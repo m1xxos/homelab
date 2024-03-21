@@ -1,0 +1,43 @@
+#cloud-config
+autoinstall:
+  version: 1
+  locale: en_US
+  keyboard:
+    layout: us
+  ssh:
+    install-server: true
+    disable_root: true
+    ssh_quiet_keygen: true
+    allow_public_ssh_keys: true
+  packages:
+    - qemu-guest-agent
+    - sudo
+  storage:
+    layout:
+      name: direct
+    swap:
+      size: 0
+  network:
+    version: 2
+    ethernets:
+      zz-all-en:
+        match:
+          name: "en*"
+        dhcp4: true
+      zz-all-eth:
+        match:
+          name: "eth*"
+        dhcp4: true
+  user-data:
+    package_upgrade: false
+    timezone: Europe/Moscow
+    users:
+      - name: m1xxos
+        groups: [adm, sudo]
+        lock-passwd: false
+        sudo: ALL=(ALL) NOPASSWD:ALL
+        shell: /bin/bash
+        # passwd: your-password
+        # - or -
+        ssh_authorized_keys:
+           - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCqNOWKBXOjOymiq1GDAfzGg26+O7uDHdie6t/IUfQc+nT3NTvx3n1bQYdW/koixKLSK8IdOInkwk5nyxUC7MzeZqlSQmjHkdGPoUKP6hIFmf0fNsBjY6E+gBtq7qeR+vi9MeLSoT0gtNI9hOI4CUMAquNoAxpoorJclQxgG2tSzAtaWe35gsn1opG4keIaEg1EnFBJzrSBcSB/G+/gegz+QVDpxy0iHmAHxCLD7/agxABVXb04RDUn2vCw7f77iaQSCsT22XkrpzACoBJtEja7LtmZTZQvitD+voi1uRxZMoQYoH+FAlKWvGNrCfQE2E8GPE6zUXR2geREd9Lgxcw5 harvester
