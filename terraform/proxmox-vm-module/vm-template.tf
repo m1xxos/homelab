@@ -38,4 +38,6 @@ resource "proxmox_vm_qemu" "template_vm" {
 
   ipconfig0 = var.ipconfig0
 
+  tags = var.tags
+
 }

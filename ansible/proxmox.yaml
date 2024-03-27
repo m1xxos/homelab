@@ -1,0 +1,27 @@
+plugin: community.general.proxmox
+url: https://192.168.1.122:8006
+user: root@pam
+token_id: packer
+token_secret: !vault |
+          $ANSIBLE_VAULT;1.1;AES256
+          64316335303130636339623766336635646562346636636363666637623364393963333238343733
+          3131313763383737373566323264643063363563346562610a313864663238613837616362643038
+          32616331356332353731323739656636616131353830616564363665313263343562353265653930
+          3764333431343964310a333536376539313863313564616232393130393039346261346239383263
+          32393563366130343037626538636439633937663635333731363638343362383661613432346262
+          3033376536303330376563666164656230346536653437323738
+validate_certs: false
+want_facts: true
+want_proxmox_nodes_ansible_host: false
+
+keyed_groups:
+  - key: proxmox_tags_parsed
+    separator: ""
+    prefix: group
+groups:
+  k3s_cluster: "'k3s' in (proxmox_tags_parsed|list)"
+  agent: "'agent' in (proxmox_tags_parsed|list)"
+  server: "'server' in (proxmox_tags_parsed|list)"
+
+compose:
+  ansible_host: proxmox_agent_interfaces | selectattr('name', 'in', 'eth0,ens18') | map(attribute='ip-addresses') | flatten | first | regex_replace('\/..', '')
