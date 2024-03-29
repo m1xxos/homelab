@@ -1,0 +1,9 @@
+- name: settup vm
+  hosts: k3s
+  become: true
+
+  tasks:
+    - name: Update all packages to their latest version
+      ansible.builtin.apt:
+        name: "*"
+        state: latest

@@ -46,3 +46,8 @@ variable "ipconfig0" {
   type    = string
   default = "ip=dhcp"
 }
+
+variable "tags" {
+  type = string
+  default = "null"
+}
