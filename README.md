@@ -13,6 +13,7 @@
 * Proxmox base vms build with Packer
 * Deployed with Terraform
 * Provisioned by Ansible
+* Kubernetes k3s
 
 
 ## Made with
@@ -25,4 +26,6 @@ This software uses the following open source packages:
 * Ansible
 * Cloud-Inint
 * Ubuntu
+* k3s
+* traefik
 

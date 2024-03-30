@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: frog
+  name: frog
+  labels:
+    app: frog
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: frog
+  template:
+    metadata:
+      labels:
+        app: frog
+    spec:
+      containers:
+      - name: frog-front
+        image: m1xxos/frog_front
+        ports:
+        - name: test
+          containerPort: 8080

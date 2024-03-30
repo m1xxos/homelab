@@ -1,0 +1,14 @@
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: frogrout
+  namespace: frog
+spec:
+  entryPoints:
+    - websecure
+  routes:
+  - match: Host(`frog.m1xxos.me`)
+    kind: Rule
+    services:
+    - name: frog
+      port: 8080
