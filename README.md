@@ -24,8 +24,7 @@ This software uses the following open source packages:
 * Packer
 * Terraform
 * Ansible
-* Cloud-Inint
+* Cloud-Init
 * Ubuntu
 * k3s
 * traefik
-

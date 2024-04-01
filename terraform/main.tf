@@ -5,7 +5,7 @@ terraform {
       version = "3.0.1-rc1"
     }
     cloudflare = {
-      source = "cloudflare/cloudflare"
+      source  = "cloudflare/cloudflare"
       version = "4.28.0"
     }
   }
@@ -41,9 +41,9 @@ module "proxmox-k3s-agents" {
   vmid      = 1300 + count.index
   cores     = 4
   memory    = 4096
-  name      = "k3s-node-${count.index}"
+  name      = "k3s-server-${count.index}"
   ipconfig0 = "ip=192.168.1.10${count.index}/24,gw=192.168.1.1"
-  tags      = "agent;k3s"
+  tags      = "k3s;server"
 
 }
 
@@ -53,8 +53,8 @@ module "proxmox-k3s-server" {
   vmid      = 1303
   cores     = 4
   memory    = 4096
-  name      = "k3s-server"
+  name      = "k3s-agent"
   ipconfig0 = "ip=192.168.1.103/24,gw=192.168.1.1"
-  tags      = "k3s;server"
+  tags      = "agent;k3s"
 
 }
