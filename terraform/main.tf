@@ -4,6 +4,10 @@ terraform {
       source  = "Telmate/proxmox"
       version = "3.0.1-rc1"
     }
+    cloudflare = {
+      source = "cloudflare/cloudflare"
+      version = "4.28.0"
+    }
   }
   backend "s3" {
     endpoint                    = "https://storage.yandexcloud.net"
@@ -26,6 +30,10 @@ provider "proxmox" {
 
 }
 
+provider "cloudflare" {
+  api_token = var.cloudflare_api_token
+}
+
 module "proxmox-k3s-agents" {
   source = "./proxmox-vm-module"
 
@@ -35,7 +43,7 @@ module "proxmox-k3s-agents" {
   memory    = 4096
   name      = "k3s-node-${count.index}"
   ipconfig0 = "ip=192.168.1.10${count.index}/24,gw=192.168.1.1"
-  tags      = "k3s, agent"
+  tags      = "agent;k3s"
 
 }
 
@@ -47,6 +55,6 @@ module "proxmox-k3s-server" {
   memory    = 4096
   name      = "k3s-server"
   ipconfig0 = "ip=192.168.1.103/24,gw=192.168.1.1"
-  tags      = "k3s, server"
+  tags      = "k3s;server"
 
 }
