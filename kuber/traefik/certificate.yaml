@@ -1,0 +1,13 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: local-m1xxos-me
+  namespace: dev
+spec:
+  secretName: local-m1xxos-me
+  dnsNames:
+    - "local.m1xxos.me"
+    - "*.local.m1xxos.me"
+  issuerRef:
+    name: acme-issuer
+    kind: ClusterIssuer
