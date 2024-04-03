@@ -58,3 +58,21 @@ module "proxmox-k3s-server" {
   tags      = "agent;k3s"
 
 }
+
+module "proxmox-lb" {
+  source = "./proxmox-vm-module"
+  for_each = tomap({
+    1 = "master"
+    2 = "backup"
+  })
+
+
+  vmid      = 1200 + each.key
+  cores     = 2
+  memory    = 2048
+  name      = "lb-${each.key}"
+  desc      = "lb-node"
+  ipconfig0 = "ip=192.168.1.20${each.key}/24,gw=192.168.1.1"
+  tags      = "lb;${each.value}"
+
+}
