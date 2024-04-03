@@ -7,8 +7,10 @@ spec:
   entryPoints:
     - websecure
   routes:
-    - match: Host(`traefik.m1xxos.me`) && (PathPrefix(`/dashboard`) || PathPrefix(`/api`))
+    - match: Host(`traefik.local.m1xxos.me`) && (PathPrefix(`/dashboard`) || PathPrefix(`/api`))
       kind: Rule
       services:
         - name: api@internal
           kind: TraefikService
+  tls:
+   secretName: local-m1xxos-me

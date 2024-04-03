@@ -7,8 +7,10 @@ spec:
   entryPoints:
     - websecure
   routes:
-  - match: Host(`frog.m1xxos.me`)
+  - match: Host(`frog.local.m1xxos.me`)
     kind: Rule
     services:
     - name: frog
       port: 8080
+  tls:
+   secretName: local-m1xxos-me
