@@ -15,6 +15,14 @@
     ansible.builtin.copy:
       src: keepalived-master.conf
       dest: /etc/keepalived/keepalived.conf
+    notify:
+      - Restart keepalived
+  
+  handlers:
+  - name: Restart keepalived
+    ansible.builtin.service:
+      name: keepalived
+      state: restarted
 
 - name: copy keepalived backup config
   hosts: groupbackup
@@ -24,6 +32,14 @@
     ansible.builtin.copy:
       src: keepalived-backup.conf
       dest: /etc/keepalived/keepalived.conf
+    notify:
+      - Restart keepalived
+  
+  handlers:
+  - name: Restart keepalived
+    ansible.builtin.service:
+      name: keepalived
+      state: restarted
 
 - name: enable keepalived
   hosts: grouplb
