@@ -5,7 +5,7 @@ locals {
 resource "cloudflare_record" "main" {
   zone_id = var.cloudflare_zone_id
   name    = local.local_name
-  value   = "192.168.1.100"
+  value   = "192.168.1.200"
   type    = "A"
   ttl     = 3600
 }
