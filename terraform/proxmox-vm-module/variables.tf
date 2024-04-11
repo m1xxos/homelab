@@ -19,7 +19,7 @@ variable "desc" {
 
 variable "clone" {
   type    = string
-  default = "ubuntu-server-lunar"
+  default = "ubuntu-server-mantic"
 }
 
 variable "cores" {
