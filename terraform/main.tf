@@ -74,15 +74,6 @@ module "proxmox-lb" {
   name      = "lb-${each.key}"
   desc      = "lb-node"
   ipconfig0 = "ip=192.168.1.20${each.key}/24,gw=192.168.1.1"
-  # tags      = "${each.value}"
-  clone     = "ubuntu-server-lunar"
-
+  tags      = "${each.value}"
 }
 
-module "proxmox-lb-test" {
-  source = "./proxmox-vm-module"
-
-  vmid = 1500
-  tags = "lb;master"
-
-}

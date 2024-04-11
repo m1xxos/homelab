@@ -1,9 +1,8 @@
 - name: LoadBalancer configuration
-  hosts: terraform-k3s-vm
+  hosts: grouplb
   vars:
     docker_users:
       - m1xxos
-    
   roles:
     - geerlingguy.docker
 - name: Keepalived setup
