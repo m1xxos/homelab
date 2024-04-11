@@ -1,5 +1,5 @@
 locals {
-  local_name = "m1xxos.me"
+  local_name = "local.m1xxos.me"
 }
 
 resource "cloudflare_record" "main" {
