@@ -1,0 +1,37 @@
+- name: Install and configure haproxy
+  hosts: grouplb
+  become: true
+  tasks:
+    - name: Install haproxy
+      ansible.builtin.apt:
+        name: haproxy
+        state: latest
+    - name: Update haproxy config
+      ansible.builtin.copy:
+        src: ./files/haproxy.cfg
+        dest: /etc/haproxy/haproxy.cfg
+      notify:
+        - Restart haproxy
+
+  handlers:
+    - name: Restart haproxy
+      ansible.builtin.service:
+        name: haproxy
+        state: restarted
+
+- name: Reconfigure k3s
+  hosts: server
+  become: true
+  tasks:
+    - name: Copy k3s config
+      ansible.builtin.copy:
+        src: ./files/k3s-config.yaml
+        dest: /etc/rancher/k3s/config.yaml
+      notify:
+        - Restart k3s
+
+  handlers:
+    - name: Restart k3s
+      ansible.builtin.service:
+        name: k3s
+        state: restarted

@@ -1,0 +1,52 @@
+- name: install keepalived
+  hosts: grouplb
+  become: true
+  tasks:
+    - name: install keepalived
+      ansible.builtin.apt:
+        name: keepalived
+        state: latest
+
+- name: copy keepalived master config
+  hosts: groupmaster
+  become: true
+  tasks:
+    - name: copy keepalived master config
+      ansible.builtin.copy:
+        src: roles/loadbalancer/files/keepalived-master.conf
+        dest: /etc/keepalived/keepalived.conf
+      notify:
+        - Restart keepalived
+
+  handlers:
+    - name: Restart keepalived
+      ansible.builtin.service:
+        name: keepalived
+        state: restarted
+
+- name: copy keepalived backup config
+  hosts: groupbackup
+  become: true
+  tasks:
+    - name: copy keepalived backup config
+      ansible.builtin.copy:
+        src: roles/loadbalancer/files/keepalived-backup.conf
+        dest: /etc/keepalived/keepalived.conf
+      notify:
+        - Restart keepalived
+
+  handlers:
+    - name: Restart keepalived
+      ansible.builtin.service:
+        name: keepalived
+        state: restarted
+
+- name: enable keepalived
+  hosts: grouplb
+  become: true
+  tasks:
+    - name: enable keepalived
+      ansible.builtin.service:
+        name: keepalived
+        state: started
+        enabled: true

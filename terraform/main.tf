@@ -44,7 +44,7 @@ module "proxmox-k3s-agents" {
   name      = "k3s-server-${count.index}"
   ipconfig0 = "ip=192.168.1.10${count.index}/24,gw=192.168.1.1"
   tags      = "k3s;server"
-
+  clone     = "ubuntu-server-lunar"
 }
 
 module "proxmox-k3s-server" {
@@ -56,5 +56,24 @@ module "proxmox-k3s-server" {
   name      = "k3s-agent"
   ipconfig0 = "ip=192.168.1.103/24,gw=192.168.1.1"
   tags      = "agent;k3s"
+  clone     = "ubuntu-server-lunar"
 
 }
+
+module "proxmox-lb" {
+  source = "./proxmox-vm-module"
+  for_each = tomap({
+    1 = "lb;master"
+    2 = "backup;lb"
+  })
+
+
+  vmid      = 1200 + each.key
+  cores     = 2
+  memory    = 2048
+  name      = "lb-${each.key}"
+  desc      = "lb-node"
+  ipconfig0 = "ip=192.168.1.20${each.key}/24,gw=192.168.1.1"
+  tags      = "${each.value}"
+}
+

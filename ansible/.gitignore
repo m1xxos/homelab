@@ -1,1 +1,2 @@
 /k3s-ansible
+*.pem
