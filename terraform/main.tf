@@ -63,8 +63,8 @@ module "proxmox-k3s-server" {
 module "proxmox-lb" {
   source = "./proxmox-vm-module"
   for_each = tomap({
-    1 = "master"
-    2 = "backup"
+    1 = "lb;master"
+    2 = "backup;lb"
   })
 
 
@@ -74,7 +74,7 @@ module "proxmox-lb" {
   name      = "lb-${each.key}"
   desc      = "lb-node"
   ipconfig0 = "ip=192.168.1.20${each.key}/24,gw=192.168.1.1"
-  tags      = "lb;${each.value}"
+  tags      = "${each.value}"
   clone     = "ubuntu-server-lunar"
 
 }
