@@ -1,0 +1,13 @@
+version: 3.8
+
+services:
+  haproxy:
+    image: haproxy:2.9
+    ports:
+      - 80:80
+      - 443:443
+      - 6443:6443
+      - 9291:9291
+    sysctls:
+      - net.ipv4.ip_unprivileged_port_start=0
+    volumes: /haproxy.cfg:/usr/local/etc/haproxy:ro

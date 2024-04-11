@@ -1,0 +1,6 @@
+- name: Install and configyre keepalived
+  ansible.builtin.include_tasks:
+    file: keepalived.yaml
+- name: Install haproxy with Docker
+  ansible.builtin.include_tasks:
+    file: haproxy-docker.yaml

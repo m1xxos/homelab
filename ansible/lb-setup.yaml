@@ -1,0 +1,5 @@
+- name: LoadBalancer configuration
+  hosts: grouplb
+  roles:
+    - geerlingguy.docker
+    - loadbalancer

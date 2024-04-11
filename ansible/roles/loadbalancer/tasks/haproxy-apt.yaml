@@ -8,11 +8,11 @@
         state: latest
     - name: Update haproxy config
       ansible.builtin.copy:
-        src: haproxy.cfg
+        src: ./files/haproxy.cfg
         dest: /etc/haproxy/haproxy.cfg
       notify:
         - Restart haproxy
-  
+
   handlers:
     - name: Restart haproxy
       ansible.builtin.service:
@@ -25,7 +25,7 @@
   tasks:
     - name: Copy k3s config
       ansible.builtin.copy:
-        src: k3s-config.yaml
+        src: ./files/k3s-config.yaml
         dest: /etc/rancher/k3s/config.yaml
       notify:
         - Restart k3s
