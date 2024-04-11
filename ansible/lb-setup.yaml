@@ -1,5 +1,13 @@
 - name: LoadBalancer configuration
-  hosts: grouplb
+  hosts: terraform-k3s-vm
+  vars:
+    docker_users:
+      - m1xxos
+    
   roles:
     - geerlingguy.docker
-    - loadbalancer
+- name: Keepalived setup
+  ansible.builtin.import_playbook: keepalived.yaml 
+
+- name: haproxy setup
+  ansible.builtin.import_playbook: haproxy-docker.yaml 

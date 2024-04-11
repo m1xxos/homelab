@@ -13,7 +13,7 @@
   tasks:
     - name: copy keepalived master config
       ansible.builtin.copy:
-        src: keepalived-master.conf
+        src: roles/loadbalancer/files/keepalived-master.conf
         dest: /etc/keepalived/keepalived.conf
       notify:
         - Restart keepalived
@@ -30,7 +30,7 @@
   tasks:
     - name: copy keepalived backup config
       ansible.builtin.copy:
-        src: keepalived-backup.conf
+        src: roles/loadbalancer/files/keepalived-backup.conf
         dest: /etc/keepalived/keepalived.conf
       notify:
         - Restart keepalived
