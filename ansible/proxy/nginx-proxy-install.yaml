@@ -1,0 +1,20 @@
+- name: Proxy configuration
+  hosts: groupnginx
+  become: true
+  vars:
+    docker_users:
+      - m1xxos
+  roles:
+    - geerlingguy.docker
+  tasks:
+    - name: Create a directory if it does not exist
+      ansible.builtin.file:
+        path: /etc/nginx-proxy/
+        state: directory
+    - name: Copy docker compose config
+      ansible.builtin.copy:
+        src: docker-compose.yaml
+        dest: /etc/nginx-proxy/docker-compose.yaml
+    - name: Run nginx proxy docker-compose Up
+      community.docker.docker_compose_v2:
+        project_src: /etc/nginx-proxy/
