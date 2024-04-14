@@ -77,3 +77,15 @@ module "proxmox-lb" {
   tags      = "${each.value}"
 }
 
+module "proxmox-nginx-proxy" {
+  source = "./proxmox-vm-module"
+
+  vmid      = 1100
+  cores     = 4
+  memory    = 4096
+  name      = "nginx-proxy-0"
+  ipconfig0 = "ip=192.168.1.250/24,gw=192.168.1.1"
+  tags      = "nginx"
+
+}
+

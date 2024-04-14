@@ -9,12 +9,12 @@
     
     - name: Copy docker compose file
       ansible.builtin.copy:
-        src: roles/loadbalancer/files/docker-compose.yaml
+        src: files/docker-compose.yaml
         dest: /etc/haproxy/docker-compose.yaml
     
     - name: Copy haproxy config file
       ansible.builtin.copy:
-        src: roles/loadbalancer/files/haproxy.cfg
+        src: files/haproxy.cfg
         dest: /etc/haproxy/haproxy.cfg
     
     - name: Run haproxy docker-compose Up
