@@ -1,5 +1,5 @@
 plugin: community.general.proxmox
-url: https://192.168.1.122:8006
+url: https://proxmox.local.m1xxos.me
 user: root@pam
 token_id: packer
 token_secret: !vault |
@@ -10,7 +10,7 @@ token_secret: !vault |
           3764333431343964310a333536376539313863313564616232393130393039346261346239383263
           32393563366130343037626538636439633937663635333731363638343362383661613432346262
           3033376536303330376563666164656230346536653437323738
-validate_certs: false
+# validate_certs: false
 want_facts: true
 want_proxmox_nodes_ansible_host: false
 
