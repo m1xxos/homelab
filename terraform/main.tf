@@ -8,6 +8,10 @@ terraform {
       source  = "cloudflare/cloudflare"
       version = "4.28.0"
     }
+    nginxproxymanager = {
+      source  = "Sander0542/nginxproxymanager"
+      version = "0.0.33"
+    }
   }
   backend "s3" {
     endpoint                    = "https://storage.yandexcloud.net"
@@ -74,7 +78,7 @@ module "proxmox-lb" {
   name      = "lb-${each.key}"
   desc      = "lb-node"
   ipconfig0 = "ip=192.168.1.20${each.key}/24,gw=192.168.1.1"
-  tags      = "${each.value}"
+  tags      = each.value
 }
 
 module "proxmox-nginx-proxy" {

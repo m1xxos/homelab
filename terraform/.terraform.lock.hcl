@@ -9,6 +9,14 @@ provider "registry.terraform.io/cloudflare/cloudflare" {
   ]
 }
 
+provider "registry.terraform.io/sander0542/nginxproxymanager" {
+  version     = "0.0.33"
+  constraints = "0.0.33"
+  hashes = [
+    "h1:k4mSqmcS+KtbFW0qqUyZg5pAf7Pv74KeSI/GezHHSws=",
+  ]
+}
+
 provider "registry.terraform.io/telmate/proxmox" {
   version     = "3.0.1-rc1"
   constraints = "3.0.1-rc1"
