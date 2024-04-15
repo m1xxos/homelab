@@ -29,8 +29,6 @@ source "proxmox-iso" "ubuntu-server-focal" {
   proxmox_url = "${var.proxmox_api_url}"
   username    = "${var.proxmox_api_token_id}"
   token       = "${var.proxmox_api_token_secret}"
-  # (Optional) Skip TLS Verification
-  insecure_skip_tls_verify = true
 
   # VM General Settings
   node                 = "pve"

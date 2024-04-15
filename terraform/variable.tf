@@ -35,3 +35,11 @@ variable "cloudflare_zone_id" {
   type      = string
   sensitive = true
 }
+
+variable "nginx_username" {
+  type = string
+}
+
+variable "nginx_password" {
+  type = string
+}
