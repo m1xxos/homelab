@@ -1,5 +1,5 @@
 name: reviewdog-docker
-on: [pull_request]
+on: [pull_request_target]
 jobs:
   hadolint:
     name: runner / hadolint
@@ -10,5 +10,4 @@ jobs:
       - name: hadolint
         uses: reviewdog/action-hadolint@v1
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
           reporter: github-pr-review
