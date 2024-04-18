@@ -20,6 +20,7 @@ jobs:
       - uses: BSFishy/pip-action@v1
         with:
           packages: |
+            ansible
             ansible-dev-tools           
       - uses: sonarsource/sonarqube-scan-action@master
         env:
