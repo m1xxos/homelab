@@ -10,4 +10,5 @@ jobs:
       - name: hadolint
         uses: reviewdog/action-hadolint@v1
         with:
+          github_token: ${{ secrets.REVIEW_DOG }}
           reporter: github-pr-review
