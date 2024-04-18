@@ -4,6 +4,8 @@ on: [push]
 jobs:
   terrascan_job_terradorm:
     runs-on: ubuntu-latest
+    permissions:
+        security-events: write
     name: terrascan-terraform
     steps:
     - name: Checkout repository
@@ -25,6 +27,8 @@ jobs:
 
   terrascan_job_k8s:
     runs-on: ubuntu-latest
+    permissions:
+        security-events: write
     name: terrascan-k8s
     steps:
     - name: Checkout repository
