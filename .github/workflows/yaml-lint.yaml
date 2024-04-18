@@ -1,7 +1,5 @@
 name: reviewdog-yaml
-on:
-  pull_request_target:
-    types: [assigned, opened, synchronize, reopened]
+on: [pull_request]
 jobs:
   yamllint:
     name: runner / yamllint
