@@ -9,7 +9,7 @@ jobs:
     name: terrascan-terraform
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
     - name: Run Terrascan
       id: terrascan
       uses: tenable/terrascan-action@main
@@ -32,7 +32,7 @@ jobs:
     name: terrascan-k8s
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
     - name: Run Terrascan
       id: terrascan
       uses: tenable/terrascan-action@main
