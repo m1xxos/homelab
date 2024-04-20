@@ -1,4 +1,4 @@
-- name: download iso
+- name: Download iso
   hosts: pve
   remote_user: root
   become: true
