@@ -8,5 +8,5 @@
 - name: Keepalived setup
   ansible.builtin.import_playbook: keepalived.yaml 
 
-- name: haproxy setup
+- name: Haproxy setup
   ansible.builtin.import_playbook: haproxy-docker.yaml 
