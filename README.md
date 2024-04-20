@@ -26,5 +26,15 @@ This software uses the following open source packages:
 * Ansible
 * Cloud-Init
 * Ubuntu
+* Docker
 * k3s
-* traefik
+* Traefik
+* Cert-manager
+* Keepalived
+* HAproxy
+* Nginx proxy manager
+* Clodflare tunnel
+* Twingate
+* SornarQube
+* GitHub actions
+* Linters
