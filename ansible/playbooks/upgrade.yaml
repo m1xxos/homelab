@@ -1,4 +1,4 @@
-- name: settup vm
+- name: Settup vm
   hosts: proxmox_all_running
   become: true
 

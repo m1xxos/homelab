@@ -11,10 +11,12 @@
       ansible.builtin.file:
         path: /etc/nginx-proxy/
         state: directory
+        mode: 664
     - name: Copy docker compose config
       ansible.builtin.copy:
         src: docker-compose.yaml
         dest: /etc/nginx-proxy/docker-compose.yaml
+        mode: 664
     - name: Run nginx proxy docker-compose Up
       community.docker.docker_compose_v2:
         project_src: /etc/nginx-proxy/

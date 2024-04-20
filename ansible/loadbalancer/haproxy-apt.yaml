@@ -5,11 +5,12 @@
     - name: Install haproxy
       ansible.builtin.apt:
         name: haproxy
-        state: latest
+        state: present
     - name: Update haproxy config
       ansible.builtin.copy:
         src: ./files/haproxy.cfg
         dest: /etc/haproxy/haproxy.cfg
+        mode: 664
       notify:
         - Restart haproxy
 
@@ -27,6 +28,7 @@
       ansible.builtin.copy:
         src: ./files/k3s-config.yaml
         dest: /etc/rancher/k3s/config.yaml
+        mode: 664
       notify:
         - Restart k3s
 
