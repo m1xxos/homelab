@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: nfs-client-provisioner
+  name: nfs-client-provisioner
+spec:
+  template:
+    spec:
+      containers:
+        - name: nfs-client-provisioner
+          env:
+            - name: NFS_SERVER
+              value: 192.168.1.143
+            - name: NFS_PATH
+              value: /mnt/main-storage/k3s-storage
+      volumes:
+        - name: nfs-client-root
+          nfs:
+            server: 192.168.1.143
+            path: /mnt/main-storage/k3s-storage
