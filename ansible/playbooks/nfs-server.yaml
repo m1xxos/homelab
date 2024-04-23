@@ -1,0 +1,13 @@
+- name: Nfs server setup
+  hosts: groupnginx
+  become: true
+  vars: 
+    nfs_exports: [ "/home/public *(rw,sync,no_root_squash)" ]
+  tasks:
+    - name: Create share directory
+      ansible.builtin.file:
+        path: /home/public/
+        state: directory
+  
+  roles: 
+    geerlingguy.nfs
