@@ -91,6 +91,7 @@ module "proxmox-nginx-proxy" {
   desc      = "proxy"
   ipconfig0 = "ip=192.168.1.250/24,gw=192.168.1.1"
   tags      = "nginx"
+  size      = 60
 
 }
 
@@ -103,7 +104,7 @@ resource "proxmox_vm_qemu" "proxmox-truenas" {
   iso    = "local:iso/TrueNAS-SCALE-23.10.2.iso"
 
   tags        = "truenas"
-  onboot      = true
+  onboot      = false
   target_node = "pve"
   qemu_os     = "l26"
   agent       = 0
