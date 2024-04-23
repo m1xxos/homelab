@@ -56,3 +56,16 @@ resource "nginxproxymanager_proxy_host" "tunnel_sonar_proxy" {
   hsts_enabled            = true
   certificate_id          = 7
 }
+
+resource "nginxproxymanager_proxy_host" "nas_proxy" {
+  domain_names            = ["nas.local.m1xxos.me"]
+  forward_host            = "192.168.1.143"
+  forward_port            = 443
+  forward_scheme          = "https"
+  allow_websocket_upgrade = true
+  block_exploits          = true
+  ssl_forced              = true
+  http2_support           = true
+  hsts_enabled            = true
+  certificate_id          = 3
+}

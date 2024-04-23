@@ -75,7 +75,7 @@ module "proxmox-lb" {
   vmid      = 1200 + each.key
   cores     = 2
   memory    = 2048
-  name      = "lb-${each.key}"
+  name      = "lb-${each.key - 1}"
   desc      = "lb-node"
   ipconfig0 = "ip=192.168.1.20${each.key}/24,gw=192.168.1.1"
   tags      = each.value
@@ -88,8 +88,48 @@ module "proxmox-nginx-proxy" {
   cores     = 4
   memory    = 4096
   name      = "nginx-proxy-0"
+  desc      = "proxy"
   ipconfig0 = "ip=192.168.1.250/24,gw=192.168.1.1"
   tags      = "nginx"
+  size      = 60
 
+}
+
+resource "proxmox_vm_qemu" "proxmox-truenas" {
+  vmid   = 1500
+  cores  = 4
+  memory = 8192
+  name   = "truenas-0"
+  desc   = "TrueNAS vm"
+  iso    = "local:iso/TrueNAS-SCALE-23.10.2.iso"
+
+  tags        = "truenas"
+  onboot      = false
+  target_node = "pve"
+  qemu_os     = "l26"
+  agent       = 0
+
+  network {
+    bridge = "vmbr0"
+    model  = "virtio"
+  }
+
+  scsihw = "virtio-scsi-pci"
+  disks {
+    virtio {
+      virtio0 {
+        disk {
+          storage = "pve-nvme"
+          size    = 20
+        }
+      }
+      virtio1 {
+        disk {
+          storage = "pve-nvme"
+          size    = 60
+        }
+      }
+    }
+  }
 }
 
