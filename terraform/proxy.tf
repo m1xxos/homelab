@@ -15,7 +15,7 @@ resource "nginxproxymanager_proxy_host" "proxmox_proxy" {
   ssl_forced              = true
   http2_support           = true
   hsts_enabled            = true
-  certificate_id          = 5
+  certificate_id          = 1
 }
 
 resource "nginxproxymanager_proxy_host" "k3s_proxy" {
@@ -28,7 +28,7 @@ resource "nginxproxymanager_proxy_host" "k3s_proxy" {
   ssl_forced              = true
   http2_support           = true
   hsts_enabled            = true
-  certificate_id          = 3
+  certificate_id          = 1
 }
 
 resource "nginxproxymanager_proxy_host" "tunnel_proxmox_proxy" {
@@ -41,7 +41,7 @@ resource "nginxproxymanager_proxy_host" "tunnel_proxmox_proxy" {
   ssl_forced              = true
   http2_support           = true
   hsts_enabled            = true
-  certificate_id          = 6
+  certificate_id          = 3
 }
 
 resource "nginxproxymanager_proxy_host" "tunnel_sonar_proxy" {
@@ -54,7 +54,7 @@ resource "nginxproxymanager_proxy_host" "tunnel_sonar_proxy" {
   ssl_forced              = true
   http2_support           = true
   hsts_enabled            = true
-  certificate_id          = 7
+  certificate_id          = 2
 }
 
 resource "nginxproxymanager_proxy_host" "nas_proxy" {
@@ -67,5 +67,5 @@ resource "nginxproxymanager_proxy_host" "nas_proxy" {
   ssl_forced              = true
   http2_support           = true
   hsts_enabled            = true
-  certificate_id          = 3
+  certificate_id          = 1
 }
