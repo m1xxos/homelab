@@ -1,0 +1,37 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.name }}-config
+data: 
+    qBittorrent.conf: |
+        [AutoRun]
+        enabled=false
+        program=
+
+        [BitTorrent]
+        Session\DefaultSavePath=/downloads/
+        Session\Port=6881
+        Session\QueueingSystemEnabled=true
+        Session\TempPath=/downloads/incomplete/
+
+        [LegalNotice]
+        Accepted=true
+
+        [Meta]
+        MigrationVersion=6
+
+        [Network]
+        PortForwardingEnabled=false
+        Proxy\HostnameLookupEnabled=false
+        Proxy\Profiles\BitTorrent=true
+        Proxy\Profiles\Misc=true
+        Proxy\Profiles\RSS=true
+
+        [Preferences]
+        Connection\PortRangeMin=6881
+        Connection\UPnP=false
+        Downloads\SavePath=/downloads/
+        Downloads\TempPath=/downloads/incomplete/
+        WebUI\Address=*
+        WebUI\ServerDomains=*
+        WebUI\Password_PBKDF2="pofig"

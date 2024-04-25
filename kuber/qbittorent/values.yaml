@@ -11,9 +11,12 @@ namespace: torrent
 
 image:
   name: lscr.io/linuxserver/qbittorrent
-  tag: "latest"
-
+  tag: "4.6.4"
 
 
 service:
-  port: 8080
+  httpPort: 8080
+  connectionPort: 6881
+
+ingress:
+  hostname: torrent.local.m1xxos.me

@@ -1,25 +1,44 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  namespace: {{ values.namespace }}
-  name: {{ include "qbittorent.fullname" . }}
+  namespace: {{ .Values.namespace }}
+  name: {{ .Values.name }}
   labels:
-    app: {{ values.labels }}
+    app: {{ .Values.labels }}
 spec:
-  replicas: {{ values.replicaCount }}
+  replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      app: {{ values.labels }}
+      app: {{ .Values.labels }}
   template:
     metadata:
       labels:
-        app: {{ values.labels }}
+        app: {{ .Values.labels }}
     spec:
       containers:
-      - name: {{ include "qbittorent.fullname" . }}
-        image: "{{ values.image.name }}:{{ values.image.tag }}"
+      - name: {{ .Values.name }}
+        image: "{{ .Values.image.name }}:{{ .Values.image.tag }}"
+        # volumeMounts:
+        # - name: {{ .Values.name }}-config
+        #   mountPath: "/config/qBittorrent/qBittorrent.conf"
+        #   subPath: qBittorrent.conf
+
+        resources:
+          requests:
+            memory: "200Mi" 
+            cpu: "500m"
+          limits:
+            memory: "500Mi"
+            cpu: "1000m"
+        
         ports:
-        - containerPort: 8080
-        - containerPort: 6881
-        - containerPort: 6881
+        - containerPort: {{ .Values.service.httpPort }}
+        - containerPort: {{ .Values.service.connectionPort }}
+        - containerPort: {{ .Values.service.connectionPort }}
           protocol: UDP
+        
+      volumes:
+      - name: {{ .Values.name }}-config
+        configMap:
+          name: {{ .Values.name }}-config
+                
