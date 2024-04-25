@@ -1,0 +1,16 @@
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: {{ include "qbittorent.fullname" . }}
+  namespace: {{ values.namespace }}
+spec:
+  entryPoints:
+    - websecure
+  routes:
+  - match: Host(`torrent.local.m1xxos.me`)
+    kind: Rule
+    services:
+    - name: {{ include "qbittorent.fullname" . }}
+      port: {{ .Values.service.port }}
+  tls:
+   secretName: local-m1xxos-me

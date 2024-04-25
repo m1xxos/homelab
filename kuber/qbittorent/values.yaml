@@ -1,0 +1,19 @@
+# Default values for qbittorent.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+name: qbittorent
+labels: qbittorent
+
+namespace: torrent
+
+image:
+  name: lscr.io/linuxserver/qbittorrent
+  tag: "latest"
+
+
+
+service:
+  port: 8080

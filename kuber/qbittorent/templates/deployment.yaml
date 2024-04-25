@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: {{ values.namespace }}
+  name: {{ include "qbittorent.fullname" . }}
+  labels:
+    app: {{ values.labels }}
+spec:
+  replicas: {{ values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ values.labels }}
+  template:
+    metadata:
+      labels:
+        app: {{ values.labels }}
+    spec:
+      containers:
+      - name: {{ include "qbittorent.fullname" . }}
+        image: "{{ values.image.name }}:{{ values.image.tag }}"
+        ports:
+        - containerPort: 8080
+        - containerPort: 6881
+        - containerPort: 6881
+          protocol: UDP
