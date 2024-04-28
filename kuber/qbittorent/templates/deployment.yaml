@@ -34,6 +34,10 @@ spec:
             memory: "500Mi"
             cpu: "1000m"
         
+        securityContext:
+            allowPrivilegeEscalation: true
+            runAsNonRoot: false
+        
         ports:
         - containerPort: {{ .Values.service.httpPort }}
         - containerPort: {{ .Values.service.connectionPort }}
