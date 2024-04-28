@@ -14,8 +14,19 @@ spec:
               value: 192.168.1.250
             - name: NFS_PATH
               value: /home/public
+          resources:
+            requests:
+              memory: "200Mi" 
+              cpu: "100m"
+            limits:
+              memory: "1000Mi"
+              cpu: "1000m"
+          securityContext:
+            allowPrivilegeEscalation: true
+            runAsNonRoot: false
       volumes:
         - name: nfs-client-root
           nfs:
             server: 192.168.1.250
             path: /home/public
+      
