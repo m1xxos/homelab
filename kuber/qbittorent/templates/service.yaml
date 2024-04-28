@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: {{ .Values.namespace }}
+  name: {{ .Values.name }}
+
+spec:
+  ports:
+    - port: {{ .Values.service.httpPort }}
+      targetPort: {{ .Values.service.httpPort }}
+      protocol: TCP
+      name: web-ui
+    - port: {{ .Values.service.connectionPort }}
+      targetPort: {{ .Values.service.connectionPort }}
+      protocol: TCP
+      name: tcp-connection
+    - port: {{ .Values.service.connectionPort }}
+      targetPort: {{ .Values.service.connectionPort }}
+      protocol: UDP
+      name: udp-connection
+  selector:
+    app: {{ .Values.name }}

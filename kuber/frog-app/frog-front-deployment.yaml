@@ -21,3 +21,15 @@ spec:
         ports:
         - name: test
           containerPort: 8080
+        resources:
+          requests:
+            memory: "200Mi" 
+            cpu: "100m"
+          limits:
+            memory: "500Mi"
+            cpu: "1000m"
+        securityContext:
+          allowPrivilegeEscalation: false
+          runAsNonRoot: true
+      
+      automountServiceAccountToken: false

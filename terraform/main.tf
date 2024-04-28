@@ -108,6 +108,7 @@ resource "proxmox_vm_qemu" "proxmox-truenas" {
   target_node = "pve"
   qemu_os     = "l26"
   agent       = 0
+  vm_state = "stopped"
 
   network {
     bridge = "vmbr0"
