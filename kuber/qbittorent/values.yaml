@@ -10,8 +10,8 @@ labels: qbittorent
 namespace: torrent
 
 image:
-  name: lscr.io/linuxserver/qbittorrent
-  tag: "4.6.4"
+  name: wernight/qbittorrent
+  tag: "latest"
 
 
 service:

@@ -21,11 +21,15 @@ spec:
         volumeMounts:
         - name: {{ .Values.name }}
           mountPath: "/downloads"
+        - name: {{ .Values.name }}-config
+          mountPath: "/config"
+        - name: {{ .Values.name }}-torrents
+          mountPath: "/torrents"
 
         resources:
           requests:
             memory: "200Mi" 
-            cpu: "500m"
+            cpu: "100m"
           limits:
             memory: "500Mi"
             cpu: "1000m"
@@ -40,4 +44,9 @@ spec:
         - name: {{ .Values.name }}
           persistentVolumeClaim:
             claimName: {{ .Values.name }}-claim
-                
+        - name: {{ .Values.name }}-config
+          persistentVolumeClaim:
+            claimName: {{ .Values.name }}-claim-config
+        - name: {{ .Values.name }}-torrents
+          persistentVolumeClaim:
+            claimName: {{ .Values.name }}-claim-torrents
