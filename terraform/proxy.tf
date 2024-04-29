@@ -69,3 +69,16 @@ resource "nginxproxymanager_proxy_host" "nas_proxy" {
   hsts_enabled            = true
   certificate_id          = 1
 }
+
+resource "nginxproxymanager_proxy_host" "rancher_proxy" {
+  domain_names            = ["rancher.local.m1xxos.me"]
+  forward_host            = "rancher"
+  forward_port            = 443
+  forward_scheme          = "https"
+  allow_websocket_upgrade = true
+  block_exploits          = true
+  ssl_forced              = true
+  http2_support           = true
+  hsts_enabled            = true
+  certificate_id          = 1
+}
