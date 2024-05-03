@@ -1,0 +1,40 @@
+alertmanager:
+  config:
+  global:
+    telegram_api_url: "https://api.telegram.org"
+  route:
+    receiver: telegram-alert
+    group_by: ['alertname', 'cluster', 'service']
+    repeat_interval: 1h
+    routes:
+      - match:
+          severity: critical
+        receiver: telegram-alert
+        continue: true
+  receivers:
+    - name: telegram-alert
+      telegram_configs:
+        - chat_id: <ChatID>
+          bot_token: <BotToken>
+          api_url: "https://api.telegram.org"
+          send_resolved: true
+          parse_mode: html
+          template: |-
+            {{ define "telegram.default" }}
+            {{ range .Alerts }}
+            {{ if eq .Status "firing"}}&#x1F525<b>{{ .Status | toUpper }}</b>&#x1F525{{ else }}&#x2705<b>{{ .Status | toUpper }}</b>&#x2705{{ end }}
+            <b>{{ .Labels.alertname }}</b>
+            {{- if .Labels.severity }}
+            <b>Severity:</b> {{ .Labels.severity }}
+            {{- end }}
+            {{- if .Labels.cluster }}
+            <b>Cluster:</b> {{ .Labels.cluster }}
+            {{- end }}
+            {{- if .Labels.service }}
+            <b>Service:</b> {{ .Labels.service }}
+            {{- end }}
+            {{- if .Labels.instance}}
+            <b>Instance:</b> {{ .Labels.instance }}
+            {{- end }}
+            <b>Description:</b> {{ .Annotations.description }}
+            {{- end }}
