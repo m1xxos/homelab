@@ -31,6 +31,6 @@ spec:
         securityContext:
           allowPrivilegeEscalation: false
           runAsNonRoot: true
-          runAsUser: 999
+          runAsUser: 9999
       
       automountServiceAccountToken: false
