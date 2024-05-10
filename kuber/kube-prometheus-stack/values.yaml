@@ -7,14 +7,14 @@ alertmanager:
     group_by: ['alertname', 'cluster', 'service']
     repeat_interval: 1h
     routes:
-      - match:
-          severity: critical
+      - matchers:
+          - "severity = critical"
         receiver: telegram-alert
         continue: true
   receivers:
     - name: telegram-alert
       telegram_configs:
-        - chat_id: <ChatID>
+        - chat_id: 421268717
           bot_token: <BotToken>
           api_url: "https://api.telegram.org"
           send_resolved: true
@@ -38,3 +38,30 @@ alertmanager:
             {{- end }}
             <b>Description:</b> {{ .Annotations.description }}
             {{- end }}
+
+prometheus:
+  prometheusSpec:
+      additionalScrapeConfigs:
+        - job_name: 'kubernetes-pods'
+          kubernetes_sd_configs:
+            - role: pod
+              selectors:
+                - role: pod
+                  label: "app=traefik"
+          relabel_configs:
+            - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scrape]
+              action: keep
+              regex: true
+            - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_path]
+              action: replace
+              target_label: __metrics_path__
+              regex: (.+)
+            - source_labels: [__address__, __meta_kubernetes_pod_annotation_prometheus_io_port]
+              action: replace
+              regex: ([^:]+)(?::\\d+)?;(\\d+)
+              replacement: $1:$2
+              target_label: __address__
+            - source_labels: [__meta_kubernetes_service_annotation_prometheus_io_scheme]
+              action: replace
+              target_label: __scheme__
+              regex: (https?)
