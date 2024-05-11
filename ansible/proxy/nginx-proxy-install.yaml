@@ -4,8 +4,8 @@
   vars:
     docker_users:
       - m1xxos
-  # roles:
-  #   - geerlingguy.docker
+  roles:
+    - geerlingguy.docker
   tasks:
     - name: Create a nginx directory if it does not exist
       ansible.builtin.file:
