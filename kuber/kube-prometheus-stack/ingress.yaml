@@ -10,8 +10,26 @@ spec:
     - match: Host(`grafana.local.m1xxos.me`)
       kind: Rule
       services:
-        - name: kube-prom-stack-grafana
+        - name: grafana
           namespace: monitoring
           port: 80
   tls:
    secretName: local-m1xxos-me
+
+---
+
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: traefik-metrics
+  namespace: monitoring
+spec:
+  entryPoints:
+    - web
+  routes:
+    - kind: Rule
+      match: Host(`metrics.local.m1xxos.me`) || PathPrefix(`/metrics`)
+      services:
+        - name: prometheus@internal
+          kind: TraefikService
+  
