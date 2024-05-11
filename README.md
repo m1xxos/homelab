@@ -10,11 +10,10 @@
 
 ## Key Features
 
-* Proxmox base vms build with Packer
-* Deployed with Terraform
+* Ubuntu base vms build with Packer
+* Deployed on proxmox with Terraform
 * Provisioned by Ansible
-* Kubernetes k3s
-
+* Kubernetes with k3s
 
 ## Made with
 
@@ -28,6 +27,8 @@ This software uses the following open source packages:
 * Ubuntu
 * Docker
 * k3s
+* Helm
+* Rancher
 * Traefik
 * Cert-manager
 * Keepalived
@@ -38,3 +39,9 @@ This software uses the following open source packages:
 * SornarQube
 * GitHub actions
 * Linters
+* Prometheus
+* Grafana
+
+## Architecture diagram
+
+![Alt text](/architecture.png?raw=true "Title")
