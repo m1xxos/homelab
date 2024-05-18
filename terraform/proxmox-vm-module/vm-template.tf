@@ -5,7 +5,7 @@ resource "proxmox_vm_qemu" "template_vm" {
   desc        = var.desc
   qemu_os     = "l26"
 
-  onboot = true
+  onboot = var.onboot
 
   clone = var.clone
 

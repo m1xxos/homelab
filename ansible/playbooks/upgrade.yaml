@@ -5,7 +5,7 @@
   tasks:
     - name: Update cache
       ansible.builtin.apt:
-        update_cache: yes
+        update_cache: true
         cache_valid_time: 3600
     - name: Update all packages to their latest version
       ansible.builtin.apt:
@@ -16,4 +16,3 @@
         upgrade: dist
     - name: Upgrade Ubuntu release
       ansible.builtin.shell: do-release-upgrade -f DistUpgradeViewNonInteractive
-      

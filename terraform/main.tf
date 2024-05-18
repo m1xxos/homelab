@@ -66,6 +66,9 @@ module "proxmox-k3s-server" {
 
 module "proxmox-lb" {
   source = "./proxmox-vm-module"
+  
+  onboot = false
+  
   for_each = tomap({
     1 = "lb;master"
     2 = "backup;lb"
