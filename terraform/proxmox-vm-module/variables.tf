@@ -51,3 +51,8 @@ variable "tags" {
   type = string
   default = "null"
 }
+
+variable "onboot" {
+  type = bool
+  default = true
+}

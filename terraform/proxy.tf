@@ -20,7 +20,7 @@ resource "nginxproxymanager_proxy_host" "proxmox_proxy" {
 
 resource "nginxproxymanager_proxy_host" "k3s_proxy" {
   domain_names            = ["*.local.m1xxos.me"]
-  forward_host            = "192.168.1.200"
+  forward_host            = "192.168.1.100"
   forward_port            = 443
   forward_scheme          = "https"
   allow_websocket_upgrade = true
