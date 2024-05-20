@@ -1,0 +1,19 @@
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: source
+  namespace: dev
+spec:
+  secretName: source-tls
+  commonName: source
+  issuerRef:
+    name: source-ca
+    kind: Issuer
+    group: cert-manager.io
+  secretTemplate:
+    annotations:
+      reflector.v1.k8s.emberstack.com/reflection-allowed: "true"
+      reflector.v1.k8s.emberstack.com/reflection-allowed-namespaces: "monitoring,frog"  # Control destination namespaces
+      reflector.v1.k8s.emberstack.com/reflection-auto-enabled: "true" # Auto create reflection for matching namespaces
+      reflector.v1.k8s.emberstack.com/reflection-auto-namespaces: "monitoring,frog" # Control auto-reflection namespaces
