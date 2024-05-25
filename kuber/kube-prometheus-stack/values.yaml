@@ -77,7 +77,7 @@ coreDns:
   enabled: true
 
 kubeDns:
-  enabled: false
+  enabled: true
 
 kubeEtcd:
   enabled: false
@@ -141,11 +141,11 @@ prometheus:
     serviceMonitorSelectorNilUsesHelmValues: false
     podMonitorSelectorNilUsesHelmValues: false
     probeSelectorNilUsesHelmValues: false
-    retention: 30m
+    retention: 10m
     enableAdminAPI: true
     walCompression: true
 
-    scrapeInterval: 60s
+    scrapeInterval: 80s
     # storageSpec:
     #   volumeClaimTemplate:
     #     metadata:
