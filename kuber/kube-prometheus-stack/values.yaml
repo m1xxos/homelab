@@ -7,18 +7,11 @@ defaultRules:
     etcd: true
     configReloaders: true
     general: true
-    k8sContainerCpuUsageSecondsTotal: true
-    k8sContainerMemoryCache: true
-    k8sContainerMemoryRss: true
-    k8sContainerMemorySwap: true
-    k8sContainerResource: true
-    k8sContainerMemoryWorkingSetBytes: true
-    k8sPodOwner: true
-    kubeApiserverAvailability: true
+    k8s: true
     kubeApiserverBurnrate: true
+    kubeApiserverAvailability: true
     kubeApiserverHistogram: true
     kubeApiserverSlos: true
-    kubeControllerManager: true
     kubelet: true
     kubeProxy: true
     kubePrometheusGeneral: true
@@ -27,8 +20,7 @@ defaultRules:
     kubernetesResources: true
     kubernetesStorage: true
     kubernetesSystem: true
-    kubeSchedulerAlerting: true
-    kubeSchedulerRecording: true
+    kubeScheduler: true
     kubeStateMetrics: true
     network: true
     node: true
@@ -85,14 +77,14 @@ coreDns:
   enabled: true
 
 kubeDns:
-  enabled: false
+  enabled: true
 
 kubeEtcd:
-  enabled: true
+  enabled: false
 
 
 kubeScheduler:
-  enabled: true
+  enabled: false
 
 kubeProxy:
   enabled: true
@@ -149,9 +141,11 @@ prometheus:
     serviceMonitorSelectorNilUsesHelmValues: false
     podMonitorSelectorNilUsesHelmValues: false
     probeSelectorNilUsesHelmValues: false
-    retention: 6h
+    retention: 10m
     enableAdminAPI: true
     walCompression: true
+
+    scrapeInterval: 80s
     # storageSpec:
     #   volumeClaimTemplate:
     #     metadata:
