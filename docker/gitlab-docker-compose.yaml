@@ -6,13 +6,9 @@ services:
     restart: always
     hostname: 'gitlab.local.m1xxos.me'
     environment:
-      - GITLAB_REGISTRY_ENABLED=true
-      - GITLAB_REGISTRY_HOST=registry.m1xxos.local.me
-      - GITLAB_REGISTRY_PORT=443
-      - GITLAB_REGISTRY_API_URL=http://registry:5000
-      - GITLAB_REGISTRY_KEY_PATH=/certs/registry.key
-      - GITLAB_SSH_PORT=2228
-      - GITLAB_OMNIBUS_CONFIG="external_url 'https://gitlab.local.m1xxos.me'" 
+      GITLAB_OMNIBUS_CONFIG: |
+        external_url 'https://gitlab.local.m1xxos.me'
+        gitlab_rails['gitlab_shell_ssh_port'] = 2228
     ports:
       - '80:80'
       - '443:443'
