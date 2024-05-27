@@ -41,6 +41,8 @@ provider "cloudflare" {
 module "proxmox-k3s-agents" {
   source = "./proxmox-vm-module"
 
+  vm_state = "stopped"
+  
   count     = 3
   vmid      = 1300 + count.index
   cores     = 4
@@ -53,6 +55,8 @@ module "proxmox-k3s-agents" {
 
 module "proxmox-k3s-server" {
   source = "./proxmox-vm-module"
+
+  vm_state = "stopped"
 
   vmid      = 1303
   cores     = 4
@@ -68,6 +72,7 @@ module "proxmox-lb" {
   source = "./proxmox-vm-module"
   
   onboot = false
+  vm_state = "stopped"
   
   for_each = tomap({
     1 = "lb;master"

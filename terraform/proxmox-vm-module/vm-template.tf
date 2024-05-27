@@ -40,4 +40,6 @@ resource "proxmox_vm_qemu" "template_vm" {
 
   tags = var.tags
 
+  vm_state = var.vm_state
+
 }
