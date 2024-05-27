@@ -1,0 +1,45 @@
+version: '3.6'
+services:
+  gitlab:
+    image: gitlab/gitlab-ce:17.0.1-ce.0
+    container_name: gitlab
+    restart: always
+    hostname: 'gitlab.local.m1xxos.me'
+    environment:
+      - GITLAB_REGISTRY_ENABLED=true
+      - GITLAB_REGISTRY_HOST=registry.m1xxos.local.me
+      - GITLAB_REGISTRY_PORT=443
+      - GITLAB_REGISTRY_API_URL=http://registry:5000
+      - GITLAB_REGISTRY_KEY_PATH=/certs/registry.key
+      - GITLAB_SSH_PORT=2228
+      - GITLAB_OMNIBUS_CONFIG="external_url 'https://gitlab.local.m1xxos.me'" 
+    ports:
+      - '80:80'
+      - '443:443'
+      - '2228:22'
+    volumes:
+      - '$GITLAB_HOME/config:/etc/gitlab'
+      - '$GITLAB_HOME/logs:/var/log/gitlab'
+      - '$GITLAB_HOME/data:/var/opt/gitlab'
+      - '$GITLAB_HOME/certs:/certs'
+      - '$GITLAB_HOME/gitlab:/home/git/data'
+    shm_size: '256m'
+
+  registry:
+      image: registry
+      restart: always
+      expose:
+        - "5000"
+      ports:
+        - "5000:5000"
+      volumes:
+        - $GITLAB_HOME/gitlab/shared/registry:/registry
+        - $GITLAB_HOME/certs:/certs
+      environment:
+        - REGISTRY_LOG_LEVEL=info
+        - REGISTRY_STORAGE_FILESYSTEM_ROOTDIRECTORY=/registry
+        - REGISTRY_AUTH_TOKEN_REALM=https://gitlab.local.m1xxos.me/jwt/auth
+        - REGISTRY_AUTH_TOKEN_SERVICE=container_registry
+        - REGISTRY_AUTH_TOKEN_ISSUER=gitlab-issuer
+        - REGISTRY_AUTH_TOKEN_ROOTCERTBUNDLE=/certs/registry.crt
+        - REGISTRY_STORAGE_DELETE_ENABLED=true

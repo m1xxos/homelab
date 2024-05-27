@@ -42,7 +42,7 @@ module "proxmox-k3s-agents" {
   source = "./proxmox-vm-module"
 
   vm_state = "stopped"
-  
+
   count     = 3
   vmid      = 1300 + count.index
   cores     = 4
@@ -103,3 +103,16 @@ module "proxmox-nginx-proxy" {
 
 }
 
+module "proxmox-portainer" {
+  source = "./proxmox-vm-module"
+
+  vmid      = 1150
+  cores     = 6
+  memory    = 6114
+  name      = "portainer-0"
+  desc      = "portainer/gitlab"
+  ipconfig0 = "ip=192.168.1.228/24,gw=192.168.1.1"
+  tags      = "portainer"
+  size      = 60
+
+}
