@@ -73,7 +73,7 @@ resource "nginxproxymanager_proxy_host" "gitlab_proxy" {
 resource "nginxproxymanager_proxy_host" "registry_proxy" {
   domain_names            = ["registry.local.m1xxos.me"]
   forward_host            = "192.168.1.228"
-  forward_port            = 5000
+  forward_port            = 443
   forward_scheme          = "https"
   allow_websocket_upgrade = true
   block_exploits          = true

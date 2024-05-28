@@ -70,10 +70,10 @@ module "proxmox-k3s-server" {
 
 module "proxmox-lb" {
   source = "./proxmox-vm-module"
-  
-  onboot = false
+
+  onboot   = false
   vm_state = "stopped"
-  
+
   for_each = tomap({
     1 = "lb;master"
     2 = "backup;lb"
@@ -108,7 +108,7 @@ module "proxmox-portainer" {
 
   vmid      = 1150
   cores     = 6
-  memory    = 6114
+  memory    = 10240
   name      = "portainer-0"
   desc      = "portainer/gitlab"
   ipconfig0 = "ip=192.168.1.228/24,gw=192.168.1.1"
