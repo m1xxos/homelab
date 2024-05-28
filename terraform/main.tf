@@ -41,34 +41,32 @@ provider "cloudflare" {
 module "proxmox-k3s-agents" {
   source = "./proxmox-vm-module"
 
-  count     = 3
-  vmid      = 1300 + count.index
+  count     = 1
+  vmid      = 1301 + count.index
   cores     = 4
   memory    = 4096
-  name      = "k3s-server-${count.index}"
-  ipconfig0 = "ip=192.168.1.10${count.index}/24,gw=192.168.1.1"
-  tags      = "k3s;server"
-  clone     = "ubuntu-server-lunar"
+  name      = "k3s-agent-${count.index}"
+  ipconfig0 = "ip=192.168.1.10${count.index + 1}/24,gw=192.168.1.1"
+  tags      = "agent;k3s"
 }
 
 module "proxmox-k3s-server" {
   source = "./proxmox-vm-module"
 
-  vmid      = 1303
+  vmid      = 1300
   cores     = 4
   memory    = 4096
-  name      = "k3s-agent"
-  ipconfig0 = "ip=192.168.1.103/24,gw=192.168.1.1"
-  tags      = "agent;k3s"
-  clone     = "ubuntu-server-lunar"
-
+  name      = "k3s-server-0"
+  ipconfig0 = "ip=192.168.1.100/24,gw=192.168.1.1"
+  tags      = "k3s;server"
 }
 
 module "proxmox-lb" {
   source = "./proxmox-vm-module"
-  
-  onboot = false
-  
+
+  onboot   = false
+  vm_state = "stopped"
+
   for_each = tomap({
     1 = "lb;master"
     2 = "backup;lb"
@@ -98,3 +96,16 @@ module "proxmox-nginx-proxy" {
 
 }
 
+module "proxmox-portainer" {
+  source = "./proxmox-vm-module"
+
+  vmid      = 1150
+  cores     = 6
+  memory    = 10240
+  name      = "portainer-0"
+  desc      = "portainer/gitlab"
+  ipconfig0 = "ip=192.168.1.228/24,gw=192.168.1.1"
+  tags      = "portainer"
+  size      = 60
+
+}

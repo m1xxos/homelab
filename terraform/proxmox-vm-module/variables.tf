@@ -56,3 +56,8 @@ variable "onboot" {
   type = bool
   default = true
 }
+
+variable "vm_state" {
+  type = string
+  default = "running"
+}

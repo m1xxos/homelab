@@ -44,3 +44,41 @@ resource "nginxproxymanager_proxy_host" "tunnel_proxmox_proxy" {
   certificate_id          = 3
 }
 
+resource "nginxproxymanager_proxy_host" "portainer_proxy" {
+  domain_names            = ["portainer.local.m1xxos.me"]
+  forward_host            = "192.168.1.228"
+  forward_port            = 9443
+  forward_scheme          = "https"
+  allow_websocket_upgrade = true
+  block_exploits          = true
+  ssl_forced              = true
+  http2_support           = true
+  hsts_enabled            = true
+  certificate_id          = 1
+}
+
+resource "nginxproxymanager_proxy_host" "gitlab_proxy" {
+  domain_names            = ["gitlab.local.m1xxos.me"]
+  forward_host            = "192.168.1.228"
+  forward_port            = 443
+  forward_scheme          = "https"
+  allow_websocket_upgrade = true
+  block_exploits          = true
+  ssl_forced              = true
+  http2_support           = true
+  hsts_enabled            = true
+  certificate_id          = 1
+}
+
+resource "nginxproxymanager_proxy_host" "registry_proxy" {
+  domain_names            = ["registry.local.m1xxos.me"]
+  forward_host            = "192.168.1.228"
+  forward_port            = 443
+  forward_scheme          = "https"
+  allow_websocket_upgrade = true
+  block_exploits          = true
+  ssl_forced              = true
+  http2_support           = true
+  hsts_enabled            = true
+  certificate_id          = 1
+}
