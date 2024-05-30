@@ -2,7 +2,7 @@ apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
   name: local-m1xxos-me
-  namespace: dev
+  namespace: cert-manager
 spec:
   secretName: local-m1xxos-me
   dnsNames:
@@ -11,3 +11,9 @@ spec:
   issuerRef:
     name: acme-issuer
     kind: ClusterIssuer
+  secretTemplate:
+    annotations:
+      reflector.v1.k8s.emberstack.com/reflection-allowed: "true"
+      reflector.v1.k8s.emberstack.com/reflection-allowed-namespaces: ""
+      reflector.v1.k8s.emberstack.com/reflection-auto-enabled: "true"
+      reflector.v1.k8s.emberstack.com/reflection-auto-namespaces: ""

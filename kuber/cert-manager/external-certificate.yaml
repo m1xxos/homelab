@@ -2,7 +2,7 @@ apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
   name: m1xxos-me
-  namespace: dev
+  namespace: cert-manager
 spec:
   secretName: m1xxos-me
   dnsNames:
