@@ -10,15 +10,16 @@ spec:
     namespace: gitlab
     server: {{ .Values.spec.destination.server }}
   project: default
-  path: kuber/gtilab-runner
-  source:
-    repoURL: {{ .Values.spec.source.repoURL }}
-    targetRevision: {{ .Values.spec.source.targetRevision }}
-    repoURL: https://charts.gitlab.io
-    chart: gitlab/gitlab-runner
-    helm:
-      valueFile:
-      - values.yaml
+  sources:
+    - chart: gitlab-runner
+      repoURL: https://charts.gitlab.io
+      targetRevision: 0.65.0
+      helm:
+        valueFiles:
+          - $values/kuber/gtilab-runner/values.yaml
+    - repoURL: {{ .Values.spec.source.repoURL }}
+      targetRevision: {{ .Values.spec.source.targetRevision }}
+      ref: values
 
   syncPolicy:
     automated:
