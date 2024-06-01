@@ -55,13 +55,13 @@ gitlabUrl: https://gitlab.local.m1xxos.me
 ##
 ## ref: https://docs.gitlab.com/ee/ci/runners/new_creation_workflow.html
 ##
-runnerRegistrationToken: ""
+# runnerRegistrationToken: ""
 
 ## The Runner Token for adding new Runners to the GitLab Server. This must
 ## be retrieved from your GitLab instance. It is the token of an already registered runner.
 ## ref: (we don't have docs for that yet, but we want to use an existing token)
 ##
-# runnerToken: ""
+runnerToken: "glrt-nByyZDbjB-T-LsHcPGeP"
 #
 
 ## Unregister all runners before termination
