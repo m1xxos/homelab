@@ -2,3 +2,5 @@ mirrors:
   docker.io:
     endpoint:
       - "https://mirror.gcr.io"
+      - "https://registry.docker-cn.com"
+      - "https://c.163.com/"

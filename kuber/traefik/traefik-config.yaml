@@ -7,7 +7,7 @@ spec:
   valuesContent: |-
     image:
       name: traefik
-      tag: 2.10.5
+      tag: 2.10.7
     deployment:
       replicas: 1
     ports:
