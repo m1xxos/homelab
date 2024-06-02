@@ -7,10 +7,26 @@ spec:
   valuesContent: |-
     image:
       name: traefik
-      tag: 2.10.5
+      tag: 2.10.7
     deployment:
       replicas: 1
     ports:
       web:
         redirectTo:
           port: websecure
+    experimental:
+      plugins:
+        ldapAuth:
+          moduleName: "github.com/wiltonsr/ldapAuth"
+          version: "v0.1.8"
+        demo:
+          moduleName: github.com/traefik/plugindemo
+          version: v0.2.1
+    additionalVolumes:
+      - name: plugins
+        emptyDir:
+          sizeLimit: 500Mi
+    volumes:
+      - name: plugins
+        mountPath: /usr/local/bin/plugins-storage
+        readOnly: false
