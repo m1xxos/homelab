@@ -6,7 +6,7 @@ terraform {
     }
     cloudflare = {
       source  = "cloudflare/cloudflare"
-      version = "4.28.0"
+      version = "4.34.0"
     }
     nginxproxymanager = {
       source  = "Sander0542/nginxproxymanager"
