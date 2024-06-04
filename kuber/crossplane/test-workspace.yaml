@@ -2,22 +2,32 @@ apiVersion: tf.upbound.io/v1beta1
 kind: Workspace
 metadata:
   name: example-inline
+  namespace: crossplane-system
   annotations:
     crossplane.io/external-name: coolbucket
 spec:
   forProvider:
     source: Inline
     module: |
-      resource "proxmox_vm_qemu" "template_vm" {
-      name        = "test"
-      vmid        = 1228
-      target_node = "pve"
-      desc        = "testtest"
-      qemu_os     = "l26"
+      resource "proxmox_vm_qemu" "test_vm" {
+        name        = "test"
+        vmid        = 1228
+        target_node = "pve"
+        desc        = "testtest"
+        qemu_os     = "l26"
 
+        clone = "ubuntu-server-mantic"
 
-      clone = "ubuntu-server-mantic"
-
+        disks {
+          virtio {
+            virtio0 {
+              disk {
+                storage = "pve-nvme"
+                size    = 20
+              }
+            }
+          }
+        }
       }
   writeConnectionSecretToRef:
     namespace: default
