@@ -16,6 +16,9 @@ spec:
         desc        = "testtest"
         qemu_os     = "l26"
 
+        cores       = 4
+        memory      = 2048
+
         clone = "ubuntu-server-mantic"
 
         disks {
