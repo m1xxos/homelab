@@ -1,0 +1,24 @@
+apiVersion: tf.upbound.io/v1beta1
+kind: Workspace
+metadata:
+  name: example-inline
+  annotations:
+    crossplane.io/external-name: coolbucket
+spec:
+  forProvider:
+    source: Inline
+    module: |
+      resource "proxmox_vm_qemu" "template_vm" {
+      name        = "test"
+      vmid        = 1228
+      target_node = "pve"
+      desc        = "testtest"
+      qemu_os     = "l26"
+
+
+      clone = "ubuntu-server-mantic"
+
+      }
+  writeConnectionSecretToRef:
+    namespace: default
+    name: terraform-workspace-example-inline

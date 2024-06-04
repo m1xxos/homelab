@@ -1,0 +1,55 @@
+apiVersion: tf.upbound.io/v1beta1
+kind: ProviderConfig
+metadata:
+  name: default
+spec:
+  credentials:
+      - filename: proxmox.auto.tfvars
+        source: Secret
+        secretRef:
+          namespace: crossplane-system
+          name: tf-creds
+          key: proxmox.auto.tfvars
+      - filename: .terraformrc
+        secretRef:
+          key: .terraformrc
+          name: terraformrc
+          namespace: crossplane-system
+        source: Secret
+
+
+  configuration: |
+    terraform {
+      required_providers {
+        proxmox = {
+          source = "Telmate/proxmox"
+          version = "3.0.1-rc1"
+        }
+      }
+      
+      backend "kubernetes" {
+        secret_suffix     = "providerconfig-test"
+        namespace         = "crossplane-system"
+        in_cluster_config = true
+      }
+    }
+    provider "proxmox" {
+      pm_api_url          = var.proxmox_api_url
+      pm_api_token_id     = var.proxmox_api_token_id
+      pm_api_token_secret = var.proxmox_api_token_secret
+
+    }
+    variable "proxmox_api_url" {
+      type = string
+    }
+
+    variable "proxmox_api_token_id" {
+      type      = string
+      sensitive = true
+    }
+
+    variable "proxmox_api_token_secret" {
+      type      = string
+      sensitive = true
+    }
+
