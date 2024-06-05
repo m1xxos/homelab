@@ -26,10 +26,21 @@ resource "proxmox_vm_qemu" "template_vm" {
         }
       }
     }
+    ide {
+      ide2 {
+        cdrom {
+          passthrough = false
+        }
+      }
+      ide3 {
+        cloudinit {
+          storage  = "local-lvm"
+        }
+      }
+    }
   }
 
   os_type                 = "cloud-init"
-  cloudinit_cdrom_storage = "local-lvm"
 
   network {
     bridge = "vmbr0"
