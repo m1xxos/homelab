@@ -17,7 +17,7 @@ spec:
         qemu_os     = "l26"
 
         cores       = 4
-        memory      = 2048
+        memory      = 4096
 
         clone = "ubuntu-server-mantic"
 
