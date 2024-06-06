@@ -19,7 +19,7 @@ spec:
         cores       = 4
         memory      = 4096
 
-        clone = "ubuntu-server-mantic"
+        clone = "ubuntu-server-noble"
 
         disks {
           virtio {
