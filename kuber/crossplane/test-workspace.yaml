@@ -7,6 +7,8 @@ metadata:
     crossplane.io/external-name: coolbucket
 spec:
   forProvider:
+    initArgs:
+      - -upgrade=true
     source: Inline
     module: |
       resource "proxmox_vm_qemu" "test_vm" {
