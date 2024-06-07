@@ -20,6 +20,7 @@ spec:
 
         cores       = 4
         memory      = 4096
+        agent       = 1
 
         clone = "ubuntu-server-noble"
 
