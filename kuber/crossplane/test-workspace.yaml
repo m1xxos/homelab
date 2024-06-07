@@ -7,6 +7,8 @@ metadata:
     crossplane.io/external-name: coolbucket
 spec:
   forProvider:
+    initArgs:
+      - -upgrade=true
     source: Inline
     module: |
       resource "proxmox_vm_qemu" "test_vm" {
@@ -18,8 +20,9 @@ spec:
 
         cores       = 4
         memory      = 4096
+        agent       = 1
 
-        clone = "ubuntu-server-mantic"
+        clone = "ubuntu-server-noble"
 
         disks {
           virtio {
@@ -30,7 +33,27 @@ spec:
               }
             }
           }
+          ide {
+            ide2 {
+              cdrom {
+                passthrough = false
+              }
+            }
+            ide3 {
+              cloudinit {
+                storage  = "local-lvm"
+              }
+            }
+          }
         }
+        os_type                 = "cloud-init"
+
+        network {
+          bridge = "vmbr0"
+          model  = "virtio"
+        }
+
+        ipconfig0 = "ip=dhcp"
       }
   writeConnectionSecretToRef:
     namespace: default

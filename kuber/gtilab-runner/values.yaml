@@ -1,3 +1,6 @@
 gitlabUrl: https://gitlab.local.m1xxos.me
 
 runnerToken: "glrt-nByyZDbjB-T-LsHcPGeP"
+
+rbac:
+  create: true
