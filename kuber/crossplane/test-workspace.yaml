@@ -30,7 +30,27 @@ spec:
               }
             }
           }
+          ide {
+            ide2 {
+              cdrom {
+                passthrough = false
+              }
+            }
+            ide3 {
+              cloudinit {
+                storage  = "local-lvm"
+              }
+            }
+          }
         }
+        os_type                 = "cloud-init"
+
+        network {
+          bridge = "vmbr0"
+          model  = "virtio"
+        }
+
+        ipconfig0 = "ip=dhcp"
       }
   writeConnectionSecretToRef:
     namespace: default
