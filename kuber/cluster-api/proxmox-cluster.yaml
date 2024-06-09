@@ -1,7 +1,7 @@
 apiVersion: cluster.x-k8s.io/v1beta1
 kind: Cluster
 metadata:
-  name: capi-quickstart
+  name: proxmox
   namespace: capi-system
 spec:
   clusterNetwork:
@@ -11,18 +11,20 @@ spec:
   controlPlaneRef:
     apiVersion: controlplane.cluster.x-k8s.io/v1beta1
     kind: KubeadmControlPlane
-    name: capi-quickstart-control-plane
+    name: proxmox-control-plane
   infrastructureRef:
     apiVersion: infrastructure.cluster.x-k8s.io/v1alpha1
     kind: ProxmoxCluster
-    name: capi-quickstart
+    name: proxmox
 ---
 apiVersion: infrastructure.cluster.x-k8s.io/v1alpha1
 kind: ProxmoxCluster
 metadata:
-  name: capi-quickstart
+  name: proxmox
   namespace: capi-system
 spec:
+  schedulerHints:
+    memoryAdjustment: 0
   allowedNodes:
   - pve
   controlPlaneEndpoint:
@@ -30,16 +32,17 @@ spec:
     port: 6443
   dnsServers:
   - 1.1.1.1
+  - 1.1.0.0
   ipv4Config:
     addresses:
-    - 192.168.1.115-192.168.1.125
+    - 192.168.1.111-192.168.1.120
     gateway: 192.168.1.1
     prefix: 24
 ---
 apiVersion: controlplane.cluster.x-k8s.io/v1beta1
 kind: KubeadmControlPlane
 metadata:
-  name: capi-quickstart-control-plane
+  name: proxmox-control-plane
   namespace: capi-system
 spec:
   kubeadmConfigSpec:
@@ -166,14 +169,14 @@ spec:
     infrastructureRef:
       apiVersion: infrastructure.cluster.x-k8s.io/v1alpha1
       kind: ProxmoxMachineTemplate
-      name: capi-quickstart-control-plane
-  replicas: 3
-  version: v1.28.0
+      name: proxmox-control-plane
+  replicas: 1
+  version: v1.28.9
 ---
 apiVersion: infrastructure.cluster.x-k8s.io/v1alpha1
 kind: ProxmoxMachineTemplate
 metadata:
-  name: capi-quickstart-control-plane
+  name: proxmox-control-plane
   namespace: capi-system
 spec:
   template:
@@ -181,26 +184,26 @@ spec:
       disks:
         bootVolume:
           disk: scsi0
-          sizeGb: 100
+          sizeGb: 20
       format: qcow2
       full: true
-      memoryMiB: 16384
+      memoryMiB: 4096
       network:
         default:
-          bridge: vmbr1
+          bridge: vmbr0
           model: virtio
       numCores: 4
-      numSockets: 2
+      numSockets: 1
       sourceNode: pve
       templateID: 100
 ---
 apiVersion: cluster.x-k8s.io/v1beta1
 kind: MachineDeployment
 metadata:
-  name: capi-quickstart-workers
+  name: proxmox-workers
   namespace: capi-system
 spec:
-  clusterName: capi-quickstart
+  clusterName: proxmox
   replicas: 3
   selector:
     matchLabels: null
@@ -213,18 +216,18 @@ spec:
         configRef:
           apiVersion: bootstrap.cluster.x-k8s.io/v1beta1
           kind: KubeadmConfigTemplate
-          name: capi-quickstart-worker
-      clusterName: capi-quickstart
+          name: proxmox-worker
+      clusterName: proxmox
       infrastructureRef:
         apiVersion: infrastructure.cluster.x-k8s.io/v1alpha1
         kind: ProxmoxMachineTemplate
-        name: capi-quickstart-worker
-      version: v1.28.0
+        name: proxmox-worker
+      version: v1.28.9
 ---
 apiVersion: infrastructure.cluster.x-k8s.io/v1alpha1
 kind: ProxmoxMachineTemplate
 metadata:
-  name: capi-quickstart-worker
+  name: proxmox-worker
   namespace: capi-system
 spec:
   template:
@@ -232,23 +235,23 @@ spec:
       disks:
         bootVolume:
           disk: scsi0
-          sizeGb: 100
+          sizeGb: 20
       format: qcow2
       full: true
-      memoryMiB: 16384
+      memoryMiB: 4096
       network:
         default:
-          bridge: vmbr1
+          bridge: vmbr0
           model: virtio
       numCores: 4
-      numSockets: 2
+      numSockets: 1
       sourceNode: pve
       templateID: 100
 ---
 apiVersion: bootstrap.cluster.x-k8s.io/v1beta1
 kind: KubeadmConfigTemplate
 metadata:
-  name: capi-quickstart-worker
+  name: proxmox-worker
   namespace: capi-system
 spec:
   template:
