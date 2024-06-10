@@ -1,0 +1,24 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: dev-cluster
+  namespace: argocd
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+spec:
+  destination:
+    namespace: dev-cluster
+    server: {{ .Values.spec.destination.server }}
+  project: default
+  sources:
+    path: kuber/cluster-chart
+    repoURL: {{ .Values.spec.source.repoURL }}
+    targetRevision: {{ .Values.spec.source.targetRevision }}
+    helm:
+    valueFiles:
+      - /argo-apps/values/dev-chart-values.yaml
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
