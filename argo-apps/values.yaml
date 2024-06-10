@@ -3,4 +3,4 @@ spec:
     server: https://kubernetes.default.svc
   source:
     repoURL: https://github.com/m1xxos/homelab
-    targetRevision: 38-ubuntu-24
+    targetRevision: 40-simple-k8s-cluster-creation
