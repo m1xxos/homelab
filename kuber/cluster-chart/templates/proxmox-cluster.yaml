@@ -1,0 +1,147 @@
+apiVersion: infrastructure.cluster.x-k8s.io/v1alpha1
+kind: ProxmoxCluster
+metadata:
+  name: {{ .Values.name }}
+spec:
+  # memory fix
+  schedulerHints:
+    memoryAdjustment: 0
+  allowedNodes:
+    - pve
+  controlPlaneEndpoint:
+    host: {{ .Values.network.host }}
+    port: 6443
+  dnsServers:
+  - 1.1.1.1
+  - 1.1.0.0
+  ipv4Config:
+    addresses:
+      {{ .Values.network.addresses | toYaml }}
+    gateway: {{ .Values.network.gateway }}
+    prefix: {{ .Values.network.prefix }}
+---
+apiVersion: controlplane.cluster.x-k8s.io/v1beta1
+kind: KubeadmControlPlane
+metadata:
+  name: {{ .Values.name }}-control-plane
+spec:
+  kubeadmConfigSpec:
+    files:
+    - content: |
+        {{ .Files.Get "configs/controll-plane.yaml" | indent 8 }}
+      owner: root:root
+      path: /etc/kubernetes/manifests/kube-vip.yaml
+    - content: |
+        {{ .Files.Get "configs/kuber.sh" | indent 8 }}
+      owner: root:root
+      path: /etc/kube-vip-prepare.sh
+      permissions: "0700"
+    initConfiguration:
+      nodeRegistration:
+        kubeletExtraArgs:
+          provider-id: proxmox://{{`'{{ ds.meta_data.instance_id }}'`}}
+    joinConfiguration:
+      nodeRegistration:
+        kubeletExtraArgs:
+          provider-id: proxmox://{{`'{{ ds.meta_data.instance_id }}'`}}
+    preKubeadmCommands:
+    - /etc/kube-vip-prepare.sh
+    users:
+    - name: root
+      sshAuthorizedKeys:
+      {{ .Values.user.sshAuthorizedKeys | toYaml | indent 6 }}
+  machineTemplate:
+    infrastructureRef:
+      apiVersion: infrastructure.cluster.x-k8s.io/v1alpha1
+      kind: ProxmoxMachineTemplate
+      name: {{ .Values.name }}-control-plane
+  replicas: {{ .Values.controlPlane.replicas }}
+  version: {{ .Values.version }}
+---
+apiVersion: infrastructure.cluster.x-k8s.io/v1alpha1
+kind: ProxmoxMachineTemplate
+metadata:
+  name: {{ .Values.name }}-control-plane
+spec:
+  template:
+    spec:
+      disks:
+        bootVolume:
+          disk: {{ .Values.machineTemplate.disk }}
+          sizeGb: {{ .Values.machineTemplate.sizeGb }}
+      format: qcow2
+      full: true
+      memoryMiB: {{ .Values.machineTemplate.memoryMiB }}
+      network:
+        default:
+          bridge: {{ .Values.machineTemplate.bridge }}
+          model: virtio
+      numCores: {{ .Values.machineTemplate.numCores }}
+      numSockets: {{ .Values.machineTemplate.numSockets }}
+      sourceNode: {{ .Values.machineTemplate.sourceNode }}
+      templateID: {{ .Values.machineTemplate.templateID }}
+---
+apiVersion: cluster.x-k8s.io/v1beta1
+kind: MachineDeployment
+metadata:
+  name: {{ .Values.name }}-workers
+spec:
+  clusterName: {{ .Values.name }}
+  replicas: {{ .Values.worker.replicas }}
+  selector:
+    matchLabels: null
+  template:
+    metadata:
+      labels:
+        node-role.kubernetes.io/node: ""
+    spec:
+      bootstrap:
+        configRef:
+          apiVersion: bootstrap.cluster.x-k8s.io/v1beta1
+          kind: KubeadmConfigTemplate
+          name: {{ .Values.name }}-worker
+      clusterName: {{ .Values.name }}
+      infrastructureRef:
+        apiVersion: infrastructure.cluster.x-k8s.io/v1alpha1
+        kind: ProxmoxMachineTemplate
+        name: {{ .Values.name }}-worker
+      version: {{ .Values.version }}
+---
+apiVersion: infrastructure.cluster.x-k8s.io/v1alpha1
+kind: ProxmoxMachineTemplate
+metadata:
+  name: {{ .Values.name }}-worker
+spec:
+  template:
+    spec:
+      disks:
+        bootVolume:
+          disk: {{ .Values.machineTemplate.disk }}
+          sizeGb: {{ .Values.machineTemplate.sizeGb }}
+      format: qcow2
+      full: true
+      memoryMiB: {{ .Values.machineTemplate.memoryMiB }}
+      network:
+        default:
+          bridge: {{ .Values.machineTemplate.bridge }}
+          model: virtio
+      numCores: {{ .Values.machineTemplate.numCores }}
+      numSockets: {{ .Values.machineTemplate.numSockets }}
+      sourceNode: {{ .Values.machineTemplate.sourceNode }}
+      templateID: {{ .Values.machineTemplate.templateID }}
+---
+apiVersion: bootstrap.cluster.x-k8s.io/v1beta1
+kind: KubeadmConfigTemplate
+metadata:
+  name: {{ .Values.name }}-worker
+spec:
+  template:
+    spec:
+      joinConfiguration:
+        nodeRegistration:
+          kubeletExtraArgs:
+            provider-id: proxmox://{{`'{{ ds.meta_data.instance_id }}'`}} 
+      users:
+      - name: root
+        sshAuthorizedKeys:
+        {{ .Values.user.sshAuthorizedKeys | toYaml | indent 8 }}

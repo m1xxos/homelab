@@ -23,8 +23,10 @@ metadata:
   name: proxmox
   namespace: capi-system
 spec:
+  # memory fix
   schedulerHints:
     memoryAdjustment: 0
+    
   allowedNodes:
   - pve
   controlPlaneEndpoint:
