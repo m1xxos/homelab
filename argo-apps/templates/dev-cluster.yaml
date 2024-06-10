@@ -15,8 +15,8 @@ spec:
     repoURL: {{ .Values.spec.source.repoURL }}
     targetRevision: {{ .Values.spec.source.targetRevision }}
     helm:
-    valueFiles:
-      - /argo-apps/values/dev-chart-values.yaml
+      valueFiles:
+        - /argo-apps/values/dev-chart-values.yaml
 
   syncPolicy:
     automated:
