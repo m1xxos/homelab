@@ -11,15 +11,15 @@ spec:
     server: {{ .Values.spec.destination.devServer }}
   project: default
   source:
-    - chart: traefik
-      repoURL: https://traefik.github.io/charts
-      targetRevision: 28.2.0
-      helm:
-        valuesObject:
-          ports:
-            web:
-              redirectTo:
-                port: websecure
+    chart: traefik
+    repoURL: https://traefik.github.io/charts
+    targetRevision: 28.2.0
+    helm:
+    valuesObject:
+        ports:
+        web:
+            redirectTo:
+            port: websecure
 
 
   syncPolicy:
