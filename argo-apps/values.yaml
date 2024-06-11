@@ -1,6 +1,7 @@
 spec:
   destination:
     server: https://kubernetes.default.svc
+    dev-server: https://192.168.1.110:6443
   source:
     repoURL: https://github.com/m1xxos/homelab
     targetRevision: 40-simple-k8s-cluster-creation
