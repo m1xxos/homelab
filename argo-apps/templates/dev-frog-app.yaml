@@ -8,7 +8,7 @@ metadata:
 spec:
   destination:
     namespace: argocd
-    server: {{ .Values.spec.destination.dev-server }}
+    server: {{ .Values.spec.destination.devServer }}
   project: default
   source:
     path: kuber/frog-app
