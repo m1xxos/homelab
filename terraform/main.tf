@@ -99,6 +99,9 @@ module "proxmox-nginx-proxy" {
 module "proxmox-portainer" {
   source = "./proxmox-vm-module"
 
+  onboot   = false
+  vm_state = "stopped"
+
   vmid      = 1150
   cores     = 6
   memory    = 10240

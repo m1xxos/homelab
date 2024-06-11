@@ -1,3 +1,4 @@
 tests/
 k3s-ansible
 .vscode
+*.kubeconfig
