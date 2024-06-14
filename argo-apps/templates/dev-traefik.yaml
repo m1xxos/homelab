@@ -19,6 +19,8 @@ spec:
         logs:
           general:
             level: DEBUG
+          access:
+            enable: true
     #     ports:
     #     web:
     #         redirectTo:
