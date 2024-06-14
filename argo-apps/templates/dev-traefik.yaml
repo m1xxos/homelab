@@ -14,8 +14,10 @@ spec:
     chart: traefik
     repoURL: https://traefik.github.io/charts
     targetRevision: 28.2.0
-    # helm:
-    # valuesObject:
+    helm:
+      valuesObject:
+        logs:
+          level: DEBUG
     #     ports:
     #     web:
     #         redirectTo:
