@@ -33,7 +33,7 @@ resource "nginxproxymanager_proxy_host" "k3s_proxy" {
 
 resource "nginxproxymanager_proxy_host" "dev_kuber_proxy" {
   domain_names            = ["*.dev.local.m1xxos.me"]
-  forward_host            = "192.168.1.110"
+  forward_host            = "192.168.10.0"
   forward_port            = 443
   forward_scheme          = "https"
   allow_websocket_upgrade = true
