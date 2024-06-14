@@ -5,4 +5,4 @@ spec:
 
   source:
     repoURL: https://github.com/m1xxos/homelab
-    targetRevision: 40-simple-k8s-cluster-creation
+    targetRevision: 43-cluster-api-auto-traefik-and-lb
