@@ -17,3 +17,11 @@ resource "cloudflare_record" "traefik" {
   type    = "CNAME"
   ttl     = 3600
 }
+
+resource "cloudflare_record" "test" {
+  zone_id = var.cloudflare_zone_id
+  name    = "test.m1xxos.me"
+  value   = "192.168.1.10"
+  type    = "A"
+  ttl     = 3600
+}
