@@ -38,7 +38,10 @@ resource "nginxproxymanager_proxy_host" "dev_kuber_proxy" {
   forward_scheme          = "http"
   allow_websocket_upgrade = true
   block_exploits          = true
-  ssl_forced              = false
+  ssl_forced              = true
+  http2_support           = true
+  hsts_enabled            = true
+  certificate_id          = 4
 
 }
 

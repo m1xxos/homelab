@@ -14,12 +14,12 @@ spec:
     chart: traefik
     repoURL: https://traefik.github.io/charts
     targetRevision: 28.2.0
-    helm:
-    valuesObject:
-        ports:
-        web:
-            redirectTo:
-            port: websecure
+    # helm:
+    # valuesObject:
+    #     ports:
+    #     web:
+    #         redirectTo:
+    #         port: websecure
 
 
   syncPolicy:
