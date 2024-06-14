@@ -17,7 +17,8 @@ spec:
     helm:
       valuesObject:
         logs:
-          level: DEBUG
+          general:
+            level: DEBUG
     #     ports:
     #     web:
     #         redirectTo:
