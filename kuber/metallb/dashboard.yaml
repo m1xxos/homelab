@@ -18,7 +18,7 @@ apiVersion: traefik.io/v1alpha1
 kind: IngressRoute
 metadata:
   name: guestbook-ui
-  namespace: argocd
+  namespace: default
 spec:
   entryPoints:
     - websecure
@@ -28,4 +28,3 @@ spec:
       kind: Rule
       services:
         - name: guestbook-ui
-          namespace: argocd
