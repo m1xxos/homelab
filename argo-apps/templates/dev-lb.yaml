@@ -1,27 +1,27 @@
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: dev-lb
-  namespace: argocd
-  finalizers:
-  - resources-finalizer.argocd.argoproj.io
-spec:
-  destination:
-    namespace: metallb-system
-    server: {{ .Values.spec.destination.devServer }}
-  project: default
-  sources:
-    - chart: metallb
-      repoURL: https://metallb.github.io/metallb
-      targetRevision: 0.14.5
+# apiVersion: argoproj.io/v1alpha1
+# kind: Application
+# metadata:
+#   name: dev-lb
+#   namespace: argocd
+#   finalizers:
+#   - resources-finalizer.argocd.argoproj.io
+# spec:
+#   destination:
+#     namespace: metallb-system
+#     server: {{ .Values.spec.destination.devServer }}
+#   project: default
+#   sources:
+#     - chart: metallb
+#       repoURL: https://metallb.github.io/metallb
+#       targetRevision: 0.14.5
     
-    - repoURL: {{ .Values.spec.source.repoURL }}
-      targetRevision: {{ .Values.spec.source.targetRevision }}
-      path: kuber/metallb
+#     - repoURL: {{ .Values.spec.source.repoURL }}
+#       targetRevision: {{ .Values.spec.source.targetRevision }}
+#       path: kuber/metallb
       
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
-    syncOptions:
-      - CreateNamespace=true
+#   syncPolicy:
+#     automated:
+#       prune: true
+#       selfHeal: true
+#     syncOptions:
+#       - CreateNamespace=true
