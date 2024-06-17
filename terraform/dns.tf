@@ -17,3 +17,11 @@ resource "cloudflare_record" "traefik" {
   type    = "CNAME"
   ttl     = 3600
 }
+
+resource "cloudflare_record" "traefik-dev" {
+  zone_id = var.cloudflare_zone_id
+  name    = "*.dev"
+  value   = local.local_name
+  type    = "CNAME"
+  ttl     = 3600
+}
