@@ -32,16 +32,17 @@ resource "nginxproxymanager_proxy_host" "k3s_proxy" {
 }
 
 resource "nginxproxymanager_proxy_host" "dev_kuber_proxy" {
-  domain_names            = ["*.dev.local.m1xxos.me"]
-  forward_host            = "192.168.1.110"
-  forward_port            = 443
-  forward_scheme          = "https"
+  domain_names            = ["*.dev.m1xxos.me"]
+  forward_host            = "192.168.1.115"
+  forward_port            = 80
+  forward_scheme          = "http"
   allow_websocket_upgrade = true
   block_exploits          = true
-  ssl_forced              = true
-  http2_support           = true
-  hsts_enabled            = true
-  certificate_id          = 1
+  # ssl_forced              = true
+  # http2_support           = true
+  # hsts_enabled            = true
+  # certificate_id          = 4
+
 }
 
 resource "nginxproxymanager_proxy_host" "tunnel_proxmox_proxy" {

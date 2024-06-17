@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: dev-traefik
+  name: traefik
   namespace: argocd
   finalizers:
   - resources-finalizer.argocd.argoproj.io
@@ -15,11 +15,16 @@ spec:
     repoURL: https://traefik.github.io/charts
     targetRevision: 28.2.0
     helm:
-    valuesObject:
-        ports:
-        web:
-            redirectTo:
-            port: websecure
+      valuesObject:
+        logs:
+          general:
+            level: DEBUG
+          access:
+            enable: true
+    #     ports:
+    #     web:
+    #         redirectTo:
+    #         port: websecure
 
 
   syncPolicy:
