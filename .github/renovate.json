@@ -7,6 +7,6 @@
     "fileMatch": ["\\.yaml$", "\\.yml$"]
   },
   "argocd": {
-    "fileMatch": ["argo-apps/\\.yaml$"]
+    "fileMatch": ["argo-apps/.+\\.yaml$"]
   }
 }
