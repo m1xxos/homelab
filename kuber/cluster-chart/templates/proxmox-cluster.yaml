@@ -48,9 +48,9 @@ spec:
       joinTokenTTLInSecs: 900000
       addons:
         - dns
-        - cert-manager
-        - metrics-server
-        - metallb
+        # - cert-manager
+        # - metrics-server
+        # - metallb
     clusterConfiguration:
       portCompatibilityRemap: true
   machineTemplate:
