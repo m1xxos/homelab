@@ -54,7 +54,7 @@ spec:
     clusterConfiguration:
       portCompatibilityRemap: true
   machineTemplate:
-    infrastructureRef:
+    infrastructureTemplate:
       apiVersion: infrastructure.cluster.x-k8s.io/v1alpha1
       kind: ProxmoxMachineTemplate
       name: {{ .Values.name }}-control-plane
