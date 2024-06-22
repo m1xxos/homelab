@@ -5,4 +5,4 @@ spec:
 
   source:
     repoURL: https://github.com/m1xxos/homelab
-    targetRevision: 43-cluster-api-auto-traefik-and-lb
+    targetRevision: main
