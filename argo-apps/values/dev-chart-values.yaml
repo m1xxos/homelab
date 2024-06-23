@@ -16,11 +16,11 @@ worker:
   replicas: 1
 
 machineTemplate:
-  disk: virio0
+  disk: scsi0
   sizeGb: 20
   memoryMiB: 4096
   bridge: vmbr0
   numCores: 4
   numSockets: 1
   sourceNode: pve
-  templateID: 106
+  templateID: 100
