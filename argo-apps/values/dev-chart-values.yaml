@@ -16,7 +16,7 @@ worker:
   replicas: 1
 
 machineTemplate:
-  disk: scsi0
+  disk: virio0
   sizeGb: 20
   memoryMiB: 4096
   bridge: vmbr0
