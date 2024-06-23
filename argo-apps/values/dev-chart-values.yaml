@@ -23,4 +23,4 @@ machineTemplate:
   numCores: 4
   numSockets: 1
   sourceNode: pve
-  templateID: 105
+  templateID: 106
