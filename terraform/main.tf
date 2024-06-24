@@ -87,7 +87,7 @@ module "proxmox-nginx-proxy" {
 
   vmid      = 1100
   cores     = 4
-  memory    = 4096
+  memory    = 6144
   name      = "nginx-proxy-0"
   desc      = "proxy"
   ipconfig0 = "ip=192.168.1.250/24,gw=192.168.1.1"
