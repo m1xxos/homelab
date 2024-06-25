@@ -7,7 +7,7 @@ resource "proxmox_vm_qemu" "maas_vms" {
   vmid        = 1130 + count.index
   target_node = "pve"
   agent       = 0
-  boot        = "order=scsi0;net0"
+  boot        = "order=net0"
   pxe         = true
 
   cores   = 4
@@ -21,4 +21,5 @@ resource "proxmox_vm_qemu" "maas_vms" {
     model     = "e1000"
   }
 
+  vm_state = "stopped"
 }
