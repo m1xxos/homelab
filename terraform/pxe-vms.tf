@@ -19,6 +19,7 @@ resource "proxmox_vm_qemu" "maas_vms" {
     firewall  = false
     link_down = false
     model     = "e1000"
+    tag       = 10
   }
 
   disks {

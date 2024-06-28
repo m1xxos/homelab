@@ -82,19 +82,6 @@ module "proxmox-lb" {
   tags      = each.value
 }
 
-module "proxmox-nginx-proxy" {
-  source = "./proxmox-vm-module"
-
-  vmid      = 1100
-  cores     = 4
-  memory    = 6144
-  name      = "nginx-proxy-0"
-  desc      = "proxy"
-  ipconfig0 = "ip=192.168.1.250/24,gw=192.168.1.1"
-  tags      = "nginx"
-  size      = 60
-
-}
 
 module "proxmox-portainer" {
   source = "./proxmox-vm-module"
