@@ -1,0 +1,106 @@
+apiVersion: cluster.x-k8s.io/v1beta1
+kind: Cluster
+metadata:
+  name: microk8s-maas
+  namespace: dev-cluster
+spec:
+  controlPlaneRef:
+    apiVersion: controlplane.cluster.x-k8s.io/v1beta1
+    kind: MicroK8sControlPlane
+    name: microk8s-maas-control-plane
+  infrastructureRef:
+    apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
+    kind: MaasCluster
+    name: microk8s-maas
+---
+apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
+kind: MaasCluster
+metadata:
+  name: microk8s-maas
+  namespace: dev-cluster
+spec:
+  dnsDomain: maas
+---
+apiVersion: controlplane.cluster.x-k8s.io/v1beta1
+kind: MicroK8sControlPlane
+metadata:
+  name: microk8s-maas-control-plane
+  namespace: dev-cluster
+spec:
+  controlPlaneConfig:
+    clusterConfiguration:
+      portCompatibilityRemap: true
+    initConfiguration:
+      IPinIP: true
+      addons:
+      - dns
+      - ingress
+      joinTokenTTLInSecs: 9000
+  machineTemplate:
+    infrastructureTemplate:
+      apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
+      kind: MaasMachineTemplate
+      name: microk8s-maas-control-plane
+  replicas: 1
+  version: v1.27.0
+---
+apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
+kind: MaasMachineTemplate
+metadata:
+  name: microk8s-maas-control-plane
+  namespace: dev-cluster
+spec:
+  template:
+    spec:
+      image: u-2204-k-1261-0
+      minCPU: 1
+      minMemory: 2048
+      resourcePool: null
+      tags: []
+---
+apiVersion: cluster.x-k8s.io/v1beta1
+kind: MachineDeployment
+metadata:
+  name: microk8s-maas-md-0
+  namespace: dev-cluster
+spec:
+  clusterName: microk8s-maas
+  replicas: 1
+  selector:
+    matchLabels: null
+  template:
+    spec:
+      bootstrap:
+        configRef:
+          apiVersion: bootstrap.cluster.x-k8s.io/v1beta1
+          kind: MicroK8sConfigTemplate
+          name: microk8s-maas-md-0
+      clusterName: microk8s-maas
+      infrastructureRef:
+        apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
+        kind: MaasMachineTemplate
+        name: microk8s-maas-md-0
+      version: 1.27.0
+---
+apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
+kind: MaasMachineTemplate
+metadata:
+  name: microk8s-maas-md-0
+  namespace: dev-cluster
+spec:
+  template:
+    spec:
+      image: u-2204-k-1261-0
+      minCPU: 1
+      minMemory: 2048
+      resourcePool: null
+      tags: []
+---
+apiVersion: bootstrap.cluster.x-k8s.io/v1beta1
+kind: MicroK8sConfigTemplate
+metadata:
+  name: microk8s-maas-md-0
+  namespace: dev-cluster
+spec:
+  template:
+    spec: {}

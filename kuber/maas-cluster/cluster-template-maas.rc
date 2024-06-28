@@ -1,0 +1,29 @@
+# MAAS access endpoint and key
+export MAAS_API_KEY=FbNhGauwAhQqN6rqRU:BbX6ZcXnGxLxaHs6SR:LPfEdNACkcvNrM4e54fytR56PcAfuxsN
+export MAAS_ENDPOINT=http://192.168.1.250:5240/MAAS
+
+# Kubernetes cluster configuration
+export KUBERNETES_VERSION=1.27.0
+export CONTROL_PLANE_MACHINE_COUNT=1
+export WORKER_MACHINE_COUNT=1
+
+# MaaS domain to use
+export MAAS_DNS_DOMAIN="maas"
+
+# Control plane machine configuration
+export CONTROL_PLANE_MACHINE_MINCPU="1"
+export CONTROL_PLANE_MACHINE_MINMEMORY="2048"
+export CONTROL_PLANE_MACHINE_IMAGE="u-2204-k-1261-0"
+
+# Worker machine configuration
+export WORKER_MACHINE_MINCPU="1"
+export WORKER_MACHINE_MINMEMORY="2048"
+export WORKER_MACHINE_IMAGE="u-2204-k-1261-0"
+
+# (optional) Configure resource pools for control plane and worker machines
+# export CONTROL_PLANE_MACHINE_RESOURCEPOOL="kvm-pool"
+# export WORKER_MACHINE_RESOURCEPOOL="bare-metal-pool"
+
+# (optional) Configure (comma-separated) tags for control plane and worker machines
+# export CONTROL_PLANE_MACHINE_TAGS="control-plane,controller"
+# export WORKER_MACHINE_TAGS="worker,compute"
