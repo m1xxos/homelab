@@ -15,11 +15,10 @@ resource "proxmox_vm_qemu" "maas_vms" {
   memory  = 4096
 
   network {
-    bridge    = "vmbr0"
+    bridge    = "vmbr10"
     firewall  = false
     link_down = false
     model     = "e1000"
-    tag       = 10
   }
 
   disks {

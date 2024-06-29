@@ -48,12 +48,12 @@ resource "proxmox_vm_qemu" "proxy-vm" {
   }
 
   network {
-    bridge = "vmbr0"
+    bridge = "vmbr10"
     model  = "virtio"
-    tag    = 10
   }
 
   ipconfig0 = "ip=192.168.1.250/24,gw=192.168.1.1"
+  ipconfig1 = "ip=192.168.1.249/24,gw=192.168.1.1"
 
   tags = "nginx"
 
