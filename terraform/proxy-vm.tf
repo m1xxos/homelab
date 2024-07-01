@@ -53,7 +53,7 @@ resource "proxmox_vm_qemu" "proxy-vm" {
   }
 
   ipconfig0 = "ip=192.168.1.250/24,gw=192.168.1.1"
-  ipconfig1 = "ip=192.168.1.249/24,gw=192.168.1.1"
+  ipconfig1 = "ip=192.168.10.249/24,gw=192.168.1.1"
 
   tags = "nginx"
 
