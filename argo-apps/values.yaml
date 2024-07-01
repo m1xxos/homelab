@@ -5,4 +5,4 @@ spec:
 
   source:
     repoURL: https://github.com/m1xxos/homelab
-    targetRevision: main
+    targetRevision: 56-microk8s-cluster

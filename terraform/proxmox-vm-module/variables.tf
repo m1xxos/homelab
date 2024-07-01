@@ -61,3 +61,8 @@ variable "vm_state" {
   type = string
   default = "running"
 }
+
+variable "vlan" {
+  type = bool
+  default = false
+}

@@ -1,0 +1,19 @@
+# MAAS access endpoint and key
+export MAAS_API_KEY=kx8dxezjWJvq2EnuBq:agNNecrH5tbb7JLDcM:uLcxzXz6bUVZTtUyvWjGQZ9dhKPcDqJe
+export MAAS_ENDPOINT=http://192.168.1.250:5240/MAAS
+export MAAS_DNS_DOMAIN=maas
+
+# Cluster configuration
+export KUBERNETES_VERSION=v1.26.1
+export CONTROL_PLANE_MACHINE_IMAGE=custom/u-2204-0-k-1261-0
+export CONTROL_PLANE_MACHINE_MINCPU=1
+export CONTROL_PLANE_MACHINE_MINMEMORY=2048
+export WORKER_MACHINE_IMAGE=custom/u-2204-0-k-1261-0
+export WORKER_MACHINE_MINCPU=1
+export WORKER_MACHINE_MINMEMORY=2048
+
+# Selecting machine based on resourcepool (optional) and machine tag (optional)
+export CONTROL_PLANE_MACHINE_RESOURCEPOOL=default
+export CONTROL_PLANE_MACHINE_TAG=hello-world
+export WORKER_MACHINE_RESOURCEPOOL=default
+export WORKER_MACHINE_TAG=hello-world
