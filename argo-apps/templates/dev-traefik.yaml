@@ -13,7 +13,7 @@ spec:
   source:
     chart: traefik
     repoURL: https://traefik.github.io/charts
-    targetRevision: 28.3.0
+    targetRevision: 29.0.1
     helm:
       valuesObject:
         logs:
