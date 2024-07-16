@@ -1,5 +1,6 @@
 - name: LoadBalancer configuration
-  hosts: grouplb
+  hosts: grouphome
+  become: true
   vars:
     docker_users:
       - m1xxos

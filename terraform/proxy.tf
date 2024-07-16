@@ -60,7 +60,7 @@ resource "nginxproxymanager_proxy_host" "tunnel_proxmox_proxy" {
 
 resource "nginxproxymanager_proxy_host" "portainer_proxy" {
   domain_names            = ["portainer.local.m1xxos.me"]
-  forward_host            = "192.168.1.228"
+  forward_host            = "192.168.1.99"
   forward_port            = 9443
   forward_scheme          = "https"
   allow_websocket_upgrade = true
