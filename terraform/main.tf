@@ -94,7 +94,7 @@ module "proxmox-portainer" {
   memory    = 10240
   name      = "portainer-0"
   desc      = "portainer/gitlab"
-  ipconfig0 = "ip=192.168.1.228/24,gw=192.168.1.1"
+  ipconfig0 = "ip=192.168.2.228/24,gw=192.168.1.1"
   tags      = "portainer"
   size      = 60
 
