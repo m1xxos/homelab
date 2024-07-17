@@ -1,12 +1,12 @@
 ---
 services:
   jellyfin:
-    image: lscr.io/linuxserver/jellyfin:latest
+    image: lscr.io/linuxserver/jellyfin:10.9.7
     container_name: jellyfin
     environment:
       - PUID=1000
       - PGID=1000
-      - TZ=Etc/UTC
+      - TZ=Europe/Moscow
     volumes:
       - jellyfin-config:/config
       - tvseries:/data/tvshows
@@ -17,8 +17,22 @@ services:
       - 7359:7359/udp
       - 1900:1900/udp
     restart: unless-stopped
+  
+  jellyseerr:
+    image: fallenbagel/jellyseerr:1.9.2
+    container_name: jellyseerr
+    environment:
+      - LOG_LEVEL=debug
+      - TZ=Europe/Moscow
+      - PORT=5055 #optional
+    ports:
+      - 5055:5055
+    volumes:
+      - jellyseerr-config:/app/config
+    restart: unless-stopped
 
 volumes:
   jellyfin-config:
+  jellyseerr-config:
   tvseries:
   movies:
