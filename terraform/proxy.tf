@@ -96,3 +96,16 @@ resource "nginxproxymanager_proxy_host" "registry_proxy" {
   hsts_enabled            = true
   certificate_id          = 1
 }
+
+resource "nginxproxymanager_proxy_host" "jellyfin_proxy" {
+  domain_names            = ["jellyfin.local.m1xxos.me"]
+  forward_host            = "192.168.1.99"
+  forward_port            = 8096
+  forward_scheme          = "http"
+  allow_websocket_upgrade = true
+  block_exploits          = true
+  ssl_forced              = true
+  http2_support           = true
+  hsts_enabled            = true
+  certificate_id          = 1
+}

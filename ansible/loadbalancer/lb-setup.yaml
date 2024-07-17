@@ -7,7 +7,7 @@
   roles:
     - geerlingguy.docker
 - name: Keepalived setup
-  ansible.builtin.import_playbook: keepalived.yaml 
+  ansible.builtin.import_playbook: keepalived.yaml
 
 - name: Haproxy setup
-  ansible.builtin.import_playbook: haproxy-docker.yaml 
+  ansible.builtin.import_playbook: haproxy-docker.yaml
