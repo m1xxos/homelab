@@ -30,9 +30,26 @@ services:
     volumes:
       - jellyseerr-config:/app/config
     restart: unless-stopped
+  
+  radarr:
+    image: lscr.io/linuxserver/radarr:5.8.3
+    container_name: radarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Moscow
+    volumes:
+      - radarr-config:/config
+      - movies:/movies #optional
+      - downloads:/downloads #optional
+    ports:
+      - 7878:7878
+    restart: unless-stopped
 
 volumes:
   jellyfin-config:
   jellyseerr-config:
+  radarr-config:
   tvseries:
   movies:
+  downloads:
