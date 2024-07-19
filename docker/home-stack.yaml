@@ -66,14 +66,16 @@ services:
   prowlarr:
     image: lscr.io/linuxserver/prowlarr:1.20.1
     container_name: prowlarr
+    depends_on:
+      - openvpn
     environment:
       - PUID=1000
       - PGID=1000
       - TZ=Europe/Moscow
     volumes:
       - prowlarr-config:/config
-    ports:
-      - 9696:9696
+    # ports:
+    #   - 9696:9696
     network_mode: "service:vpn"
     restart: unless-stopped
   
