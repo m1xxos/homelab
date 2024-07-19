@@ -67,7 +67,7 @@ services:
     image: lscr.io/linuxserver/prowlarr:1.20.1
     container_name: prowlarr
     depends_on:
-      - openvpn
+      - vpn
     environment:
       - PUID=1000
       - PGID=1000
