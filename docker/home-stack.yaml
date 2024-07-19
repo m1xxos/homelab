@@ -125,6 +125,8 @@ services:
       - 'label:disable'
     devices:
       - '/dev/net/tun:/dev/net/tun'
+    dns:
+      - 9.9.9.9
     ports:
       - 7878:7878
       - 8989:8989
