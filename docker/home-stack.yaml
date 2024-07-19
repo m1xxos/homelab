@@ -110,7 +110,6 @@ services:
     container_name: vpn
     image: 'dperson/openvpn-client:latest'
     environment:
-      environment:
       - PUID=1030
       - PGID=100
       - TZ=Europe/Moscow
