@@ -46,8 +46,6 @@ services:
       - radarr-config:/config
       - movies:/movies #optional
       - downloads:/downloads #optional
-    expose:
-      - 7878
     network_mode: "service:vpn"
     restart: unless-stopped
 
@@ -64,8 +62,6 @@ services:
       - sonarr-config:/config
       - tvseries:/tv #optional
       - downloads:/downloads #optional
-    expose:
-      - 8989
     network_mode: "service:vpn"
     restart: unless-stopped
 
@@ -80,8 +76,6 @@ services:
       - TZ=Europe/Moscow
     volumes:
       - prowlarr-config:/config
-    expose:
-      - 9696
     network_mode: "service:vpn"
     restart: unless-stopped
   
