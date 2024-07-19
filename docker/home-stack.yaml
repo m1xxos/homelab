@@ -74,7 +74,7 @@ services:
       - prowlarr-config:/config
     ports:
       - 9696:9696
-    network_mode: "service:openvpn"
+    network_mode: "service:vpn"
     restart: unless-stopped
   
   flaresolverr:
