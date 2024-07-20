@@ -87,7 +87,7 @@ services:
       - PGID=1000
       - TZ=Europe/Moscow
     volumes:
-      - /home/m1xxos/settings.py:/app/settings.py
+      - /home/m1xxos/home/settings.py:/app/settings.py
       - searcharr-logs:/app/logs
       - searcharr-data:/app/data
     restart: unless-stopped
