@@ -1,0 +1,161 @@
+---
+services:
+  jellyfin:
+    image: lscr.io/linuxserver/jellyfin:10.9.7
+    container_name: jellyfin
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Moscow
+    volumes:
+      - jellyfin-config:/config
+      - tvseries:/data/tvshows
+      - movies:/data/movies
+    ports:
+      - 8096:8096
+      - 8920:8920
+      - 7359:7359/udp
+      - 1900:1900/udp
+    restart: unless-stopped
+  
+  jellyseerr:
+    image: fallenbagel/jellyseerr:1.9.2
+    container_name: jellyseerr
+    environment:
+      - LOG_LEVEL=debug
+      - TZ=Europe/Moscow
+      - PORT=5055 #optional
+    dns:
+      - 9.9.9.9
+    ports:
+      - 5055:5055
+    volumes:
+      - jellyseerr-config:/app/config
+    restart: unless-stopped
+  
+  radarr:
+    image: lscr.io/linuxserver/radarr:5.7.0
+    container_name: radarr
+    depends_on:
+      - vpn
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Moscow
+    volumes:
+      - radarr-config:/config
+      - movies:/movies #optional
+      - downloads:/downloads #optional
+    network_mode: "service:vpn"
+    restart: unless-stopped
+
+  sonarr:
+    image: lscr.io/linuxserver/sonarr:4.0.8
+    container_name: sonarr
+    depends_on:
+      - vpn
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Moscow
+    volumes:
+      - sonarr-config:/config
+      - tvseries:/tv #optional
+      - downloads:/downloads #optional
+    network_mode: "service:vpn"
+    restart: unless-stopped
+
+  prowlarr:
+    image: lscr.io/linuxserver/prowlarr:1.20.1
+    container_name: prowlarr
+    depends_on:
+      - vpn
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Moscow
+    volumes:
+      - prowlarr-config:/config
+    network_mode: "service:vpn"
+    restart: unless-stopped
+  
+  searcharr:
+    image: toddrob/searcharr:v3
+    container_name: searcharr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Moscow
+    volumes:
+      - /home/m1xxos/home/settings.py:/app/settings.py
+      - searcharr-logs:/app/logs
+      - searcharr-data:/app/data
+    restart: unless-stopped
+  
+  flaresolverr:
+    image: ghcr.io/flaresolverr/flaresolverr:latest
+    container_name: flaresolverr
+    environment:
+      - LOG_LEVEL=${LOG_LEVEL:-info}
+      - LOG_HTML=${LOG_HTML:-false}
+      - TZ=Europe/Moscow
+    ports:
+      - "8191:8191"
+    restart: unless-stopped 
+
+  qbittorrent:
+    image: lscr.io/linuxserver/qbittorrent:4.6.5
+    container_name: qbittorrent
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Moscow
+      - WEBUI_PORT=8080
+      - TORRENTING_PORT=6881
+    volumes:
+      - qbittorrent-config:/config
+      - downloads:/downloads #optional
+    ports:
+      - 8080:8080
+      - 6881:6881
+      - 6881:6881/udp
+    restart: unless-stopped
+  
+  vpn:
+    container_name: vpn
+    image: 'dperson/openvpn-client:latest'
+    environment:
+      - PUID=1030
+      - PGID=100
+      - TZ=Europe/Moscow
+    cap_add:
+      - net_admin
+      - SYS_MODULE
+    volumes:
+      - /home/m1xxos/vpn:/vpn
+      - /lib/modules:/lib/modules
+    security_opt:
+      - 'label:disable'
+    devices:
+      - '/dev/net/tun:/dev/net/tun'
+    dns:
+      - 9.9.9.9
+    ports:
+      - 7878:7878
+      - 8989:8989
+      - 9696:9696
+    command: '-f "" -r 192.168.1.0/24'
+    restart: unless-stopped
+
+volumes:
+  jellyfin-config:
+  jellyseerr-config:
+  radarr-config:
+  sonarr-config:
+  prowlarr-config:
+  qbittorrent-config:
+  searcharr-logs:
+  searcharr-data:
+  tvseries:
+  movies:
+  downloads:
