@@ -151,14 +151,13 @@ services:
     image: ghcr.io/onedr0p/exportarr:v2.0
     container_name: sonarr-exporter
     command: ["sonarr"]
+    env_file:
+      - /home/m1xxos/home/sonarr_api.env
     environment:
       PORT: 9707
       URL: "http://vpn:8989"
-      APIKEY: /run/secrets/sonarr_api
     ports:
       - "9707:9707"
-    secrets:
-      - sonarr_api
 
 volumes:
   jellyfin-config:
@@ -172,7 +171,3 @@ volumes:
   tvseries:
   movies:
   downloads:
-
-secrets:
-   sonarr_api:
-     file: /home/m1xxos/home/sonarr_api.txt
