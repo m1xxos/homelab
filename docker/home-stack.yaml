@@ -157,6 +157,7 @@ services:
       APIKEY: $SONARR_API
     ports:
       - "9707:9707"
+    restart: unless-stopped
 
 volumes:
   jellyfin-config:
