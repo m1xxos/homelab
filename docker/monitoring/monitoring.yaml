@@ -11,7 +11,7 @@ services:
       - ./prometheus:/etc/prometheus
       - prom_data:/prometheus
   grafana:
-    image: grafana/grafana:10
+    image: grafana/grafana:11.1.0
     container_name: grafana
     ports:
       - 3000:3000
