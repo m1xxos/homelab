@@ -29,3 +29,4 @@ volumes:
 networks:
   proxynet:
     name: home-stuff_default
+    external: true
