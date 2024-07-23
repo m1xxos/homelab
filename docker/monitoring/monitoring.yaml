@@ -6,6 +6,8 @@ services:
       - '--config.file=/etc/prometheus/prometheus.yaml'
     ports:
       - 9090:9090
+    networks:
+      - proxynet
     restart: unless-stopped
     volumes:
       - ./prometheus:/etc/prometheus
