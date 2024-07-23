@@ -7,6 +7,7 @@ services:
     ports:
       - 9090:9090
     networks:
+      - monitoring_default
       - proxynet
     restart: unless-stopped
     volumes:
