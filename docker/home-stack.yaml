@@ -165,7 +165,7 @@ services:
     command: ["radarr"]
     environment:
       PORT: 9708
-      URL: "http://vpn:8989"
+      URL: "http://vpn:7878"
       APIKEY: $RADARR_API
     ports:
       - "9708:9708"
