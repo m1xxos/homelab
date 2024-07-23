@@ -21,5 +21,9 @@ services:
       - GF_SECURITY_ADMIN_PASSWORD=$GF_SECURITY_ADMIN_PASSWORD
     volumes:
       - ./grafana:/etc/grafana/provisioning/datasources
+
 volumes:
   prom_data:
+networks:
+  home-stuff_default:
+    external: true
