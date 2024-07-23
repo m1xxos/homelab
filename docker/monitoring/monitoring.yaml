@@ -18,6 +18,8 @@ services:
     container_name: grafana
     ports:
       - 3000:3000
+    networks:
+      - monitoring_default
     restart: unless-stopped
     environment:
       - GF_SECURITY_ADMIN_USER=admin
@@ -31,3 +33,4 @@ networks:
   proxynet:
     name: home-stuff_default
     external: true
+  monitoring_default:
