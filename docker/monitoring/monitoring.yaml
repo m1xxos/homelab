@@ -25,5 +25,5 @@ services:
 volumes:
   prom_data:
 networks:
-  home-stuff_default:
-    external: true
+  proxynet:
+    name: home-stuff_default
