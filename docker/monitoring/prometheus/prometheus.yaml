@@ -28,4 +28,4 @@ scrape_configs:
   scheme: http
   static_configs:
   - targets:
-    - localhost:9707
+    - sonarr-exporter:9707
