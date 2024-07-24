@@ -9,7 +9,10 @@
   "argocd": {
     "fileMatch": ["argo-apps/.+\\.ya?ml$"]
   },
-  "docker": {
-    "fileMatch": ["docker/.+\\.ya?ml$"]
+  "docker-compose": {
+    "fileMatch": [
+      "docker/.+\\.yaml$",
+      "(^|/)(?:docker-)?compose[^/]*\\.ya?ml$"
+    ]
   }
 }
