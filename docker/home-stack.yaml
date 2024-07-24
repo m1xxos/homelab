@@ -170,6 +170,18 @@ services:
     ports:
       - "9708:9708"
     restart: unless-stopped
+  
+  prowlarr-exporter:
+    image: ghcr.io/onedr0p/exportarr:v2.0
+    container_name: prowlarr-exporter
+    command: ["prowlarr"]
+    environment:
+      PORT: 9709
+      URL: "http://vpn:9696"
+      APIKEY: $PROWLARR_API
+    ports:
+      - "9709:9709"
+    restart: unless-stopped
 
 volumes:
   jellyfin-config:

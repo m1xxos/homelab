@@ -39,3 +39,13 @@ scrape_configs:
   static_configs:
   - targets:
     - radarr-exporter:9708
+
+- job_name: prowlarr-exporter
+  honor_timestamps: true
+  scrape_interval: 15s
+  scrape_timeout: 10s
+  metrics_path: /metrics
+  scheme: http
+  static_configs:
+  - targets:
+    - prowlarr-exporter:9709
