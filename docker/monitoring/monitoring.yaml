@@ -37,6 +37,7 @@ services:
     container_name: alert-manager
     command:
       - '--config.file=/alertmanager/alertmanager.yaml'
+      - '--storage.path="/etc/alertmanager/data"'
     networks:
       - monitoring_default
     ports:
