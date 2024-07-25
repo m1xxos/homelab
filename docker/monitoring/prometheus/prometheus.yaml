@@ -2,10 +2,14 @@ global:
   scrape_interval: 15s
   scrape_timeout: 10s
   evaluation_interval: 15s
+rule_files:
+  - rules.yaml
+  - node-exporter.yaml
 alerting:
   alertmanagers:
   - static_configs:
-    - targets: []
+    - targets:
+      - alert-manager:9093
     scheme: http
     timeout: 10s
     api_version: v1
