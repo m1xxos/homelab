@@ -41,7 +41,7 @@ services:
       - 9093:9093
     restart: unless-stopped
     volumes:
-      - ./prometheus/alertmanager.yaml:/alertmanager/alertmanager.yaml
+      - ./alertmanager:/alertmanager
 
   grafana:
     image: grafana/grafana:11.1.1
