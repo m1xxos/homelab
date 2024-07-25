@@ -36,7 +36,8 @@ services:
     image: prom/alertmanager:v0.27.0
     container_name: alert-manager
     command:
-      '--config.file=/etc/alertmanager/alertmanager.yaml'
+      - '--config.file=/etc/alertmanager/alertmanager.yaml'
+      - '--storage.path="/alertmanager/data'
     networks:
       - monitoring_default
     ports:
