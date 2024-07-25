@@ -1,46 +1,41 @@
+global:
+  resolve_timeout: 5m
+  http_config:
+    follow_redirects: true
+    enable_http2: true
+  smtp_hello: localhost
+  smtp_require_tls: true
+  pagerduty_url: https://events.pagerduty.com/v2/enqueue
+  opsgenie_api_url: https://api.opsgenie.com/
+  wechat_api_url: https://qyapi.weixin.qq.com/cgi-bin/
+  victorops_api_url: https://alert.victorops.com/integrations/generic/20131114/alert/
+  telegram_api_url: https://api.telegram.org
+  webex_api_url: https://webexapis.com/v1/messages
 route:
-  # When a new group of alerts is created by an incoming alert, wait at
-  # least 'group_wait' to send the initial notification.
-  # This way ensures that you get multiple alerts for the same group that start
-  # firing shortly after another are batched together on the first
-  # notification.
-  group_wait: 10s
-
-  # When the first notification was sent, wait 'group_interval' to send a batch
-  # of new alerts that started firing for that group.
-  group_interval: 30s
-
-  # If an alert has successfully been sent, wait 'repeat_interval' to
-  # resend them.
-  repeat_interval: 30m
-
-  # A default receiver
-  receiver: "slack"
-
-  # All the above attributes are inherited by all child routes and can
-  # overwritten on each.
-  routes:
-    - receiver: "slack"
-      group_wait: 10s
-      match_re:
-        severity: critical|warning
-      continue: true
-
-    - receiver: "pager"
-      group_wait: 10s
-      match_re:
-        severity: critical
-      continue: true
-
+  receiver: web.hook
+  group_by:
+  - alertname
+  continue: false
+  group_wait: 30s
+  group_interval: 5m
+  repeat_interval: 1h
+inhibit_rules:
+- source_match:
+    severity: critical
+  target_match:
+    severity: warning
+  equal:
+  - alertname
+  - dev
+  - instance
 receivers:
-  - name: "slack"
-    slack_configs:
-      - api_url: 'https://hooks.slack.com/services/XXXXXXXXX/XXXXXXXXX/xxxxxxxxxxxxxxxxxxxxxxxxxxx'
-        send_resolved: true
-        channel: 'monitoring'
-        text: "{{ range .Alerts }}<!channel> {{ .Annotations.summary }}\n{{ .Annotations.description }}\n{{ end }}"
-
-  - name: "pager"
-    webhook_configs:
-      - url: http://a.b.c.d:8080/send/sms
-        send_resolved: true
+- name: web.hook
+  webhook_configs:
+  - send_resolved: true
+    http_config:
+      follow_redirects: true
+      enable_http2: true
+    url: "https://webhook.site/ff4785ac-399d-4f18-90f9-c54a9a71fad1"
+    url_file: ""
+    max_alerts: 0
+templates: []
