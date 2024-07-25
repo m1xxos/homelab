@@ -41,7 +41,7 @@ services:
       - 9093:9093
     restart: unless-stopped
     volumes:
-      - ./alertmanager:/alertmanager
+      - ./alertmanager/:/etc/alertmanager/
 
   grafana:
     image: grafana/grafana:11.1.1
