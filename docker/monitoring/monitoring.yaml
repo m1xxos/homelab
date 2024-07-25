@@ -37,14 +37,14 @@ services:
     container_name: alert-manager
     command:
       - '--config.file=/etc/alertmanager/alertmanager.yaml'
-      - '--storage.path="/alertmanager/data'
+      # - '--storage.path="/alertmanager/data'
     networks:
       - monitoring_default
     ports:
       - 9093:9093
     restart: unless-stopped
     volumes:
-      - ./alertmanager/:/etc/alertmanager/
+      - ./alertmanager/alert-manager.yaml:/etc/alertmanager/alertmanager.yaml
 
   grafana:
     image: grafana/grafana:11.1.1
