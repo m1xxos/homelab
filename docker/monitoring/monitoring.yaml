@@ -36,15 +36,15 @@ services:
     image: prom/alertmanager:v0.27.0
     container_name: alert-manager
     command:
-      - '--config.file=/alertmanager/alertmanager.yaml'
-      - '--storage.path="/etc/alertmanager/data"'
+      - '--config.file=/etc/alertmanager/alertmanager.yaml'
     networks:
       - monitoring_default
     ports:
       - 9093:9093
     restart: unless-stopped
     volumes:
-      - ./alertmanager/:/alertmanager/
+      - ./alertmanager:/etc/alertmanager
+      - alert_data:/alertmanager
 
   grafana:
     image: grafana/grafana:11.1.1
@@ -63,6 +63,7 @@ services:
 
 volumes:
   prom_data:
+  alert_data:
   dashboards:
 networks:
   proxynet:
