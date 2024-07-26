@@ -12,7 +12,6 @@ global:
   telegram_api_url: https://api.telegram.org
   webex_api_url: https://webexapis.com/v1/messages
 route:
-  receiver: tg.message
   group_by:
   - alertname
   continue: false
