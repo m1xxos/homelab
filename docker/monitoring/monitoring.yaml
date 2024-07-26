@@ -44,7 +44,7 @@ services:
     restart: unless-stopped
     volumes:
       - ./alertmanager:/etc/alertmanager
-      - ~/home/tg-token.env:/etc/tg-token.env
+      - /home/m1xxos/home/tg-token.env:/etc/tg-token.env
       - alert_data:/alertmanager
 
   grafana:
