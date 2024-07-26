@@ -12,6 +12,7 @@ global:
   telegram_api_url: https://api.telegram.org
   webex_api_url: https://webexapis.com/v1/messages
 route:
+  receiver: tg
   group_by:
     - alertname
   continue: false
@@ -37,8 +38,9 @@ receivers:
         url: "https://webhook.site/ff4785ac-399d-4f18-90f9-c54a9a71fad1"
         url_file: ""
         max_alerts: 0
+        
   - name: tg
-    telegram_config:
+    telegram_configs:
       - send_resolved: true
         bot_token_file: "/etc/tg-token.env"
         chat_id: 421268717
