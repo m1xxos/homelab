@@ -28,18 +28,19 @@ inhibit_rules:
   - dev
   - instance
 receivers:
-- name: web.hook
-  webhook_configs:
-  - send_resolved: true
-    http_config:
-      follow_redirects: true
-      enable_http2: true
-    url: "https://webhook.site/ff4785ac-399d-4f18-90f9-c54a9a71fad1"
-    url_file: ""
-    max_alerts: 0
-- name: tg.message
-  telegram_config:
+  - name: web.hook
+    webhook_configs:
     - send_resolved: true
-      bot_token_file: "/etc/tg-token.env"
-      chat_id: 421268717
+      http_config:
+        follow_redirects: true
+        enable_http2: true
+      url: "https://webhook.site/ff4785ac-399d-4f18-90f9-c54a9a71fad1"
+      url_file: ""
+      max_alerts: 0
+  - name: tg.message
+    telegram_config:
+      - send_resolved: true
+        bot_token_file: "/etc/tg-token.env"
+        chat_id: "421268717"
+        parse_mode: "HTML"
 templates: []
