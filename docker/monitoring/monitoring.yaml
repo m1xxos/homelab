@@ -46,6 +46,24 @@ services:
       - ./alertmanager:/etc/alertmanager
       - /home/m1xxos/home/tg-token.env:/etc/tg-token.env
       - alert_data:/alertmanager
+    
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:v0.49.1
+    container_name: cadvisor
+    ports:
+      - 8081:8080
+    networks:
+      - monitoring_default
+    restart: unless-stopped
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+      - /dev/disk/:/dev/disk:ro
+    privileged: true
+    devices:
+      - /dev/kmsg
 
   grafana:
     image: grafana/grafana:11.1.1
