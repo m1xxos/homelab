@@ -77,13 +77,12 @@ services:
       - GF_SECURITY_ADMIN_USER=admin
       - GF_SECURITY_ADMIN_PASSWORD=$GF_SECURITY_ADMIN_PASSWORD
     volumes:
-      - ./grafana:/etc/grafana/provisioning/datasources
-      - dashboards:/etc/grafana/provisioning/dashboards/
+      - ./grafana:/etc/grafana/provisioning/datasources/
+      - /home/m1xxos/home/dashboards:/etc/grafana/provisioning/dashboards/
 
 volumes:
   prom_data:
   alert_data:
-  dashboards:
 networks:
   proxynet:
     name: home-stuff_default
