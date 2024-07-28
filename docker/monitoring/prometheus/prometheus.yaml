@@ -5,6 +5,7 @@ global:
 rule_files:
   - rules.yaml
   - node-exporter.yaml
+  - cadvisor.yaml
 alerting:
   alertmanagers:
   - static_configs:
@@ -63,6 +64,16 @@ scrape_configs:
   static_configs:
   - targets:
     - alert-manager:9093
+
+- job_name: cadvisor
+  honor_timestamps: true
+  scrape_interval: 15s
+  scrape_timeout: 10s
+  metrics_path: /metrics
+  scheme: http
+  static_configs:
+  - targets:
+    - cadvisor:8080
   
 - job_name: 'node'
   static_configs:
