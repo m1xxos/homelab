@@ -13,6 +13,11 @@ services:
     volumes:
       - ./prometheus:/etc/prometheus
       - prom_data:/prometheus
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.prometheus.entrypoints=websecure"
+      - "traefik.http.routers.prometheus.rule=Host(`prometheus.home.m1xxos.me`)"
+      - "traefik.http.services.prometheus.loadbalancer.server.port=9090"
   
   node-exporter:
     image: prom/node-exporter:v1.8.2
@@ -46,6 +51,11 @@ services:
       - ./alertmanager:/etc/alertmanager
       - /home/m1xxos/home/tg-token.env:/etc/tg-token.env
       - alert_data:/alertmanager
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.alert-manager.entrypoints=websecure"
+      - "traefik.http.routers.alert-manager.rule=Host(`alerts.home.m1xxos.me`)"
+      - "traefik.http.services.alert-manager.loadbalancer.server.port=9093"
     
   cadvisor:
     image: gcr.io/cadvisor/cadvisor:v0.50.0
@@ -79,6 +89,11 @@ services:
     volumes:
       - ./grafana:/etc/grafana/provisioning/datasources/
       - /home/m1xxos/home/dashboards:/etc/grafana/provisioning/dashboards/
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.grafana.entrypoints=websecure"
+      - "traefik.http.routers.grafana.rule=Host(`grafana.home.m1xxos.me`)"
+      - "traefik.http.services.grafana.loadbalancer.server.port=3000"
     
   loki:
     image: grafana/loki:3.1.0
