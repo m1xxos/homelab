@@ -10,7 +10,8 @@ services:
       - "--providers.docker.exposedbydefault=false"
       - "--entryPoints.web.address=:80"
       - "--entryPoints.websecure.address=:443"
-      - --metrics.prometheus=true
+      - "--entrypoints.websecure.http.tls=true"
+      - "--metrics.prometheus=true"
     ports:
       - "80:80"
       - "443:443"
