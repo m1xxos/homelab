@@ -2,7 +2,7 @@
 services:
   traefik:
     image: traefik:v3.0
-    container_name: "traefik"
+    container_name: traefik
     command:
       - "--log.level=INFO"
       - "--api.insecure=true"
@@ -14,6 +14,7 @@ services:
       - --certificatesresolvers.defaultrresolver.acme.email=bulynin.misha@gmail.com
       - --certificatesresolvers.defaultrresolver.acme.tlschallenge=true
       - --certificatesresolvers.defaultrresolver.acme.storage=/letsencrypt/acme.json
+      - --metrics.prometheus=true
     ports:
       - "80:80"
       - "443:443"
