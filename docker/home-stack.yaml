@@ -159,6 +159,11 @@ services:
       - 6881:6881
       - 6881:6881/udp
     restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.qbittorrent.entrypoints=websecure"
+      - "traefik.http.routers.qbittorrent.rule=Host(`torrent.home.m1xxos.me`)"
+      - "traefik.http.services.qbittorrent.loadbalancer.server.port=8080"
   
   vpn:
     container_name: vpn
@@ -185,6 +190,17 @@ services:
       - 9696:9696
     command: '-f "" -r 192.168.1.0/24'
     restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.radarr.entrypoints=websecure"
+      - "traefik.http.routers.radarr.rule=Host(`radarr.home.m1xxos.me`)"
+      - "traefik.http.services.radarr.loadbalancer.server.port=7878"
+      - "traefik.http.routers.sonarr.entrypoints=websecure"
+      - "traefik.http.routers.sonarr.rule=Host(`sonarr.home.m1xxos.me`)"
+      - "traefik.http.services.sonarr.loadbalancer.server.port=8989"
+      - "traefik.http.routers.prowlarr.entrypoints=websecure"
+      - "traefik.http.routers.prowlarr.rule=Host(`prowlarr.home.m1xxos.me`)"
+      - "traefik.http.services.prowlarr.loadbalancer.server.port=9696"
   
   sonarr-exporter:
     image: ghcr.io/onedr0p/exportarr:v2.0
