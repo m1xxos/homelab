@@ -25,3 +25,19 @@ resource "cloudflare_record" "traefik-dev" {
   type    = "CNAME"
   ttl     = 3600
 }
+
+resource "cloudflare_record" "home" {
+  zone_id = var.cloudflare_zone_id
+  name    = "home"
+  value   = "192.168.1.250"
+  type    = "A"
+  ttl     = 3600
+}
+
+resource "cloudflare_record" "home-extra" {
+  zone_id = var.cloudflare_zone_id
+  name    = "*.home"
+  value   = "home.m1xxos.me"
+  type    = "CNAME"
+  ttl     = 3600
+}
