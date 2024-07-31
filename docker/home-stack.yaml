@@ -16,6 +16,8 @@ services:
       - "80:80"
       - "443:443"
       - "8088:8080"
+    networks:
+      - proxynet-monitoring
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
       - letsencrypt:/letsencrypt
@@ -251,3 +253,8 @@ volumes:
   movies:
   downloads:
   letsencrypt:
+
+networks:
+  proxynet-monitoring:
+    name: monitoring_default
+    external: true
