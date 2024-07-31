@@ -23,7 +23,7 @@ services:
       - letsencrypt:/letsencrypt
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.traefik.entrypoints=wesecure"
+      - "traefik.http.routers.traefik.entrypoints=websecure"
       - "traefik.http.routers.traefik.rule=Host(`traefik.home.m1xxos.me`)"
       - "traefik.http.services.traefik.loadbalancer.server.port=8080"
   
@@ -46,7 +46,7 @@ services:
     restart: unless-stopped
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.jellyfin.entrypoints=wesecure"
+      - "traefik.http.routers.jellyfin.entrypoints=websecure"
       - "traefik.http.routers.jellyfin.rule=Host(`jellyfin.home.m1xxos.me`)"
       - "traefik.http.services.jellyfin.loadbalancer.server.port=8096"
 
@@ -67,7 +67,7 @@ services:
     restart: unless-stopped
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.jellyseerr.entrypoints=wesecure"
+      - "traefik.http.routers.jellyseerr.entrypoints=websecure"
       - "traefik.http.routers.jellyseerr.rule=Host(`jellyseerr.home.m1xxos.me`)"
       - "traefik.http.services.jellyseerr.loadbalancer.server.port=5055"
   
