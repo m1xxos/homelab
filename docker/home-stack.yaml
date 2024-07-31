@@ -1,5 +1,27 @@
 ---
 services:
+  traefik:
+    image: traefik:v3.0
+    container_name: "traefik"
+    command:
+      - "--log.level=INFO"
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entryPoints.web.address=:80"
+      - "--entryPoints.websecure.address=:443"
+      - --entrypoints.websecure.http.tls.certresolver=myresolver
+      - --certificatesresolvers.defaultrresolver.acme.email=bulynin.misha@gmail.com
+      - --certificatesresolvers.defaultrresolver.acme.tlschallenge=true
+      - --certificatesresolvers.defaultrresolver.acme.storage=/letsencrypt/acme.json
+    ports:
+      - "80:80"
+      - "443:443"
+      - "8080:8080"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - letsencrypt:/letsencrypt
+  
   jellyfin:
     image: lscr.io/linuxserver/jellyfin:10.9.8
     container_name: jellyfin
@@ -17,6 +39,12 @@ services:
       - 7359:7359/udp
       - 1900:1900/udp
     restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.jellyfin.entrypoints=wesecure"
+      - "traefik.http.routers.jellyfin.rule=Host(`jellyfin.home.m1xxos.me`)"
+      - "traefik.http.services.jellyfin.loadbalancer.server.port=8096"
+
   
   jellyseerr:
     image: fallenbagel/jellyseerr:1.9.2
@@ -32,6 +60,11 @@ services:
     volumes:
       - jellyseerr-config:/app/config
     restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.jellyseerr.entrypoints=wesecure"
+      - "traefik.http.routers.jellyseerr.rule=Host(`jellyseerr.home.m1xxos.me`)"
+      - "traefik.http.services.jellyseerr.loadbalancer.server.port=5055"
   
   radarr:
     image: lscr.io/linuxserver/radarr:5.8.3
@@ -195,3 +228,4 @@ volumes:
   tvseries:
   movies:
   downloads:
+  letsencrypt:
