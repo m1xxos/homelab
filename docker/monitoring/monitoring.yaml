@@ -43,6 +43,7 @@ services:
     command:
       - '--config.file=/etc/alertmanager/alertmanager.yaml'
     networks:
+      - proxynet
       - monitoring_default
     ports:
       - 9093:9093
@@ -81,6 +82,7 @@ services:
     ports:
       - 3000:3000
     networks:
+      - proxynet
       - monitoring_default
     restart: unless-stopped
     environment:
