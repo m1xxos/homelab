@@ -10,10 +10,6 @@ services:
       - "--providers.docker.exposedbydefault=false"
       - "--entryPoints.web.address=:80"
       - "--entryPoints.websecure.address=:443"
-      - --entrypoints.websecure.http.tls.certresolver=myresolver
-      - --certificatesresolvers.defaultrresolver.acme.email=bulynin.misha@gmail.com
-      - --certificatesresolvers.defaultrresolver.acme.tlschallenge=true
-      - --certificatesresolvers.defaultrresolver.acme.storage=/letsencrypt/acme.json
       - --metrics.prometheus=true
     ports:
       - "80:80"
