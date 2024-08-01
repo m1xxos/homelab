@@ -237,6 +237,23 @@ services:
     ports:
       - "9709:9709"
     restart: unless-stopped
+  
+  homarr:
+    container_name: homarr
+    image: ghcr.io/ajnart/homarr:0.15.3
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ~/homarr/configs:/app/data/configs
+      - ~/homarr/icons:/app/public/icons
+      - ~/homarr/data:/data
+    ports:
+      - '7575:7575'
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.homarr.entrypoints=websecure"
+      - "traefik.http.routers.homarr.rule=Host(`home.m1xxos.me`)"
+      - "traefik.http.services.homarr.loadbalancer.server.port=7575"
 
 volumes:
   jellyfin-config:
