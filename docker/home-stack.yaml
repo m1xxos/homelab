@@ -1,5 +1,30 @@
 ---
 services:
+  traefik:
+    image: traefik:v3.0
+    container_name: traefik
+    command:
+      - "--log.level=INFO"
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entryPoints.web.address=:80"
+      - "--entryPoints.websecure.address=:443"
+      - "--entrypoints.websecure.http.tls=true"
+      - "--metrics.prometheus=true"
+    ports:
+      - "80:80"
+      - "443:443"
+      - "8088:8080"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - letsencrypt:/letsencrypt
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.traefik.entrypoints=websecure"
+      - "traefik.http.routers.traefik.rule=Host(`traefik.home.m1xxos.me`)"
+      - "traefik.http.services.traefik.loadbalancer.server.port=8080"
+  
   jellyfin:
     image: lscr.io/linuxserver/jellyfin:10.9.8
     container_name: jellyfin
@@ -17,6 +42,12 @@ services:
       - 7359:7359/udp
       - 1900:1900/udp
     restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.jellyfin.entrypoints=websecure"
+      - "traefik.http.routers.jellyfin.rule=Host(`jellyfin.home.m1xxos.me`)"
+      - "traefik.http.services.jellyfin.loadbalancer.server.port=8096"
+
   
   jellyseerr:
     image: fallenbagel/jellyseerr:1.9.2
@@ -32,6 +63,11 @@ services:
     volumes:
       - jellyseerr-config:/app/config
     restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.jellyseerr.entrypoints=websecure"
+      - "traefik.http.routers.jellyseerr.rule=Host(`jellyseerr.home.m1xxos.me`)"
+      - "traefik.http.services.jellyseerr.loadbalancer.server.port=5055"
   
   radarr:
     image: lscr.io/linuxserver/radarr:5.8.3
@@ -120,6 +156,11 @@ services:
       - 6881:6881
       - 6881:6881/udp
     restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.qbittorrent.entrypoints=websecure"
+      - "traefik.http.routers.qbittorrent.rule=Host(`torrent.home.m1xxos.me`)"
+      - "traefik.http.services.qbittorrent.loadbalancer.server.port=8080"
   
   vpn:
     container_name: vpn
@@ -146,6 +187,20 @@ services:
       - 9696:9696
     command: '-f "" -r 192.168.1.0/24'
     restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.radarr.entrypoints=websecure"
+      - "traefik.http.routers.radarr.rule=Host(`radarr.home.m1xxos.me`)"
+      - "traefik.http.routers.radarr.service=radarr"
+      - "traefik.http.services.radarr.loadbalancer.server.port=7878"
+      - "traefik.http.routers.sonarr.entrypoints=websecure"
+      - "traefik.http.routers.sonarr.service=sonarr"
+      - "traefik.http.routers.sonarr.rule=Host(`sonarr.home.m1xxos.me`)"
+      - "traefik.http.services.sonarr.loadbalancer.server.port=8989"
+      - "traefik.http.routers.prowlarr.entrypoints=websecure"
+      - "traefik.http.routers.prowlarr.service=prowlarr"
+      - "traefik.http.routers.prowlarr.rule=Host(`prowlarr.home.m1xxos.me`)"
+      - "traefik.http.services.prowlarr.loadbalancer.server.port=9696"
   
   sonarr-exporter:
     image: ghcr.io/onedr0p/exportarr:v2.0
@@ -182,6 +237,23 @@ services:
     ports:
       - "9709:9709"
     restart: unless-stopped
+  
+  homarr:
+    container_name: homarr
+    image: ghcr.io/ajnart/homarr:0.15.3
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ~/homarr/configs:/app/data/configs
+      - ~/homarr/icons:/app/public/icons
+      - ~/homarr/data:/data
+    ports:
+      - '7575:7575'
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.homarr.entrypoints=websecure"
+      - "traefik.http.routers.homarr.rule=Host(`home.m1xxos.me`)"
+      - "traefik.http.services.homarr.loadbalancer.server.port=7575"
 
 volumes:
   jellyfin-config:
@@ -195,3 +267,9 @@ volumes:
   tvseries:
   movies:
   downloads:
+  letsencrypt:
+
+networks:
+  proxynet-monitoring:
+    name: monitoring_default
+    external: true
