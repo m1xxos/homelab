@@ -10,6 +10,6 @@ services:
       - '443:443'
       - '81:81'
     volumes:
-      - ./data:/data
-      - ./letsencrypt:/etc/letsencrypt
+      - /etc/nginx-proxy/:/data
+      - /etc/nginx-proxy/:/etc/letsencrypt
 
