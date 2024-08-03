@@ -12,4 +12,20 @@ services:
     volumes:
       - /etc/nginx-proxy/data:/data
       - /etc/nginx-proxy/letsencrypt:/etc/letsencrypt
+    logging:
+      driver: fluentd
+      options:
+        fluentd-address: 127.0.0.1:24224
+  
+  fluent-bit:
+    image: grafana/fluent-bit-plugin-loki:latest
+    container_name: fluent-bit
+    environment:
+      - LOKI_URL=http://192.168.1.99:3100/loki/api/v1/push
+    volumes:
+      - ./fluent-bit.conf:/fluent-bit/etc/fluent-bit.conf
+    ports:
+      - "24224:24224"
+      - "24224:24224/udp"
+
 
