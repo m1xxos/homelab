@@ -4,7 +4,6 @@ version: '3.8'
 services:
   proxy:
     image: 'jc21/nginx-proxy-manager:2.11.3'
-    restart: unless-stopped
     ports:
       - '80:80'
       - '443:443'
@@ -16,6 +15,7 @@ services:
       driver: fluentd
       options:
         fluentd-address: 127.0.0.1:24224
+    restart: unless-stopped
   
   fluent-bit:
     image: grafana/fluent-bit-plugin-loki:latest
@@ -27,5 +27,6 @@ services:
     ports:
       - "24224:24224"
       - "24224:24224/udp"
+    restart: unless-stopped
 
 
