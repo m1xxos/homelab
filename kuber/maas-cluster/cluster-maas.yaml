@@ -55,6 +55,7 @@ spec:
       image: u-2204-k-1261-0
       minCPU: 1
       minMemory: 2048
+      #TODO Check resource pool
       resourcePool: null
       tags: []
 ---
