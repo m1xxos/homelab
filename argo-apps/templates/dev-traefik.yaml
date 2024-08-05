@@ -21,12 +21,6 @@ spec:
             level: DEBUG
           access:
             enable: true
-    #     ports:
-    #     web:
-    #         redirectTo:
-    #         port: websecure
-
-
   syncPolicy:
     automated:
       prune: true
