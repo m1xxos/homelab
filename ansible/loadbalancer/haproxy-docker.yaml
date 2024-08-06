@@ -6,19 +6,20 @@
       ansible.builtin.file:
         path: /etc/haproxy/
         state: directory
-    
+        mode: "0775"
+
     - name: Copy docker compose file
       ansible.builtin.copy:
         src: files/docker-compose.yaml
         dest: /etc/haproxy/docker-compose.yaml
-        mode: 664
-    
+        mode: "0664"
+
     - name: Copy haproxy config file
       ansible.builtin.copy:
         src: files/haproxy.cfg
         dest: /etc/haproxy/haproxy.cfg
-        mode: 664
-    
+        mode: "0664"
+
     - name: Run haproxy docker-compose Up
       community.docker.docker_compose_v2:
         project_src: /etc/haproxy/

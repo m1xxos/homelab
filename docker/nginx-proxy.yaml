@@ -1,6 +1,3 @@
-version: '3.8'
-
-
 services:
   proxy:
     image: 'jc21/nginx-proxy-manager:2.11.3'

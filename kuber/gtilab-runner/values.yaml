@@ -1,5 +1,6 @@
 gitlabUrl: https://gitlab.local.m1xxos.me
 
+#TODO add secrete
 runnerToken: "glrt-nByyZDbjB-T-LsHcPGeP"
 
 rbac:

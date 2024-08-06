@@ -6,7 +6,7 @@
   <br>
 </h1>
 
-<h4 align="center">Моя homelab'а </h4>
+<h4 align="center">My homelab </h4>
 
 ## Key Features
 
@@ -14,34 +14,67 @@
 * Deployed on proxmox with Terraform
 * Provisioned by Ansible
 * Kubernetes with k3s
+* GitOps systems with Portainer and ArgoCD
+
+## Architecture diagram
+
+![Alt text](/architecture_v2.png?raw=true "Architecture")
 
 ## Made with
 
 This software uses the following open source packages:
 
+### Virtualization
+
 * Proxmox
+* Docker
+* Ubuntu Cloud init
+* Maas
+
+### IaC tools
+
 * Packer
 * Terraform
 * Ansible
-* Cloud-Init
-* Ubuntu
-* Docker
+* Crossplane
+
+### k8s systems
+
 * k3s
 * Helm
-* Rancher
+* ArgoCD
+* ClusterAPI
 * Traefik
 * Cert-manager
+* Nfs file provisioner
+* MetalLB
+
+### Docker systems
+
+* Portainer GitOps
+* Nginx proxy manager
 * Keepalived
 * HAproxy
-* Nginx proxy manager
 * Clodflare tunnel
 * Twingate
 * SornarQube
-* GitHub actions
-* Linters
+* Arrstack with monitoring
+
+### Monitoring
+
 * Prometheus
 * Grafana
+* AlertManager
+* Loki
+* Alloy
+* FluentBit
 
-## Architecture diagram
+### Git
+
+* GitLab
+* GitHub actions
+* Linters
+
+## Architecture diagram v1
 
 ![Alt text](/architecture.png?raw=true "Title")
