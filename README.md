@@ -6,7 +6,7 @@
   <br>
 </h1>
 
-<h4 align="center">Моя homelab'а </h4>
+<h4 align="center">My homelab </h4>
 
 ## Key Features
 
@@ -15,6 +15,10 @@
 * Provisioned by Ansible
 * Kubernetes with k3s
 * GitOps systems with Portainer and ArgoCD
+
+## Architecture diagram
+
+![Alt text](/architecture-v2.png?raw=true "Architecture")
 
 ## Made with
 
@@ -71,6 +75,6 @@ This software uses the following open source packages:
 * GitHub actions
 * Linters
 
-## Architecture diagram
+## Architecture diagram v1
 
 ![Alt text](/architecture.png?raw=true "Title")
