@@ -48,21 +48,21 @@ variable "ipconfig0" {
 }
 
 variable "tags" {
-  type = string
+  type    = string
   default = "null"
 }
 
 variable "onboot" {
-  type = bool
+  type    = bool
   default = true
 }
 
 variable "vm_state" {
-  type = string
+  type    = string
   default = "running"
 }
 
 variable "vlan" {
-  type = bool
+  type    = bool
   default = false
 }

@@ -34,13 +34,13 @@ resource "proxmox_vm_qemu" "template_vm" {
       }
       ide3 {
         cloudinit {
-          storage  = "local-lvm"
+          storage = "local-lvm"
         }
       }
     }
   }
 
-  os_type                 = "cloud-init"
+  os_type = "cloud-init"
 
   network {
     bridge = "vmbr0"

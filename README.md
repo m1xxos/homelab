@@ -18,7 +18,7 @@
 
 ## Architecture diagram
 
-![Alt text](/architecture_v2.png?raw=true "Architecture")
+![Architecture](/architecture_v2.png?raw=true "Architecture")
 
 ## Made with
 
