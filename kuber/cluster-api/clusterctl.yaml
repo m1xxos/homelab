@@ -5,7 +5,13 @@ providers:
 - name: incluster
   url: https://github.com/kubernetes-sigs/cluster-api-ipam-provider-in-cluster/releases/latest/ipam-components.yaml
   type: IPAMProvider
-
+- name: "microk8s"
+  url: "https://github.com/canonical/cluster-api-bootstrap-provider-microk8s/releases/latest/bootstrap-components.yaml"
+  type: "BootstrapProvider"
+- name: "microk8s"
+  url: "https://github.com/canonical/cluster-api-control-plane-provider-microk8s/releases/latest/control-plane-components.yaml"
+  type: "ControlPlaneProvider"
+  
 ## -- Controller settings -- ##
 PROXMOX_URL: "https://proxmox.local.m1xxos.me"                       # The Proxmox VE host
 PROXMOX_TOKEN: "root@pam!packer"                                # The Proxmox VE TokenID for authentication

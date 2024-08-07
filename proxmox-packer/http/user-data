@@ -37,7 +37,5 @@ autoinstall:
         lock-passwd: false
         sudo: ALL=(ALL) NOPASSWD:ALL
         shell: /bin/bash
-        # passwd: your-password
-        # - or -
         ssh_authorized_keys:
            - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCqNOWKBXOjOymiq1GDAfzGg26+O7uDHdie6t/IUfQc+nT3NTvx3n1bQYdW/koixKLSK8IdOInkwk5nyxUC7MzeZqlSQmjHkdGPoUKP6hIFmf0fNsBjY6E+gBtq7qeR+vi9MeLSoT0gtNI9hOI4CUMAquNoAxpoorJclQxgG2tSzAtaWe35gsn1opG4keIaEg1EnFBJzrSBcSB/G+/gegz+QVDpxy0iHmAHxCLD7/agxABVXb04RDUn2vCw7f77iaQSCsT22XkrpzACoBJtEja7LtmZTZQvitD+voi1uRxZMoQYoH+FAlKWvGNrCfQE2E8GPE6zUXR2geREd9Lgxcw5 harvester

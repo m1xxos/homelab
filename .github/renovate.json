@@ -4,9 +4,15 @@
     "config:recommended"
   ],
   "kubernetes": {
-    "fileMatch": ["\\.yaml$", "\\.yml$"]
+    "fileMatch": ["\\.yaml$", "\\.ya?ml$"]
   },
   "argocd": {
-    "fileMatch": ["argo-apps/.+\\.yaml$"]
+    "fileMatch": ["argo-apps/.+\\.ya?ml$"]
+  },
+  "docker-compose": {
+    "fileMatch": [
+      "docker/.+\\.yaml$",
+      "(^|/)(?:docker-)?compose[^/]*\\.ya?ml$"
+    ]
   }
 }

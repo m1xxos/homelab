@@ -6,7 +6,7 @@ terraform {
     }
     cloudflare = {
       source  = "cloudflare/cloudflare"
-      version = "4.35.0"
+      version = "4.38.0"
     }
     nginxproxymanager = {
       source  = "Sander0542/nginxproxymanager"
@@ -82,19 +82,6 @@ module "proxmox-lb" {
   tags      = each.value
 }
 
-module "proxmox-nginx-proxy" {
-  source = "./proxmox-vm-module"
-
-  vmid      = 1100
-  cores     = 4
-  memory    = 4096
-  name      = "nginx-proxy-0"
-  desc      = "proxy"
-  ipconfig0 = "ip=192.168.1.250/24,gw=192.168.1.1"
-  tags      = "nginx"
-  size      = 60
-
-}
 
 module "proxmox-portainer" {
   source = "./proxmox-vm-module"
@@ -111,4 +98,17 @@ module "proxmox-portainer" {
   tags      = "portainer"
   size      = 60
 
+}
+
+module "proxmox-home" {
+  source = "./proxmox-vm-module"
+
+  vmid      = 1090
+  cores     = 6
+  memory    = 8192
+  name      = "home-0"
+  desc      = "home servers"
+  ipconfig0 = "ip=192.168.1.99/24,gw=192.168.1.1"
+  tags      = "home"
+  size      = 60
 }

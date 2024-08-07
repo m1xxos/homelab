@@ -6,10 +6,10 @@ spec:
   clusterNetwork:
     pods:
       cidrBlocks:
-      - 192.168.1.0/24
+      - 192.168.10.0/24
   controlPlaneRef:
+    kind: MicroK8sControlPlane
     apiVersion: controlplane.cluster.x-k8s.io/v1beta1
-    kind: KubeadmControlPlane
     name: {{ .Values.name }}-control-plane
   infrastructureRef:
     apiVersion: infrastructure.cluster.x-k8s.io/v1alpha1
@@ -39,133 +39,22 @@ spec:
     prefix: {{ .Values.network.prefix }}
 ---
 apiVersion: controlplane.cluster.x-k8s.io/v1beta1
-kind: KubeadmControlPlane
+kind: MicroK8sControlPlane
 metadata:
   name: {{ .Values.name }}-control-plane
 spec:
-  kubeadmConfigSpec:
-    files:
-    - content: |
-        apiVersion: v1
-        kind: Pod
-        metadata:
-          creationTimestamp: null
-          name: kube-vip
-          namespace: kube-system
-        spec:
-          containers:
-          - args:
-            - manager
-            env:
-            - name: cp_enable
-              value: "true"
-            - name: vip_interface
-              value: ""
-            - name: address
-              value: 192.168.1.110
-            - name: port
-              value: "6443"
-            - name: vip_arp
-              value: "true"
-            - name: vip_leaderelection
-              value: "true"
-            - name: vip_leaseduration
-              value: "15"
-            - name: vip_renewdeadline
-              value: "10"
-            - name: vip_retryperiod
-              value: "2"
-            - name: svc_enable
-              value: "true"
-            image: ghcr.io/kube-vip/kube-vip:v0.8.1
-            imagePullPolicy: IfNotPresent
-            name: kube-vip
-            resources: {}
-            securityContext:
-              capabilities:
-                add:
-                - NET_ADMIN
-                - NET_RAW
-            volumeMounts:
-            - mountPath: /etc/kubernetes/admin.conf
-              name: kubeconfig
-          hostAliases:
-          - hostnames:
-            - localhost
-            - kubernetes
-            ip: 127.0.0.1
-          hostNetwork: true
-          volumes:
-          - hostPath:
-              path: /etc/kubernetes/admin.conf
-              type: FileOrCreate
-            name: kubeconfig
-        status: {} 
-      owner: root:root
-      path: /etc/kubernetes/manifests/kube-vip.yaml
-    - content: |
-        #!/bin/bash
-
-        # Copyright 2020 The Kubernetes Authors.
-        #
-        # Licensed under the Apache License, Version 2.0 (the "License");
-        # you may not use this file except in compliance with the License.
-        # You may obtain a copy of the License at
-        #
-        #     http://www.apache.org/licenses/LICENSE-2.0
-        #
-        # Unless required by applicable law or agreed to in writing, software
-        # distributed under the License is distributed on an "AS IS" BASIS,
-        # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-        # See the License for the specific language governing permissions and
-        # limitations under the License.
-
-        set -e
-
-        # Configure the workaround required for kubeadm init with kube-vip:
-        # xref: https://github.com/kube-vip/kube-vip/issues/684
-
-        # Nothing to do for kubernetes < v1.29
-        KUBEADM_MINOR="$(kubeadm version -o short | cut -d '.' -f 2)"
-        if [[ "$KUBEADM_MINOR" -lt "29" ]]; then
-          exit 0
-        fi
-
-        IS_KUBEADM_INIT="false"
-
-        # cloud-init kubeadm init
-        if [[ -f /run/kubeadm/kubeadm.yaml ]]; then
-          IS_KUBEADM_INIT="true"
-        fi
-
-        # ignition kubeadm init
-        if [[ -f /etc/kubeadm.sh ]] && grep -q -e "kubeadm init" /etc/kubeadm.sh; then
-          IS_KUBEADM_INIT="true"
-        fi
-
-        if [[ "$IS_KUBEADM_INIT" == "true" ]]; then
-          sed -i 's#path: /etc/kubernetes/admin.conf#path: /etc/kubernetes/super-admin.conf#' \
-            /etc/kubernetes/manifests/kube-vip.yaml
-        fi
-      owner: root:root
-      path: /etc/kube-vip-prepare.sh
-      permissions: "0700"
+  controlPlaneConfig:
     initConfiguration:
-      nodeRegistration:
-        kubeletExtraArgs:
-          provider-id: proxmox://{{`'{{ ds.meta_data.instance_id }}'`}}
-    joinConfiguration:
-      nodeRegistration:
-        kubeletExtraArgs:
-          provider-id: proxmox://{{`'{{ ds.meta_data.instance_id }}'`}}
-    preKubeadmCommands:
-    - /etc/kube-vip-prepare.sh
-    users:
-    - name: root
-      sshAuthorizedKeys:
-        - {{ .Values.user.sshAuthorizedKeys }}
+      joinTokenTTLInSecs: 900000
+      addons:
+        - dns
+        # - cert-manager
+        # - metrics-server
+        # - metallb
+    clusterConfiguration:
+      portCompatibilityRemap: true
   machineTemplate:
-    infrastructureRef:
+    infrastructureTemplate:
       apiVersion: infrastructure.cluster.x-k8s.io/v1alpha1
       kind: ProxmoxMachineTemplate
       name: {{ .Values.name }}-control-plane
@@ -212,7 +101,7 @@ spec:
       bootstrap:
         configRef:
           apiVersion: bootstrap.cluster.x-k8s.io/v1beta1
-          kind: KubeadmConfigTemplate
+          kind: MicroK8sConfigTemplate
           name: {{ .Values.name }}-worker
       clusterName: {{ .Values.name }}
       infrastructureRef:
@@ -245,18 +134,11 @@ spec:
       templateID: {{ .Values.machineTemplate.templateID }}
 ---
 apiVersion: bootstrap.cluster.x-k8s.io/v1beta1
-kind: KubeadmConfigTemplate
+kind: MicroK8sConfigTemplate
 metadata:
   name: {{ .Values.name }}-worker
 spec:
   template:
     spec:
-      joinConfiguration:
-        nodeRegistration:
-          kubeletExtraArgs:
-            provider-id: proxmox://{{`'{{ ds.meta_data.instance_id }}'`}}
-      users:
-      - name: root
-        sshAuthorizedKeys:
-        - {{ .Values.user.sshAuthorizedKeys }}
-
+      clusterConfiguration:
+        portCompatibilityRemap: true

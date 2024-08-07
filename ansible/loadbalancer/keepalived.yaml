@@ -15,7 +15,7 @@
       ansible.builtin.copy:
         src: files/keepalived-master.conf
         dest: /etc/keepalived/keepalived.conf
-        mode: 664
+        mode: "0664"
       notify:
         - Restart keepalived
 
@@ -33,7 +33,7 @@
       ansible.builtin.copy:
         src: files/keepalived-backup.conf
         dest: /etc/keepalived/keepalived.conf
-        mode: 664
+        mode: "0664"
       notify:
         - Restart keepalived
 
