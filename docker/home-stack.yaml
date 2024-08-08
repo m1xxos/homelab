@@ -307,7 +307,7 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.homarr.entrypoints=websecure"
-      - "traefik.http.routers.homarr.rule=Host(`auth.m1xxos.me`)"
+      - "traefik.http.routers.homarr.rule=Host(`auth.home.m1xxos.me`)"
       - "traefik.http.services.homarr.loadbalancer.server.port=9443"
   
   worker:
