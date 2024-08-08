@@ -308,7 +308,7 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.auth.entrypoints=websecure"
       - "traefik.http.routers.auth.rule=Host(`auth.home.m1xxos.me`)"
-      - "traefik.http.services.auth.loadbalancer.server.port=9443"
+      - "traefik.http.services.auth.loadbalancer.server.port=9000"
   
   worker:
     container_name: authentik-worker
