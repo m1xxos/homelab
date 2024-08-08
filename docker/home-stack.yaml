@@ -301,8 +301,6 @@ services:
     volumes:
       - /home/m1xxos/authetik/media:/media
       - /home/m1xxos/authetik/custom-templates:/templates
-    env_file:
-      - /home/m1xxos/authetik/.env
     depends_on:
       - postgresql
       - redis
@@ -335,8 +333,6 @@ services:
       - /home/m1xxos/authetik/media:/media
       - /home/m1xxos/authetik/certs:/certs
       - /home/m1xxos/authetik/custom-templates:/templates
-    env_file:
-      - /home/m1xxos/authetik/.env
     depends_on:
       - postgresql
       - redis
