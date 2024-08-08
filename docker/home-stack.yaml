@@ -254,6 +254,92 @@ services:
       - "traefik.http.routers.homarr.entrypoints=websecure"
       - "traefik.http.routers.homarr.rule=Host(`home.m1xxos.me`)"
       - "traefik.http.services.homarr.loadbalancer.server.port=7575"
+  
+  postgresql:
+    image: docker.io/library/postgres:16-alpine
+    container_name: postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -d $${POSTGRES_DB} -U $${POSTGRES_USER}"]
+      start_period: 20s
+      interval: 30s
+      retries: 5
+      timeout: 5s
+    volumes:
+      - database:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: ${PG_PASS:?database password required}
+      POSTGRES_USER: ${PG_USER:-authentik}
+      POSTGRES_DB: ${PG_DB:-authentik}
+    env_file:
+      - .env
+    restart: unless-stopped
+
+  redis:
+    container_name: redis
+    image: docker.io/library/redis:7.4-alpine
+    command: --save 60 1 --loglevel warning
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli ping | grep PONG"]
+      start_period: 20s
+      interval: 30s
+      retries: 5
+      timeout: 3s
+    volumes:
+      - redis:/data
+    restart: unless-stopped
+
+  server:
+    container_name: authetik-server
+    image: ghcr.io/goauthentik/server:2024.6.3
+    command: server
+    environment:
+      AUTHENTIK_REDIS__HOST: redis
+      AUTHENTIK_POSTGRESQL__HOST: postgresql
+      AUTHENTIK_POSTGRESQL__USER: ${PG_USER:-authentik}
+      AUTHENTIK_POSTGRESQL__NAME: ${PG_DB:-authentik}
+      AUTHENTIK_POSTGRESQL__PASSWORD: ${PG_PASS}
+    volumes:
+      - /home/m1xxos/authetik/media:/media
+      - /home/m1xxos/authetik/custom-templates:/templates
+    env_file:
+      - /home/m1xxos/authetik/.env
+    depends_on:
+      - postgresql
+      - redis
+    restart: unless-stopped
+      - "traefik.enable=true"
+      - "traefik.http.routers.homarr.entrypoints=websecure"
+      - "traefik.http.routers.homarr.rule=Host(`auth.m1xxos.me`)"
+      - "traefik.http.services.homarr.loadbalancer.server.port=9443"
+  
+  worker:
+    container_name: authentik-worker
+    image: ghcr.io/goauthentik/server:2024.6.3
+    restart: unless-stopped
+    command: worker
+    environment:
+      AUTHENTIK_REDIS__HOST: redis
+      AUTHENTIK_POSTGRESQL__HOST: postgresql
+      AUTHENTIK_POSTGRESQL__USER: ${PG_USER:-authentik}
+      AUTHENTIK_POSTGRESQL__NAME: ${PG_DB:-authentik}
+      AUTHENTIK_POSTGRESQL__PASSWORD: ${PG_PASS}
+    # `user: root` and the docker socket volume are optional.
+    # See more for the docker socket integration here:
+    # https://goauthentik.io/docs/outposts/integrations/docker
+    # Removing `user: root` also prevents the worker from fixing the permissions
+    # on the mounted folders, so when removing this make sure the folders have the correct UID/GID
+    # (1000:1000 by default)
+    user: root
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /home/m1xxos/authetik/media:/media
+      - /home/m1xxos/authetik/certs:/certs
+      - /home/m1xxos/authetik/custom-templates:/templates
+    env_file:
+      - /home/m1xxos/authetik/.env
+    depends_on:
+      - postgresql
+      - redis
 
 volumes:
   jellyfin-config:
@@ -268,6 +354,10 @@ volumes:
   movies:
   downloads:
   letsencrypt:
+  database:
+    driver: local
+  redis:
+    driver: local
 
 networks:
   proxynet-monitoring:
