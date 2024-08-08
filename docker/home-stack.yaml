@@ -303,6 +303,7 @@ services:
       - postgresql
       - redis
     restart: unless-stopped
+    labels:
       - "traefik.enable=true"
       - "traefik.http.routers.homarr.entrypoints=websecure"
       - "traefik.http.routers.homarr.rule=Host(`auth.m1xxos.me`)"
