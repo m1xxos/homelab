@@ -16,6 +16,7 @@ services:
       - "80:80"
       - "443:443"
       - "8088:8080"
+    restart: unless-stopped
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
       - letsencrypt:/letsencrypt
@@ -23,7 +24,7 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.traefik.entrypoints=websecure"
       - "traefik.http.routers.traefik.rule=Host(`traefik.home.m1xxos.me`)"
-      - "traefik.http.services.traefik.loadbalancer.server.port=8080"
+      - "traefik.http.services.traefik.loadbalancer.server.port=8080"     
   
   jellyfin:
     image: lscr.io/linuxserver/jellyfin:10.9.9
