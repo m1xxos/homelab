@@ -45,4 +45,7 @@ receivers:
         bot_token_file: "/etc/tg-token.env"
         chat_id: 421268717
         parse_mode: "HTML"
-templates: []
+        message: '{{ template "__yucca_text_alert_list" . }}'
+
+templates:
+- '/etc/alertmanager/templates/tg.tmpl'
