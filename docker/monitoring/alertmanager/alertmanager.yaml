@@ -48,4 +48,4 @@ receivers:
         message: '{{ template "__yucca_text_alert_list" . }}'
 
 templates:
-- '/etc/alertmanager/templates/tg.tmpl'
+  - '/etc/alertmanager/templates/tg.tmpl'
