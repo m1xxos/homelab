@@ -103,7 +103,7 @@ services:
       - GF_AUTH_GENERIC_OAUTH_ROLE_ATTRIBUTE_PATH=contains(groups, 'Grafana Admins') && 'Admin' || contains(groups, 'Grafana Editors') && 'Editor' || 'Viewer'
     volumes:
       - ./grafana:/etc/grafana/provisioning/datasources/
-      - /home/m1xxos/home/dashboards:/etc/grafana/provisioning/dashboards/
+      - 'grafana_storage:/var/lib/grafana'
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.grafana.entrypoints=websecure"
@@ -140,6 +140,7 @@ services:
 volumes:
   prom_data:
   alert_data:
+  grafana_storage:
 networks:
   proxynet:
     name: home-stuff_default
