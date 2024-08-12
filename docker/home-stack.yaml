@@ -128,17 +128,6 @@ services:
       - searcharr-logs:/app/logs
       - searcharr-data:/app/data
     restart: unless-stopped
-  
-  flaresolverr:
-    image: ghcr.io/flaresolverr/flaresolverr:latest
-    container_name: flaresolverr
-    environment:
-      - LOG_LEVEL=${LOG_LEVEL:-info}
-      - LOG_HTML=${LOG_HTML:-false}
-      - TZ=Europe/Moscow
-    ports:
-      - "8191:8191"
-    restart: unless-stopped 
 
   qbittorrent:
     image: lscr.io/linuxserver/qbittorrent:4.6.5
