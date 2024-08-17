@@ -12,6 +12,10 @@ terraform {
       source  = "Sander0542/nginxproxymanager"
       version = "0.0.33"
     }
+    authentik = {
+      source  = "goauthentik/authentik"
+      version = "2024.6.1"
+    }
   }
   backend "s3" {
     endpoint                    = "https://storage.yandexcloud.net"
@@ -36,6 +40,11 @@ provider "proxmox" {
 
 provider "cloudflare" {
   api_token = var.cloudflare_api_token
+}
+
+provider "authentik" {
+  url   = "https://auth.home.m1xxos.me"
+  token = var.authentik_token
 }
 
 module "proxmox-k3s-agents" {

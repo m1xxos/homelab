@@ -43,3 +43,8 @@ variable "nginx_username" {
 variable "nginx_password" {
   type = string
 }
+
+variable "authentik_token" {
+  type      = string
+  sensitive = true
+}
