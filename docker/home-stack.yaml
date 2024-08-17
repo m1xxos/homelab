@@ -16,6 +16,7 @@ services:
       - "80:80"
       - "443:443"
       - "8088:8080"
+    restart: unless-stopped
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
       - letsencrypt:/letsencrypt
@@ -23,7 +24,7 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.traefik.entrypoints=websecure"
       - "traefik.http.routers.traefik.rule=Host(`traefik.home.m1xxos.me`)"
-      - "traefik.http.services.traefik.loadbalancer.server.port=8080"
+      - "traefik.http.services.traefik.loadbalancer.server.port=8080"     
   
   jellyfin:
     image: lscr.io/linuxserver/jellyfin:10.9.9
@@ -127,17 +128,6 @@ services:
       - searcharr-logs:/app/logs
       - searcharr-data:/app/data
     restart: unless-stopped
-  
-  flaresolverr:
-    image: ghcr.io/flaresolverr/flaresolverr:latest
-    container_name: flaresolverr
-    environment:
-      - LOG_LEVEL=${LOG_LEVEL:-info}
-      - LOG_HTML=${LOG_HTML:-false}
-      - TZ=Europe/Moscow
-    ports:
-      - "8191:8191"
-    restart: unless-stopped 
 
   qbittorrent:
     image: lscr.io/linuxserver/qbittorrent:4.6.5
@@ -254,6 +244,91 @@ services:
       - "traefik.http.routers.homarr.entrypoints=websecure"
       - "traefik.http.routers.homarr.rule=Host(`home.m1xxos.me`)"
       - "traefik.http.services.homarr.loadbalancer.server.port=7575"
+  
+  postgresql:
+    image: docker.io/library/postgres:16-alpine
+    container_name: postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -d $${POSTGRES_DB} -U $${POSTGRES_USER}"]
+      start_period: 20s
+      interval: 30s
+      retries: 5
+      timeout: 5s
+    volumes:
+      - database:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: ${PG_PASS:?database password required}
+      POSTGRES_USER: ${PG_USER:-authentik}
+      POSTGRES_DB: ${PG_DB:-authentik}
+    restart: unless-stopped
+
+  redis:
+    container_name: redis
+    image: docker.io/library/redis:7.4-alpine
+    command: --save 60 1 --loglevel warning
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli ping | grep PONG"]
+      start_period: 20s
+      interval: 30s
+      retries: 5
+      timeout: 3s
+    volumes:
+      - redis:/data
+    restart: unless-stopped
+
+  server:
+    container_name: authentik-server
+    image: ghcr.io/goauthentik/server:2024.6.3
+    command: server
+    environment:
+      AUTHENTIK_REDIS__HOST: redis
+      AUTHENTIK_POSTGRESQL__HOST: postgresql
+      AUTHENTIK_POSTGRESQL__USER: ${PG_USER:-authentik}
+      AUTHENTIK_POSTGRESQL__NAME: ${PG_DB:-authentik}
+      AUTHENTIK_POSTGRESQL__PASSWORD: ${PG_PASS}
+      AUTHENTIK_SECRET_KEY: $AUTHENTIK_SECRET_KEY
+    volumes:
+      - /home/m1xxos/authetik/media:/media
+      - /home/m1xxos/authetik/custom-templates:/templates
+    depends_on:
+      - postgresql
+      - redis
+    restart: unless-stopped
+    ports:
+      - 9000:9000
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.auth.entrypoints=websecure"
+      - "traefik.http.routers.auth.rule=Host(`auth.home.m1xxos.me`)"
+      - "traefik.http.services.auth.loadbalancer.server.port=9000"
+  
+  worker:
+    container_name: authentik-worker
+    image: ghcr.io/goauthentik/server:2024.6.3
+    restart: unless-stopped
+    command: worker
+    environment:
+      AUTHENTIK_REDIS__HOST: redis
+      AUTHENTIK_POSTGRESQL__HOST: postgresql
+      AUTHENTIK_POSTGRESQL__USER: ${PG_USER:-authentik}
+      AUTHENTIK_POSTGRESQL__NAME: ${PG_DB:-authentik}
+      AUTHENTIK_POSTGRESQL__PASSWORD: ${PG_PASS}
+      AUTHENTIK_SECRET_KEY: $AUTHENTIK_SECRET_KEY
+    # `user: root` and the docker socket volume are optional.
+    # See more for the docker socket integration here:
+    # https://goauthentik.io/docs/outposts/integrations/docker
+    # Removing `user: root` also prevents the worker from fixing the permissions
+    # on the mounted folders, so when removing this make sure the folders have the correct UID/GID
+    # (1000:1000 by default)
+    user: root
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /home/m1xxos/authetik/media:/media
+      - /home/m1xxos/authetik/certs:/certs
+      - /home/m1xxos/authetik/custom-templates:/templates
+    depends_on:
+      - postgresql
+      - redis
 
 volumes:
   jellyfin-config:
@@ -268,6 +343,10 @@ volumes:
   movies:
   downloads:
   letsencrypt:
+  database:
+    driver: local
+  redis:
+    driver: local
 
 networks:
   proxynet-monitoring:

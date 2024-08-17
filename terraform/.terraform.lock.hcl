@@ -37,6 +37,14 @@ provider "registry.terraform.io/cloudflare/cloudflare" {
   ]
 }
 
+provider "registry.terraform.io/goauthentik/authentik" {
+  version     = "2024.6.1"
+  constraints = "2024.6.1"
+  hashes = [
+    "h1:9Yue2BsmqRmheBF59fIsiBWPTiPcVRzS2iZUqy4NVsI=",
+  ]
+}
+
 provider "registry.terraform.io/sander0542/nginxproxymanager" {
   version     = "0.0.33"
   constraints = "0.0.33"
