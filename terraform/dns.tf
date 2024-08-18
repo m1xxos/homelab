@@ -41,3 +41,19 @@ resource "cloudflare_record" "home-extra" {
   type    = "CNAME"
   ttl     = 3600
 }
+
+resource "cloudflare_record" "minikube" {
+  zone_id = var.cloudflare_zone_id
+  name    = "minikube.m1xxos.me"
+  content = "127.0.0.1"
+  type    = "A"
+  ttl     = 3600
+}
+
+resource "cloudflare_record" "minikube-extra" {
+  zone_id = var.cloudflare_zone_id
+  name    = "*.minikube"
+  content = "minikube.m1xxos.me"
+  type    = "CNAME"
+  ttl     = 3600
+}
