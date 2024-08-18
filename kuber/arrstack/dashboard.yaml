@@ -6,8 +6,9 @@ metadata:
 spec:
   entryPoints:
   - websecure
+  - web
   routes:
-  - match: Host(`traefi2k.minikube.m1xxos.me`) && (PathPrefix(`/dashboard`) || PathPrefix(`/api`))
+  - match: Host(`traefik3.minikube.m1xxos.me`) && (PathPrefix(`/dashboard`) || PathPrefix(`/api`))
     kind: Rule
     services:
     - name: api@internal
