@@ -12,3 +12,5 @@ spec:
     services:
     - name: sonarr
       port: 8989
+      sticky:
+        cookie: {}
