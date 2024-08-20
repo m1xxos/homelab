@@ -2,13 +2,13 @@ apiVersion: traefik.io/v1alpha1
 kind: IngressRoute
 metadata:
   name: dashboard
-  namespace: default
+  namespace: traefik
 spec:
   entryPoints:
   - websecure
   - web
   routes:
-  - match: Host(`traefik3.minikube.m1xxos.me`) && (PathPrefix(`/dashboard`) || PathPrefix(`/api`))
+  - match: Host(`traefik.minikube.m1xxos.me`) && (PathPrefix(`/dashboard`) || PathPrefix(`/api`))
     kind: Rule
     services:
     - name: api@internal
