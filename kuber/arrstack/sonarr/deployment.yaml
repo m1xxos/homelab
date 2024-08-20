@@ -27,6 +27,23 @@ spec:
           mountPath: /config
         ports:
         - containerPort: 8989
+      initContainers:
+      - name: sonarr-metrics
+        image: ghcr.io/onedr0p/exportarr:v2.0
+        restartPolicy: Always
+        command: ["sonarr"]
+        env:
+        - name: "PORT"
+          value: "9708"
+        - name: "URL"
+          value: "http://sonarr:8989"
+        - name: "APIKEY"
+          valueFrom:
+            secretKeyRef:
+              name: sonarr-api-key
+              key: APIKEY
+        ports:
+        - containerPort: 9708
       volumes:
       - name: sonarr-config
         persistentVolumeClaim:

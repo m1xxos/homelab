@@ -17,3 +17,8 @@ labels:
 images:
 - name: lscr.io/linuxserver/sonarr
   newTag: 4.0.8
+
+secretGenerator:
+- name: sonarr-api-key
+  envs:
+  - .env.secret
