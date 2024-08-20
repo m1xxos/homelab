@@ -2,7 +2,6 @@ apiVersion: traefik.io/v1alpha1
 kind: IngressRoute
 metadata:
   name: sonarr
-  namespace: arr-stack
 spec:
   entryPoints:
   - web
