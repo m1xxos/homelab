@@ -71,7 +71,7 @@ services:
       - "traefik.http.services.jellyseerr.loadbalancer.server.port=5055"
   
   radarr:
-    image: lscr.io/linuxserver/radarr:5.8.3
+    image: lscr.io/linuxserver/radarr:5.9.1
     container_name: radarr
     depends_on:
       - vpn
