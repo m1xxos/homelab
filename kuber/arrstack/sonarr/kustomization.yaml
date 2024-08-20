@@ -4,10 +4,10 @@ kind: Kustomization
 namespace: arr-stack
 
 resources:
-- sonarr-deployment.yaml
-- sonarr-service.yaml
-- sonarr-ingress.yaml
-- sonarr-volume.yaml
+- deployment.yaml
+- service.yaml
+- ingress.yaml
+- volume.yaml
 
 labels:
 - includeSelectors: true
