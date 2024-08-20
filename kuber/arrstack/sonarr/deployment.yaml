@@ -31,7 +31,7 @@ spec:
       - name: sonarr-metrics
         image: ghcr.io/onedr0p/exportarr:v2.0
         restartPolicy: Always
-        command: ["sonarr"]
+        args: ["sonarr"]
         env:
         - name: "PORT"
           value: "9708"

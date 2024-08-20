@@ -13,3 +13,10 @@ spec:
       port: 8989
       sticky:
         cookie: {}
+  - match: Host(`sonarr.minikube.m1xxos.me`) && PathPrefix(`/metrics`)
+    kind: Rule
+    services:
+    - name: sonarr
+      port: 9708
+      sticky:
+        cookie: {}
