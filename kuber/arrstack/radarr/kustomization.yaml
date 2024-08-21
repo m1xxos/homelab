@@ -12,11 +12,11 @@ resources:
 labels:
 - includeSelectors: true
   pairs:
-    app: sonarr
+    app: radarr
 
 images:
-- name: lscr.io/linuxserver/sonarr
-  newTag: 4.0.8
+- name: lscr.io/linuxserver/radarr
+  newTag: 5.8.3
 
 secretGenerator:
 - name: api-key
