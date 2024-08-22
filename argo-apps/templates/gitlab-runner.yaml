@@ -13,7 +13,7 @@ spec:
   sources:
     - chart: gitlab-runner
       repoURL: https://charts.gitlab.io
-      targetRevision: 0.68.0
+      targetRevision: 0.68.1
       helm:
         valueFiles:
           - $values/kuber/gtilab-runner/values.yaml
