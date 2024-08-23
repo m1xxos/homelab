@@ -38,7 +38,24 @@ spec:
               key: APIKEY
         ports:
         - containerPort: 9708
+      - name: openvpn
+        image: dperson/openvpn-client:latest
+        restartPolicy: Always
+        securityContext:
+          privileged: true
+          capabilities:
+            add:
+            - NET_ADMIN
+            - SYS_MODULE
+          allowPrivilegeEscalation: true
+          readOnlyRootFilesystem: false
+        volumeMounts:
+        - name: vpn-config
+          mountPath: /vpn
       volumes:
       - name: radarr-config
         persistentVolumeClaim:
           claimName: radarr-config-pvc
+      - name: vpn-config
+        configMap:
+          name: vpn-config

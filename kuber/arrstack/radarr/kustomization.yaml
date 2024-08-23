@@ -22,3 +22,7 @@ secretGenerator:
 - name: api-key
   envs:
   - .env.secret
+configMapGenerator:
+- name: vpn-config
+  files:
+  - VPN-2500.ovpn
