@@ -1,0 +1,26 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: arr-stack
+
+resources:
+- deployment.yaml
+- service.yaml
+- ingress.yaml
+- volume.yaml
+
+labels:
+- includeSelectors: true
+  pairs:
+    app: prowlarr
+
+images:
+- name: lscr.io/linuxserver/prowlarr
+  newTag: 1.21.2
+- name: ghcr.io/onedr0p/exportarr
+  newTag: v2.0
+
+secretGenerator:
+- name: api-key
+  envs:
+  - .env.secret
