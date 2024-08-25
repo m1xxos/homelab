@@ -17,6 +17,8 @@ labels:
 images:
 - name: lscr.io/linuxserver/prowlarr
   newTag: 1.21.2
+- name: ghcr.io/onedr0p/exportarr
+  newTag: v2.0
 
 secretGenerator:
 - name: api-key

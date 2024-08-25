@@ -17,6 +17,8 @@ labels:
 images:
 - name: lscr.io/linuxserver/sonarr
   newTag: 4.0.8
+- name: ghcr.io/onedr0p/exportarr
+  newTag: v2.0
 
 secretGenerator:
 - name: api-key

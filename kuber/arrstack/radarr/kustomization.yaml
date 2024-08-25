@@ -17,6 +17,8 @@ labels:
 images:
 - name: lscr.io/linuxserver/radarr
   newTag: 5.8.3
+- name: ghcr.io/onedr0p/exportarr
+  newTag: v2.0
 
 secretGenerator:
 - name: api-key

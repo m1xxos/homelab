@@ -5,7 +5,7 @@ locals {
 resource "cloudflare_record" "main" {
   zone_id = var.cloudflare_zone_id
   name    = local.local_name
-  content   = "192.168.1.250"
+  content = "192.168.1.250"
   type    = "A"
   ttl     = 3600
 }
@@ -13,7 +13,7 @@ resource "cloudflare_record" "main" {
 resource "cloudflare_record" "traefik" {
   zone_id = var.cloudflare_zone_id
   name    = "*.local"
-  content   = local.local_name
+  content = local.local_name
   type    = "CNAME"
   ttl     = 3600
 }
@@ -21,7 +21,7 @@ resource "cloudflare_record" "traefik" {
 resource "cloudflare_record" "traefik-dev" {
   zone_id = var.cloudflare_zone_id
   name    = "*.dev"
-  content   = local.local_name
+  content = local.local_name
   type    = "CNAME"
   ttl     = 3600
 }
@@ -29,7 +29,7 @@ resource "cloudflare_record" "traefik-dev" {
 resource "cloudflare_record" "home" {
   zone_id = var.cloudflare_zone_id
   name    = "home"
-  content   = "192.168.1.250"
+  content = "192.168.1.250"
   type    = "A"
   ttl     = 3600
 }
@@ -37,7 +37,7 @@ resource "cloudflare_record" "home" {
 resource "cloudflare_record" "home-extra" {
   zone_id = var.cloudflare_zone_id
   name    = "*.home"
-  content   = "home.m1xxos.me"
+  content = "home.m1xxos.me"
   type    = "CNAME"
   ttl     = 3600
 }
