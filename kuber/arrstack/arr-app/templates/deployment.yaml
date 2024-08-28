@@ -31,7 +31,7 @@ spec:
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
-        - name: {{ .Chart.Name }}
+        - name: {{ include "arr-app.name" . }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
@@ -50,28 +50,27 @@ spec:
           volumeMounts:
             {{- toYaml . | nindent 12 }}
           {{- end }}
-        
-        {{- if .Values.metrics.enabled }}
-        - name: "{{ .Chart.Name }}-metrics"
+      initContainers:
+        - name: "{{ include "arr-app.name" . }}-metrics"
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.metrics.image.repository }}:{{ .Values.metrics.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          restartPolicy: Always
+          args: [ "{{ .Values.metrics.type }}" ]
+          env:
+          - name: "PORT"
+            value: {{ .Values.metrics.port }}
+          - name: "URL"
+            value: "http://{{ include "arr-app.name" . }}:{{ .Values.service.port }}"
+          - name: "APIKEY"
+            valueFrom:
+              secretKeyRef:
+                {{- toYaml .Values.metrics.secretKeyRef | nindent  16 }}
           ports:
-            - name: http
-              containerPort: {{ .Values.service.port }}
+            - name: metrics
+              containerPort: {{ .Values.metrics.port }}
               protocol: TCP
-          livenessProbe:
-            {{- toYaml .Values.livenessProbe | nindent 12 }}
-          readinessProbe:
-            {{- toYaml .Values.readinessProbe | nindent 12 }}
-          resources:
-            {{- toYaml .Values.resources | nindent 12 }}
-          {{- with .Values.volumeMounts }}
-          volumeMounts:
-            {{- toYaml . | nindent 12 }}
-          {{- end }}
-        {{- end }}
 
       {{- with .Values.volumes }}
       volumes:
