@@ -50,6 +50,7 @@ spec:
           volumeMounts:
             {{- toYaml . | nindent 12 }}
           {{- end }}
+      {{- if .Values.metrics.enabled }}
       initContainers:
         - name: "{{ include "arr-app.name" . }}-metrics"
           securityContext:
@@ -71,7 +72,7 @@ spec:
             - name: metrics
               containerPort: {{ .Values.metrics.port }}
               protocol: TCP
-
+      {{- end }}
       {{- with .Values.volumes }}
       volumes:
         {{- toYaml . | nindent 8 }}
