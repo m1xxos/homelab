@@ -60,7 +60,7 @@ spec:
           args: [ "{{ .Values.metrics.type }}" ]
           env:
           - name: "PORT"
-            value: {{ .Values.metrics.port }}
+            value: {{ .Values.metrics.port | quote }}
           - name: "URL"
             value: "http://{{ include "arr-app.name" . }}:{{ .Values.service.port }}"
           - name: "APIKEY"
