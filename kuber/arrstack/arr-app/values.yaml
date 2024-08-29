@@ -20,6 +20,7 @@ metrics:
   secretKeyRef:
     name: api-key
     key: APIKEY
+  volumeName: config
 
 imagePullSecrets: []
 nameOverride: "radarr"
@@ -99,7 +100,7 @@ autoscaling:
   # targetMemoryUtilizationPercentage: 80
 
 # Additional volumes on the output Deployment definition.
-persistent-config:
+persistentConfig:
   enabled: true
 
 volumes:
