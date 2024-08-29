@@ -1,0 +1,15 @@
+{{- if .Values.persistent-config.enabled }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  {{- with .Values.volumes 0 }}
+    name: {{ .name }}
+  {{- end -}} }}
+spec:
+  resources:
+    requests:
+      storage: 200
+  volumeMode: Filesystem
+  accessModes:
+  - ReadWriteMany
+{{- end }}
