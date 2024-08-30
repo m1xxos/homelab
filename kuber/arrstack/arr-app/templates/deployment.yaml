@@ -73,10 +73,10 @@ spec:
               containerPort: {{ .Values.metrics.port }}
               protocol: TCP
       {{- end }}
-      {{- with .Values.volumes }}
       volumes:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
+      - name: config
+        persistentVolumeClaim:
+        claimName: "{{ include "arr-app.name" . }}-config"
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
