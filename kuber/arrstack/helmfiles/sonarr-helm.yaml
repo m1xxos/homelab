@@ -1,5 +1,5 @@
 releases:
-- name: prom-norbac-ubuntu
+- name: sonarr
   namespace: arr-test
   chart: ../arr-app
   set:
