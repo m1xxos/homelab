@@ -278,7 +278,7 @@ services:
 
   server:
     container_name: authentik-server
-    image: ghcr.io/goauthentik/server:2024.6.4
+    image: ghcr.io/goauthentik/server:2024.8.0
     command: server
     environment:
       AUTHENTIK_REDIS__HOST: redis
@@ -304,7 +304,7 @@ services:
   
   worker:
     container_name: authentik-worker
-    image: ghcr.io/goauthentik/server:2024.6.4
+    image: ghcr.io/goauthentik/server:2024.8.0
     restart: unless-stopped
     command: worker
     environment:
