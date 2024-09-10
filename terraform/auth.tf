@@ -2,15 +2,15 @@ data "authentik_flow" "default-provider-authorization-implicit-consent" {
   slug = "default-provider-authorization-implicit-consent"
 }
 
-data "authentik_scope_mapping" "scope-email" {
+data "authentik_property_mapping_provider_scope" "scope-email" {
   name = "authentik default OAuth Mapping: OpenID 'email'"
 }
 
-data "authentik_scope_mapping" "scope-profile" {
+data "authentik_property_mapping_provider_scope" "scope-profile" {
   name = "authentik default OAuth Mapping: OpenID 'profile'"
 }
 
-data "authentik_scope_mapping" "scope-openid" {
+data "authentik_property_mapping_provider_scope" "scope-openid" {
   name = "authentik default OAuth Mapping: OpenID 'openid'"
 }
 
@@ -28,9 +28,9 @@ resource "authentik_provider_oauth2" "portainer" {
   redirect_uris = ["https://portainer.local.m1xxos.me/"]
 
   property_mappings = [
-    data.authentik_scope_mapping.scope-email.id,
-    data.authentik_scope_mapping.scope-profile.id,
-    data.authentik_scope_mapping.scope-openid.id,
+    data.authentik_property_mapping_provider_scope.scope-email.id,
+    data.authentik_property_mapping_provider_scope.scope-profile.id,
+    data.authentik_property_mapping_provider_scope.scope-openid.id,
   ]
 }
 

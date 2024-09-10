@@ -61,6 +61,7 @@ module "proxmox-k3s-agents" {
 
 module "proxmox-k3s-server" {
   source = "./proxmox-vm-module"
+  onboot = false
 
   vmid      = 1300
   cores     = 4
