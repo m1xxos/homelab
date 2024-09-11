@@ -116,18 +116,18 @@ services:
     network_mode: "service:vpn"
     restart: unless-stopped
   
-  searcharr:
-    image: toddrob/searcharr:v3
-    container_name: searcharr
-    environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=Europe/Moscow
-    volumes:
-      - /home/m1xxos/home/settings.py:/app/settings.py
-      - searcharr-logs:/app/logs
-      - searcharr-data:/app/data
-    restart: unless-stopped
+  # searcharr:
+  #   image: toddrob/searcharr:v3
+  #   container_name: searcharr
+  #   environment:
+  #     - PUID=1000
+  #     - PGID=1000
+  #     - TZ=Europe/Moscow
+  #   volumes:
+  #     - /home/m1xxos/home/settings.py:/app/settings.py
+  #     - searcharr-logs:/app/logs
+  #     - searcharr-data:/app/data
+  #   restart: unless-stopped
 
   qbittorrent:
     image: lscr.io/linuxserver/qbittorrent:4.6.6
