@@ -49,6 +49,8 @@ provider "authentik" {
 
 module "proxmox-k3s-agents" {
   source = "./proxmox-vm-module"
+  onboot = false
+  vm_state = "stopped"
 
   count     = 1
   vmid      = 1301 + count.index
@@ -62,6 +64,7 @@ module "proxmox-k3s-agents" {
 module "proxmox-k3s-server" {
   source = "./proxmox-vm-module"
   onboot = false
+  vm_state = "stopped"
 
   vmid      = 1300
   cores     = 4
