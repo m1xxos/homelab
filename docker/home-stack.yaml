@@ -93,32 +93,42 @@ services:
   sonarr:
     image: lscr.io/linuxserver/sonarr:4.0.9
     container_name: sonarr
-    depends_on:
-    - vpn
     environment:
     - PUID=1000
     - PGID=1000
     - TZ=Europe/Moscow
+    expose:
+    - 8989
     volumes:
     - sonarr-config:/config
     - tvseries:/tv #optional
     - downloads:/downloads #optional
-    network_mode: "service:vpn"
     restart: unless-stopped
+    labels:
+    - "traefik.enable"
+    - "traefik.http.routers.sonarr.entrypoints=websecure"
+    - "traefik.http.routers.sonarr.service=sonarr"
+    - "traefik.http.routers.sonarr.rule=Host(`sonarr.home.m1xxos.me`)"
+    - "traefik.http.services.sonarr.loadbalancer.server.port=8989"
 
   prowlarr:
     image: lscr.io/linuxserver/prowlarr:1.23.1
     container_name: prowlarr
-    depends_on:
-    - vpn
     environment:
     - PUID=1000
     - PGID=1000
     - TZ=Europe/Moscow
+    expose:
+    - 9696
     volumes:
     - prowlarr-config:/config
-    network_mode: "service:vpn"
     restart: unless-stopped
+    labels:
+    - "traefik.enable"
+    - "traefik.http.routers.prowlarr.entrypoints=websecure"
+    - "traefik.http.routers.prowlarr.service=prowlarr"
+    - "traefik.http.routers.prowlarr.rule=Host(`prowlarr.home.m1xxos.me`)"
+    - "traefik.http.services.prowlarr.loadbalancer.server.port=9696"
 
   # searcharr:
   #   image: toddrob/searcharr:v3
@@ -156,50 +166,13 @@ services:
     - "traefik.http.routers.qbittorrent.rule=Host(`torrent.home.m1xxos.me`)"
     - "traefik.http.services.qbittorrent.loadbalancer.server.port=8080"
 
-  vpn:
-    container_name: vpn
-    image: 'dperson/openvpn-client:latest'
-    environment:
-    - PUID=1030
-    - PGID=100
-    - TZ=Europe/Moscow
-    cap_add:
-    - net_admin
-    - SYS_MODULE
-    volumes:
-    - /home/m1xxos/vpn:/vpn
-    - /lib/modules:/lib/modules
-    security_opt:
-    - 'label:disable'
-    devices:
-    - '/dev/net/tun:/dev/net/tun'
-    dns:
-    - 9.9.9.9
-    ports:
-    - 7878:7878
-    - 8989:8989
-    - 9696:9696
-    command: '-f "" -r 192.168.1.0/24'
-    restart: unless-stopped
-    labels:
-    - "traefik.enable=true"
-
-    - "traefik.http.routers.sonarr.entrypoints=websecure"
-    - "traefik.http.routers.sonarr.service=sonarr"
-    - "traefik.http.routers.sonarr.rule=Host(`sonarr.home.m1xxos.me`)"
-    - "traefik.http.services.sonarr.loadbalancer.server.port=8989"
-    - "traefik.http.routers.prowlarr.entrypoints=websecure"
-    - "traefik.http.routers.prowlarr.service=prowlarr"
-    - "traefik.http.routers.prowlarr.rule=Host(`prowlarr.home.m1xxos.me`)"
-    - "traefik.http.services.prowlarr.loadbalancer.server.port=9696"
-
   sonarr-exporter:
     image: ghcr.io/onedr0p/exportarr:v2.0
     container_name: sonarr-exporter
     command: ["sonarr"]
     environment:
       PORT: 9707
-      URL: "http://vpn:8989"
+      URL: "http://sonarr:8989"
       APIKEY: $SONARR_API
     ports:
     - "9707:9707"
@@ -211,7 +184,7 @@ services:
     command: ["radarr"]
     environment:
       PORT: 9708
-      URL: "http://vpn:7878"
+      URL: "http://radarr:7878"
       APIKEY: $RADARR_API
     ports:
     - "9708:9708"
@@ -223,7 +196,7 @@ services:
     command: ["prowlarr"]
     environment:
       PORT: 9709
-      URL: "http://vpn:9696"
+      URL: "http://prowlarr:9696"
       APIKEY: $PROWLARR_API
     ports:
     - "9709:9709"
