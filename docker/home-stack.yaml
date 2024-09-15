@@ -105,7 +105,7 @@ services:
     - downloads:/downloads #optional
     restart: unless-stopped
     labels:
-    - "traefik.enable"
+    - "traefik.enable=true"
     - "traefik.http.routers.sonarr.entrypoints=websecure"
     - "traefik.http.routers.sonarr.service=sonarr"
     - "traefik.http.routers.sonarr.rule=Host(`sonarr.home.m1xxos.me`)"
@@ -124,24 +124,24 @@ services:
     - prowlarr-config:/config
     restart: unless-stopped
     labels:
-    - "traefik.enable"
+    - "traefik.enable=true"
     - "traefik.http.routers.prowlarr.entrypoints=websecure"
     - "traefik.http.routers.prowlarr.service=prowlarr"
     - "traefik.http.routers.prowlarr.rule=Host(`prowlarr.home.m1xxos.me`)"
     - "traefik.http.services.prowlarr.loadbalancer.server.port=9696"
 
-  # searcharr:
-  #   image: toddrob/searcharr:v3
-  #   container_name: searcharr
-  #   environment:
-  #     - PUID=1000
-  #     - PGID=1000
-  #     - TZ=Europe/Moscow
-  #   volumes:
-  #     - /home/m1xxos/home/settings.py:/app/settings.py
-  #     - searcharr-logs:/app/logs
-  #     - searcharr-data:/app/data
-  #   restart: unless-stopped
+  searcharr:
+    image: toddrob/searcharr:v3
+    container_name: searcharr
+    environment:
+    - PUID=1000
+    - PGID=1000
+    - TZ=Europe/Moscow
+    volumes:
+    - /home/m1xxos/home/settings.py:/app/settings.py
+    - searcharr-logs:/app/logs
+    - searcharr-data:/app/data
+    restart: unless-stopped
 
   qbittorrent:
     image: lscr.io/linuxserver/qbittorrent:4.6.6
