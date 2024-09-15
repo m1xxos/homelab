@@ -1,104 +1,108 @@
----
 services:
   traefik:
     image: traefik:v3.1
     container_name: traefik
     command:
-      - "--log.level=INFO"
-      - "--api.insecure=true"
-      - "--providers.docker=true"
-      - "--providers.docker.exposedbydefault=false"
-      - "--entryPoints.web.address=:80"
-      - "--entryPoints.websecure.address=:443"
-      - "--entrypoints.websecure.http.tls=true"
-      - "--metrics.prometheus=true"
+    - "--log.level=INFO"
+    - "--api.insecure=true"
+    - "--providers.docker=true"
+    - "--providers.docker.exposedbydefault=false"
+    - "--entryPoints.web.address=:80"
+    - "--entryPoints.websecure.address=:443"
+    - "--entrypoints.websecure.http.tls=true"
+    - "--metrics.prometheus=true"
     ports:
-      - "80:80"
-      - "443:443"
-      - "8088:8080"
+    - "80:80"
+    - "443:443"
+    - "8088:8080"
     restart: unless-stopped
     volumes:
-      - "/var/run/docker.sock:/var/run/docker.sock:ro"
-      - letsencrypt:/letsencrypt
+    - "/var/run/docker.sock:/var/run/docker.sock:ro"
+    - letsencrypt:/letsencrypt
     labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.traefik.entrypoints=websecure"
-      - "traefik.http.routers.traefik.rule=Host(`traefik.home.m1xxos.me`)"
-      - "traefik.http.services.traefik.loadbalancer.server.port=8080"     
-  
+    - "traefik.enable=true"
+    - "traefik.http.routers.traefik.entrypoints=websecure"
+    - "traefik.http.routers.traefik.rule=Host(`traefik.home.m1xxos.me`)"
+    - "traefik.http.services.traefik.loadbalancer.server.port=8080"
+
   jellyfin:
     image: lscr.io/linuxserver/jellyfin:10.9.11
     container_name: jellyfin
     environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=Europe/Moscow
+    - PUID=1000
+    - PGID=1000
+    - TZ=Europe/Moscow
     volumes:
-      - jellyfin-config:/config
-      - tvseries:/data/tvshows
-      - movies:/data/movies
+    - jellyfin-config:/config
+    - tvseries:/data/tvshows
+    - movies:/data/movies
     ports:
-      - 8096:8096
-      - 8920:8920
-      - 7359:7359/udp
-      - 1900:1900/udp
+    - 8096:8096
+    - 8920:8920
+    - 7359:7359/udp
+    - 1900:1900/udp
     restart: unless-stopped
     labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.jellyfin.entrypoints=websecure"
-      - "traefik.http.routers.jellyfin.rule=Host(`jellyfin.home.m1xxos.me`)"
-      - "traefik.http.services.jellyfin.loadbalancer.server.port=8096"
+    - "traefik.enable=true"
+    - "traefik.http.routers.jellyfin.entrypoints=websecure"
+    - "traefik.http.routers.jellyfin.rule=Host(`jellyfin.home.m1xxos.me`)"
+    - "traefik.http.services.jellyfin.loadbalancer.server.port=8096"
 
-  
+
   jellyseerr:
     image: fallenbagel/jellyseerr:1.9.2
     container_name: jellyseerr
     environment:
-      - LOG_LEVEL=debug
-      - TZ=Europe/Moscow
-      - PORT=5055 #optional
+    - LOG_LEVEL=debug
+    - TZ=Europe/Moscow
+    - PORT=5055 #optional
     dns:
-      - 9.9.9.9
+    - 9.9.9.9
     ports:
-      - 5055:5055
+    - 5055:5055
     volumes:
-      - jellyseerr-config:/app/config
+    - jellyseerr-config:/app/config
     restart: unless-stopped
     labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.jellyseerr.entrypoints=websecure"
-      - "traefik.http.routers.jellyseerr.rule=Host(`jellyseerr.home.m1xxos.me`)"
-      - "traefik.http.services.jellyseerr.loadbalancer.server.port=5055"
-  
+    - "traefik.enable=true"
+    - "traefik.http.routers.jellyseerr.entrypoints=websecure"
+    - "traefik.http.routers.jellyseerr.rule=Host(`jellyseerr.home.m1xxos.me`)"
+    - "traefik.http.services.jellyseerr.loadbalancer.server.port=5055"
+
   radarr:
     image: lscr.io/linuxserver/radarr:5.9.1
     container_name: radarr
-    depends_on:
-      - vpn
     environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=Europe/Moscow
+    - PUID=1000
+    - PGID=1000
+    - TZ=Europe/Moscow
+    expose:
+    - 7878
     volumes:
-      - radarr-config:/config
-      - movies:/movies #optional
-      - downloads:/downloads #optional
-    network_mode: "service:vpn"
+    - radarr-config:/config
+    - movies:/movies #optional
+    - downloads:/downloads #optional
     restart: unless-stopped
+    labels:
+    - "traefik.enable=true"
+    - "traefik.http.routers.radarr.entrypoints=websecure"
+    - "traefik.http.routers.radarr.rule=Host(`radarr.home.m1xxos.me`)"
+    - "traefik.http.routers.radarr.service=radarr"
+    - "traefik.http.services.radarr.loadbalancer.server.port=7878"
 
   sonarr:
     image: lscr.io/linuxserver/sonarr:4.0.9
     container_name: sonarr
     depends_on:
-      - vpn
+    - vpn
     environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=Europe/Moscow
+    - PUID=1000
+    - PGID=1000
+    - TZ=Europe/Moscow
     volumes:
-      - sonarr-config:/config
-      - tvseries:/tv #optional
-      - downloads:/downloads #optional
+    - sonarr-config:/config
+    - tvseries:/tv #optional
+    - downloads:/downloads #optional
     network_mode: "service:vpn"
     restart: unless-stopped
 
@@ -106,16 +110,16 @@ services:
     image: lscr.io/linuxserver/prowlarr:1.23.1
     container_name: prowlarr
     depends_on:
-      - vpn
+    - vpn
     environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=Europe/Moscow
+    - PUID=1000
+    - PGID=1000
+    - TZ=Europe/Moscow
     volumes:
-      - prowlarr-config:/config
+    - prowlarr-config:/config
     network_mode: "service:vpn"
     restart: unless-stopped
-  
+
   # searcharr:
   #   image: toddrob/searcharr:v3
   #   container_name: searcharr
@@ -133,65 +137,62 @@ services:
     image: lscr.io/linuxserver/qbittorrent:4.6.6
     container_name: qbittorrent
     environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=Europe/Moscow
-      - WEBUI_PORT=8080
-      - TORRENTING_PORT=6881
+    - PUID=1000
+    - PGID=1000
+    - TZ=Europe/Moscow
+    - WEBUI_PORT=8080
+    - TORRENTING_PORT=6881
     volumes:
-      - qbittorrent-config:/config
-      - downloads:/downloads #optional
+    - qbittorrent-config:/config
+    - downloads:/downloads #optional
     ports:
-      - 8080:8080
-      - 6881:6881
-      - 6881:6881/udp
+    - 8080:8080
+    - 6881:6881
+    - 6881:6881/udp
     restart: unless-stopped
     labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.qbittorrent.entrypoints=websecure"
-      - "traefik.http.routers.qbittorrent.rule=Host(`torrent.home.m1xxos.me`)"
-      - "traefik.http.services.qbittorrent.loadbalancer.server.port=8080"
-  
+    - "traefik.enable=true"
+    - "traefik.http.routers.qbittorrent.entrypoints=websecure"
+    - "traefik.http.routers.qbittorrent.rule=Host(`torrent.home.m1xxos.me`)"
+    - "traefik.http.services.qbittorrent.loadbalancer.server.port=8080"
+
   vpn:
     container_name: vpn
     image: 'dperson/openvpn-client:latest'
     environment:
-      - PUID=1030
-      - PGID=100
-      - TZ=Europe/Moscow
+    - PUID=1030
+    - PGID=100
+    - TZ=Europe/Moscow
     cap_add:
-      - net_admin
-      - SYS_MODULE
+    - net_admin
+    - SYS_MODULE
     volumes:
-      - /home/m1xxos/vpn:/vpn
-      - /lib/modules:/lib/modules
+    - /home/m1xxos/vpn:/vpn
+    - /lib/modules:/lib/modules
     security_opt:
-      - 'label:disable'
+    - 'label:disable'
     devices:
-      - '/dev/net/tun:/dev/net/tun'
+    - '/dev/net/tun:/dev/net/tun'
     dns:
-      - 9.9.9.9
+    - 9.9.9.9
     ports:
-      - 7878:7878
-      - 8989:8989
-      - 9696:9696
+    - 7878:7878
+    - 8989:8989
+    - 9696:9696
     command: '-f "" -r 192.168.1.0/24'
     restart: unless-stopped
     labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.radarr.entrypoints=websecure"
-      - "traefik.http.routers.radarr.rule=Host(`radarr.home.m1xxos.me`)"
-      - "traefik.http.routers.radarr.service=radarr"
-      - "traefik.http.services.radarr.loadbalancer.server.port=7878"
-      - "traefik.http.routers.sonarr.entrypoints=websecure"
-      - "traefik.http.routers.sonarr.service=sonarr"
-      - "traefik.http.routers.sonarr.rule=Host(`sonarr.home.m1xxos.me`)"
-      - "traefik.http.services.sonarr.loadbalancer.server.port=8989"
-      - "traefik.http.routers.prowlarr.entrypoints=websecure"
-      - "traefik.http.routers.prowlarr.service=prowlarr"
-      - "traefik.http.routers.prowlarr.rule=Host(`prowlarr.home.m1xxos.me`)"
-      - "traefik.http.services.prowlarr.loadbalancer.server.port=9696"
-  
+    - "traefik.enable=true"
+
+    - "traefik.http.routers.sonarr.entrypoints=websecure"
+    - "traefik.http.routers.sonarr.service=sonarr"
+    - "traefik.http.routers.sonarr.rule=Host(`sonarr.home.m1xxos.me`)"
+    - "traefik.http.services.sonarr.loadbalancer.server.port=8989"
+    - "traefik.http.routers.prowlarr.entrypoints=websecure"
+    - "traefik.http.routers.prowlarr.service=prowlarr"
+    - "traefik.http.routers.prowlarr.rule=Host(`prowlarr.home.m1xxos.me`)"
+    - "traefik.http.services.prowlarr.loadbalancer.server.port=9696"
+
   sonarr-exporter:
     image: ghcr.io/onedr0p/exportarr:v2.0
     container_name: sonarr-exporter
@@ -201,9 +202,9 @@ services:
       URL: "http://vpn:8989"
       APIKEY: $SONARR_API
     ports:
-      - "9707:9707"
+    - "9707:9707"
     restart: unless-stopped
-  
+
   radarr-exporter:
     image: ghcr.io/onedr0p/exportarr:v2.0
     container_name: radarr-exporter
@@ -213,9 +214,9 @@ services:
       URL: "http://vpn:7878"
       APIKEY: $RADARR_API
     ports:
-      - "9708:9708"
+    - "9708:9708"
     restart: unless-stopped
-  
+
   prowlarr-exporter:
     image: ghcr.io/onedr0p/exportarr:v2.0
     container_name: prowlarr-exporter
@@ -225,26 +226,26 @@ services:
       URL: "http://vpn:9696"
       APIKEY: $PROWLARR_API
     ports:
-      - "9709:9709"
+    - "9709:9709"
     restart: unless-stopped
-  
+
   homarr:
     container_name: homarr
     image: ghcr.io/ajnart/homarr:0.15.4
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - ~/homarr/configs:/app/data/configs
-      - ~/homarr/icons:/app/public/icons
-      - ~/homarr/data:/data
+    - /var/run/docker.sock:/var/run/docker.sock
+    - ~/homarr/configs:/app/data/configs
+    - ~/homarr/icons:/app/public/icons
+    - ~/homarr/data:/data
     ports:
-      - '7575:7575'
+    - '7575:7575'
     restart: unless-stopped
     labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.homarr.entrypoints=websecure"
-      - "traefik.http.routers.homarr.rule=Host(`home.m1xxos.me`)"
-      - "traefik.http.services.homarr.loadbalancer.server.port=7575"
-  
+    - "traefik.enable=true"
+    - "traefik.http.routers.homarr.entrypoints=websecure"
+    - "traefik.http.routers.homarr.rule=Host(`home.m1xxos.me`)"
+    - "traefik.http.services.homarr.loadbalancer.server.port=7575"
+
   postgresql:
     image: docker.io/library/postgres:16-alpine
     container_name: postgresql
@@ -255,7 +256,7 @@ services:
       retries: 5
       timeout: 5s
     volumes:
-      - database:/var/lib/postgresql/data
+    - database:/var/lib/postgresql/data
     environment:
       POSTGRES_PASSWORD: ${PG_PASS:?database password required}
       POSTGRES_USER: ${PG_USER:-authentik}
@@ -273,7 +274,7 @@ services:
       retries: 5
       timeout: 3s
     volumes:
-      - redis:/data
+    - redis:/data
     restart: unless-stopped
 
   server:
@@ -288,20 +289,20 @@ services:
       AUTHENTIK_POSTGRESQL__PASSWORD: ${PG_PASS}
       AUTHENTIK_SECRET_KEY: $AUTHENTIK_SECRET_KEY
     volumes:
-      - /home/m1xxos/authetik/media:/media
-      - /home/m1xxos/authetik/custom-templates:/templates
+    - /home/m1xxos/authetik/media:/media
+    - /home/m1xxos/authetik/custom-templates:/templates
     depends_on:
-      - postgresql
-      - redis
+    - postgresql
+    - redis
     restart: unless-stopped
     ports:
-      - 9000:9000
+    - 9000:9000
     labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.auth.entrypoints=websecure"
-      - "traefik.http.routers.auth.rule=Host(`auth.home.m1xxos.me`)"
-      - "traefik.http.services.auth.loadbalancer.server.port=9000"
-  
+    - "traefik.enable=true"
+    - "traefik.http.routers.auth.entrypoints=websecure"
+    - "traefik.http.routers.auth.rule=Host(`auth.home.m1xxos.me`)"
+    - "traefik.http.services.auth.loadbalancer.server.port=9000"
+
   worker:
     container_name: authentik-worker
     image: ghcr.io/goauthentik/server:2024.8.1
@@ -322,13 +323,13 @@ services:
     # (1000:1000 by default)
     user: root
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - /home/m1xxos/authetik/media:/media
-      - /home/m1xxos/authetik/certs:/certs
-      - /home/m1xxos/authetik/custom-templates:/templates
+    - /var/run/docker.sock:/var/run/docker.sock
+    - /home/m1xxos/authetik/media:/media
+    - /home/m1xxos/authetik/certs:/certs
+    - /home/m1xxos/authetik/custom-templates:/templates
     depends_on:
-      - postgresql
-      - redis
+    - postgresql
+    - redis
 
 volumes:
   jellyfin-config:
