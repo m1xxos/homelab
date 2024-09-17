@@ -144,7 +144,7 @@ services:
     restart: unless-stopped
 
   qbittorrent:
-    image: lscr.io/linuxserver/qbittorrent:4.6.6
+    image: lscr.io/linuxserver/qbittorrent:4.6.7
     container_name: qbittorrent
     environment:
     - PUID=1000
