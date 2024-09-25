@@ -16,7 +16,7 @@ labels:
 
 images:
 - name: lscr.io/linuxserver/radarr
-  newTag: 5.10.4
+  newTag: 5.11.0
 - name: ghcr.io/onedr0p/exportarr
   newTag: v2.0
 
