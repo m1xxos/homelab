@@ -14,5 +14,18 @@
       "docker/.+\\.yaml$",
       "(^|/)(?:docker-)?compose[^/]*\\.ya?ml$"
     ]
-  }
+  },
+  "packageRules": [
+    {
+      "groupName": "all non-major dependencies",
+      "groupSlug": "all-minor-patch",
+      "matchPackageNames": [
+        "*"
+      ],
+      "matchUpdateTypes": [
+        "minor",
+        "patch"
+      ]
+    }
+  ]
 }
