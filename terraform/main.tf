@@ -6,7 +6,7 @@ terraform {
     }
     cloudflare = {
       source  = "cloudflare/cloudflare"
-      version = "4.42.0"
+      version = "4.43.0"
     }
     nginxproxymanager = {
       source  = "Sander0542/nginxproxymanager"
@@ -14,7 +14,7 @@ terraform {
     }
     authentik = {
       source  = "goauthentik/authentik"
-      version = "2024.8.3"
+      version = "2024.8.4"
     }
   }
   backend "s3" {

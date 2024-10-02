@@ -16,7 +16,7 @@ labels:
 
 images:
 - name: lscr.io/linuxserver/prowlarr
-  newTag: 1.23.1
+  newTag: 1.24.3
 - name: ghcr.io/onedr0p/exportarr
   newTag: v2.0
 
