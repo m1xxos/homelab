@@ -70,7 +70,7 @@ services:
     - "traefik.http.services.jellyseerr.loadbalancer.server.port=5055"
 
   radarr:
-    image: lscr.io/linuxserver/radarr:5.11.0
+    image: lscr.io/linuxserver/radarr:5.12.2
     container_name: radarr
     environment:
     - PUID=1000
