@@ -1,3 +1,3 @@
-ancestorEntries = ["terraform/main.tf", "terraform/talos-cluster-module/cluster.tf", "terraform/talos-cluster-module/providers.tf"]
-ourEntries = ["terraform/main.tf", "terraform/talos-cluster-module/cluster.tf", "terraform/talos-cluster-module/providers.tf"]
-theirEntries = ["terraform/main.tf", "terraform/talos-cluster-module/cluster.tf", "terraform/talos-cluster-module/providers.tf"]
+ancestorEntries = [".gitignore", "terraform/.terraform.lock.hcl", "terraform/talos-cluster-module/providers.tf"]
+ourEntries = [".gitignore", "terraform/.terraform.lock.hcl", "terraform/outputs.tf", "terraform/talos-cluster-module/helm.tf", "terraform/talos-cluster-module/providers.tf"]
+theirEntries = [".gitignore", "terraform/.terraform.lock.hcl", "terraform/outputs.tf", "terraform/talos-cluster-module/helm.tf", "terraform/talos-cluster-module/providers.tf"]
