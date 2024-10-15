@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sonarr
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: sonarr
+  template:
+    metadata:
+      labels:
+        app: sonarr
+    spec:
+      containers:
+      - name: sonarr
+        image: lscr.io/linuxserver/sonarr:4.0.9
+        env:
+        - name: "TZ"
+          value: "Europe/Moscow"
+        resources:
+          limits:
+            memory: "256Mi"
+            cpu: "500m"
+        volumeMounts:
+        - name: sonarr-config
+          mountPath: /config
+        ports:
+        - containerPort: 8989
+      initContainers:
+      - name: metrics
+        image: ghcr.io/onedr0p/exportarr:v2.0
+        restartPolicy: Always
+        args: ["sonarr"]
+        env:
+        - name: "PORT"
+          value: "9708"
+        - name: "URL"
+          value: "http://sonarr:8989"
+        - name: "APIKEY"
+          valueFrom:
+            secretKeyRef:
+              name: api-key
+              key: APIKEY
+        ports:
+        - containerPort: 9708
+      volumes:
+      - name: sonarr-config
+        persistentVolumeClaim:
+          claimName: sonarr-config-pvc

@@ -1,0 +1,31 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended"
+  ],
+  "kubernetes": {
+    "fileMatch": ["\\.yaml$", "\\.ya?ml$"]
+  },
+  "argocd": {
+    "fileMatch": ["argo-apps/.+\\.ya?ml$"]
+  },
+  "docker-compose": {
+    "fileMatch": [
+      "docker/.+\\.yaml$",
+      "(^|/)(?:docker-)?compose[^/]*\\.ya?ml$"
+    ]
+  },
+  "packageRules": [
+    {
+      "groupName": "all non-major dependencies",
+      "groupSlug": "all-minor-patch",
+      "matchPackageNames": [
+        "*"
+      ],
+      "matchUpdateTypes": [
+        "minor",
+        "patch"
+      ]
+    }
+  ]
+}

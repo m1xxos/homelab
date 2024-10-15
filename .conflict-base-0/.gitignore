@@ -1,0 +1,6 @@
+tests/
+k3s-ansible
+.vscode
+*.kubeconfig
+settings.py
+kuber/arrstack/radarr/VPN-2500.ovpn
