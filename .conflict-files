@@ -1,3 +1,0 @@
-ancestorEntries = []
-ourEntries = ["terraform/providers.tf"]
-theirEntries = ["terraform/providers.tf"]
