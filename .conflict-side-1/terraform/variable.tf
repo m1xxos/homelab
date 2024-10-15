@@ -13,9 +13,9 @@ variable "proxmox_api_token_secret" {
 }
 
 variable "proxmox_talos_api_token" {
-  type = string
+  type      = string
   sensitive = true
-  
+
 }
 
 variable "ssh_password" {
