@@ -16,6 +16,14 @@ terraform {
       source  = "goauthentik/authentik"
       version = "2024.8.4"
     }
+    proxmox-talos = {
+      source  = "bpg/proxmox"
+      version = "0.60.0"
+    }
+    talos = {
+      source  = "siderolabs/talos"
+      version = "0.5.0"
+    }
   }
   backend "s3" {
     endpoint                    = "https://storage.yandexcloud.net"
@@ -36,6 +44,19 @@ provider "proxmox" {
   pm_api_token_id     = var.proxmox_api_token_id
   pm_api_token_secret = var.proxmox_api_token_secret
 
+}
+
+provider "proxmox-talos" {
+  endpoint  = var.proxmox_api_url
+  username  = var.proxmox_api_token_id
+  api_token = var.proxmox_talos_api_token
+  insecure  = true
+
+  ssh {
+    agent    = true
+    username = "root"
+    password = var.ssh_password
+  }
 }
 
 provider "cloudflare" {

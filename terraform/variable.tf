@@ -12,6 +12,17 @@ variable "proxmox_api_token_secret" {
   sensitive = true
 }
 
+variable "proxmox_talos_api_token" {
+  type = string
+  sensitive = true
+  
+}
+
+variable "ssh_password" {
+  type      = string
+  sensitive = true
+}
+
 variable "bucket" {
   type = string
 }
