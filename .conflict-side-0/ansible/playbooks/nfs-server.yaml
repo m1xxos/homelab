@@ -1,0 +1,7 @@
+- name: Nfs server setup
+  hosts: groupnginx
+  become: true
+  vars: 
+    nfs_exports: [ "/home/public *(rw,sync,no_root_squash)" ]
+  roles: 
+    - geerlingguy.nfs

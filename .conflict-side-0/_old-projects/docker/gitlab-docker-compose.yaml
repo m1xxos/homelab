@@ -1,0 +1,24 @@
+version: '3.6'
+services:
+  gitlab:
+    image: gitlab/gitlab-ce:17.5.1-ce.0
+    container_name: gitlab
+    restart: always
+    hostname: 'gitlab.local.m1xxos.me'
+    environment:
+      GITLAB_OMNIBUS_CONFIG: |
+        external_url 'https://gitlab.local.m1xxos.me'
+        gitlab_rails['gitlab_shell_ssh_port'] = 2228
+        gitlab_rails['registry_enabled'] = true
+        registry_external_url 'https://registry.local.m1xxos.me'
+        registry_nginx['ssl_certificate'] = "/etc/gitlab/ssl/gitlab.local.m1xxos.me.crt"
+        registry_nginx['ssl_certificate_key'] = "/etc/gitlab/ssl/gitlab.local.m1xxos.me.key"
+    ports:
+      - '80:80'
+      - '443:443'
+      - '2228:22'
+    volumes:
+      - '$GITLAB_HOME/config:/etc/gitlab'
+      - '$GITLAB_HOME/logs:/var/log/gitlab'
+      - '$GITLAB_HOME/data:/var/opt/gitlab'
+    shm_size: '256m'

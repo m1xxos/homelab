@@ -1,0 +1,8 @@
+spec:
+  destination:
+    server: https://kubernetes.default.svc
+    devServer: https://192.168.1.110:6443
+
+  source:
+    repoURL: https://github.com/m1xxos/homelab
+    targetRevision: 56-microk8s-cluster

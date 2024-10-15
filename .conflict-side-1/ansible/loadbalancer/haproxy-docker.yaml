@@ -1,0 +1,25 @@
+- name: Install haproxy with docker
+  hosts: grouplb
+  become: true
+  tasks:
+    - name: Create a directory if it does not exist
+      ansible.builtin.file:
+        path: /etc/haproxy/
+        state: directory
+        mode: "0775"
+
+    - name: Copy docker compose file
+      ansible.builtin.copy:
+        src: files/docker-compose.yaml
+        dest: /etc/haproxy/docker-compose.yaml
+        mode: "0664"
+
+    - name: Copy haproxy config file
+      ansible.builtin.copy:
+        src: files/haproxy.cfg
+        dest: /etc/haproxy/haproxy.cfg
+        mode: "0664"
+
+    - name: Run haproxy docker-compose Up
+      community.docker.docker_compose_v2:
+        project_src: /etc/haproxy/

@@ -1,0 +1,16 @@
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: {{ .Values.name }}
+  namespace: {{ .Values.namespace }}
+spec:
+  entryPoints:
+    - websecure
+  routes:
+  - match: Host(`{{ .Values.ingress.hostname }}`)
+    kind: Rule
+    services:
+    - name: {{ .Values.name }}
+      port: {{ .Values.service.httpPort }}
+  tls:
+   secretName: local-m1xxos-me
