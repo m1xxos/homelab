@@ -23,7 +23,7 @@ data "talos_machine_configuration" "machineconfig_cp" {
 }
 
 resource "talos_machine_configuration_apply" "cp_config_apply" {
-  for_each = toset(local.talos_cp_ips)
+  for_each                    = toset(local.talos_cp_ips)
   depends_on                  = [proxmox_virtual_environment_vm.talos_cp]
   client_configuration        = talos_machine_secrets.machine_secrets.client_configuration
   machine_configuration_input = data.talos_machine_configuration.machineconfig_cp.machine_configuration
@@ -40,12 +40,12 @@ resource "talos_machine_configuration_apply" "cp_config_apply" {
       machine = {
         kubelet = {
           extraMounts = [
-            {destination = "/var/lib/longhorn",
-            type = "bind",
-            source = "/var/lib/longhorn",
-            options = [
-              "bind", "rshared", "rw"
-            ]}
+            { destination = "/var/lib/longhorn",
+              type        = "bind",
+              source      = "/var/lib/longhorn",
+              options = [
+                "bind", "rshared", "rw"
+            ] }
           ]
         }
       }
@@ -61,7 +61,7 @@ data "talos_machine_configuration" "machineconfig_worker" {
 }
 
 resource "talos_machine_configuration_apply" "worker_config_apply" {
-  for_each = toset(local.talos_worker_ips)
+  for_each                    = toset(local.talos_worker_ips)
   depends_on                  = [proxmox_virtual_environment_vm.talos_worker]
   client_configuration        = talos_machine_secrets.machine_secrets.client_configuration
   machine_configuration_input = data.talos_machine_configuration.machineconfig_worker.machine_configuration
@@ -79,12 +79,12 @@ resource "talos_machine_configuration_apply" "worker_config_apply" {
       machine = {
         kubelet = {
           extraMounts = [
-            {destination = "/var/lib/longhorn",
-            type = "bind",
-            source = "/var/lib/longhorn",
-            options = [
-              "bind", "rshared", "rw"
-            ]}
+            { destination = "/var/lib/longhorn",
+              type        = "bind",
+              source      = "/var/lib/longhorn",
+              options = [
+                "bind", "rshared", "rw"
+            ] }
           ]
         }
       }
@@ -97,14 +97,6 @@ resource "talos_machine_bootstrap" "bootstrap" {
   client_configuration = talos_machine_secrets.machine_secrets.client_configuration
   node                 = local.talos_cp_ips[0]
 }
-
-# data "talos_cluster_health" "health" {
-#   depends_on           = [talos_machine_configuration_apply.cp_config_apply, talos_machine_configuration_apply.worker_config_apply]
-#   client_configuration = data.talos_client_configuration.talosconfig.client_configuration
-#   control_plane_nodes  = local.talos_cp_ips
-#   worker_nodes         = local.talos_worker_ips
-#   endpoints            = data.talos_client_configuration.talosconfig.endpoints
-# }
 
 data "talos_cluster_kubeconfig" "kubeconfig" {
   depends_on           = [talos_machine_bootstrap.bootstrap]

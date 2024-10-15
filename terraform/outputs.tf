@@ -3,7 +3,7 @@ output "talosconfig" {
   sensitive = true
 }
 
-output "kubeconfig"{
-    value = module.test-cluster.kubeconfig
-    sensitive = true
+output "kubeconfig" {
+  value     = module.test-cluster.kubeconfig
+  sensitive = true
 }
