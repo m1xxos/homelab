@@ -29,3 +29,24 @@ module "proxmox-home" {
   tags      = "home"
   size      = 60
 }
+
+module "test-cluster" {
+  source = "./talos-cluster-module"
+  talos_cps = [
+    {
+      name  = "test-cp"
+      vm_id = 999
+      ip    = "192.168.1.73"
+    }
+  ]
+  talos_workers = [
+    {
+      name  = "test-worker"
+      vm_id = 998
+      ip    = "192.168.1.74"
+    }
+  ]
+  cloudflare_zone_id = var.cloudflare_zone_id
+  cluster_name       = "test-cluster"
+  talos_image_id     = proxmox_virtual_environment_download_file.talos_nocloud_image.id
+}

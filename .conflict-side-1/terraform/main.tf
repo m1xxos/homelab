@@ -34,16 +34,26 @@ module "test-cluster" {
   source = "./talos-cluster-module"
   talos_cps = [
     {
-      name  = "test-cp"
-      vm_id = 999
-      ip    = "192.168.1.73"
+      name  = "test-cp-0"
+      vm_id = 900
+      ip    = "192.168.1.70"
+    },
+    {
+      name  = "test-cp-1"
+      vm_id = 901
+      ip    = "192.168.1.71"
     }
   ]
   talos_workers = [
     {
-      name  = "test-worker"
-      vm_id = 998
-      ip    = "192.168.1.74"
+      name  = "test-worker-0"
+      vm_id = 902
+      ip    = "192.168.1.72"
+    },
+    {
+      name  = "test-worker-1"
+      vm_id = 903
+      ip    = "192.168.1.73"
     }
   ]
   cloudflare_zone_id = var.cloudflare_zone_id

@@ -1,3 +1,3 @@
-ancestorEntries = ["terraform/main.tf"]
-ourEntries = ["terraform/main.tf", "terraform/talos-cluster-module/cluster.tf", "terraform/talos-cluster-module/dns.tf", "terraform/talos-cluster-module/outputs.tf", "terraform/talos-cluster-module/providers.tf", "terraform/talos-cluster-module/variables.tf", "terraform/talos-cluster-module/vm.tf"]
-theirEntries = ["terraform/main.tf", "terraform/talos-cluster-module/cluster.tf", "terraform/talos-cluster-module/dns.tf", "terraform/talos-cluster-module/outputs.tf", "terraform/talos-cluster-module/providers.tf", "terraform/talos-cluster-module/variables.tf", "terraform/talos-cluster-module/vm.tf"]
+ancestorEntries = ["terraform/main.tf", "terraform/talos-cluster-module/cluster.tf", "terraform/talos-cluster-module/providers.tf"]
+ourEntries = ["terraform/main.tf", "terraform/talos-cluster-module/cluster.tf", "terraform/talos-cluster-module/providers.tf"]
+theirEntries = ["terraform/main.tf", "terraform/talos-cluster-module/cluster.tf", "terraform/talos-cluster-module/providers.tf"]
