@@ -207,7 +207,7 @@ services:
     - "traefik.http.services.homarr.loadbalancer.server.port=7575"
 
   postgresql:
-    image: docker.io/library/postgres:16-alpine
+    image: docker.io/library/postgres:17-alpine
     container_name: postgresql
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -d $${POSTGRES_DB} -U $${POSTGRES_USER}"]
