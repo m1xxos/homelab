@@ -25,6 +25,14 @@ provider "registry.terraform.io/goauthentik/authentik" {
   ]
 }
 
+provider "registry.terraform.io/hashicorp/helm" {
+  version     = "2.16.0"
+  constraints = "2.16.0"
+  hashes = [
+    "h1:zk+1yjCh9RKDsugek6X2JXtLywtdIeS1DeOLjzypU70=",
+  ]
+}
+
 provider "registry.terraform.io/sander0542/nginxproxymanager" {
   version     = "0.0.33"
   constraints = "0.0.33"
