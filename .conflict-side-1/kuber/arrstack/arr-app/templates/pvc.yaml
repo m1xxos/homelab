@@ -1,0 +1,13 @@
+{{- if .Values.persistentConfig.enabled }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+    name: "{{ include "arr-app.name" . }}-config"
+spec:
+  resources:
+    requests:
+      storage: 200
+  volumeMode: Filesystem
+  accessModes:
+  - ReadWriteMany
+{{- end }}

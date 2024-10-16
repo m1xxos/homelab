@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: prowlarr
+spec:
+  replicas: 1
+  template:
+    spec:
+      containers:
+      - name: prowlarr
+        image: lscr.io/linuxserver/prowlarr
+        env:
+        - name: "TZ"
+          value: "Europe/Moscow"
+        resources:
+          limits:
+            memory: "256Mi"
+            cpu: "500m"
+        volumeMounts:
+        - name: prowlarr-config
+          mountPath: /config
+        ports:
+        - containerPort: 9696
+      initContainers:
+      - name: metrics
+        image: ghcr.io/onedr0p/exportarr:v2.0
+        restartPolicy: Always
+        args: ["prowlarr"]
+        env:
+        - name: "PORT"
+          value: "9708"
+        - name: "URL"
+          value: "http://prowlarr:9696"
+        - name: "APIKEY"
+          valueFrom:
+            secretKeyRef:
+              name: api-key
+              key: APIKEY
+        ports:
+        - containerPort: 9708
+      volumes:
+      - name: prowlarr-config
+        persistentVolumeClaim:
+          claimName: prowlarr-config-pvc
+      - name: vpn-config
+        configMap:
+          name: vpn-config
