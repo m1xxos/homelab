@@ -18,14 +18,6 @@ resource "cloudflare_record" "traefik" {
   ttl     = 3600
 }
 
-resource "cloudflare_record" "traefik-dev" {
-  zone_id = var.cloudflare_zone_id
-  name    = "*.dev"
-  content = local.local_name
-  type    = "CNAME"
-  ttl     = 3600
-}
-
 resource "cloudflare_record" "home" {
   zone_id = var.cloudflare_zone_id
   name    = "home"
