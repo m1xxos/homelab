@@ -1,3 +1,10 @@
+locals {
+  node_name = "pve"
+  cpu_type = "x86-64-v2-AES"
+  operating_system_type = "l26"
+  datastore_id = "pve-nvme"
+}
+
 resource "proxmox_virtual_environment_vm" "talos_cp" {
   for_each = {
     for cp in var.talos_cps :
@@ -6,18 +13,18 @@ resource "proxmox_virtual_environment_vm" "talos_cp" {
   name        = each.value.name
   description = "Managed by Terraform, talos"
   tags        = ["talos", var.cluster_name]
-  node_name   = "pve"
+  node_name   = local.node_name
   vm_id       = each.value.vm_id
   on_boot     = true
 
 
   cpu {
-    cores = 4
-    type  = "x86-64-v2-AES"
+    cores = var.cp_cpu_cores
+    type  = local.cpu_type
   }
 
   memory {
-    dedicated = 4096
+    dedicated = var.cp_memory
   }
 
   agent {
@@ -29,19 +36,19 @@ resource "proxmox_virtual_environment_vm" "talos_cp" {
   }
 
   disk {
-    datastore_id = "pve-nvme"
+    datastore_id = local.datastore_id
     file_id      = var.talos_image_id
     file_format  = "raw"
     interface    = "virtio0"
-    size         = 20
+    size         = var.cp_disk_size
   }
 
   operating_system {
-    type = "l26" # Linux Kernel 2.6 - 5.X.
+    type = local.operating_system_type
   }
 
   initialization {
-    datastore_id = "pve-nvme"
+    datastore_id = local.datastore_id
     ip_config {
       ipv4 {
         address = "${each.value.ip}/24"
@@ -63,18 +70,18 @@ resource "proxmox_virtual_environment_vm" "talos_worker" {
   name        = each.value.name
   description = "Managed by Terraform"
   tags        = ["talos", var.cluster_name]
-  node_name   = "pve"
+  node_name   = local.node_name
   vm_id       = each.value.vm_id
   on_boot     = true
 
 
   cpu {
-    cores = 4
-    type  = "x86-64-v2-AES"
+    cores = var.worker_cpu_cores
+    type  = local.cpu_type
   }
 
   memory {
-    dedicated = 4096
+    dedicated = var.worker_memory
   }
 
   agent {
@@ -86,19 +93,19 @@ resource "proxmox_virtual_environment_vm" "talos_worker" {
   }
 
   disk {
-    datastore_id = "pve-nvme"
+    datastore_id = local.datastore_id
     file_id      = var.talos_image_id
     file_format  = "raw"
     interface    = "virtio0"
-    size         = 20
+    size         = var.worker_disk_size
   }
 
   operating_system {
-    type = "l26" # Linux Kernel 2.6 - 5.X.
+    type = local.operating_system_type # Linux Kernel 2.6 - 5.X.
   }
 
   initialization {
-    datastore_id = "pve-nvme"
+    datastore_id = local.datastore_id
     ip_config {
       ipv4 {
         address = "${each.value.ip}/24"
