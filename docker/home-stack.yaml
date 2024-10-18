@@ -191,7 +191,7 @@ services:
 
   homarr:
     container_name: homarr
-    image: ghcr.io/ajnart/homarr:0.15.4
+    image: ghcr.io/ajnart/homarr:0.15.6
     volumes:
     - /var/run/docker.sock:/var/run/docker.sock
     - ~/homarr/configs:/app/data/configs
