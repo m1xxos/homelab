@@ -54,6 +54,11 @@ module "test-cluster" {
       name  = "test-worker-1"
       vm_id = 903
       ip    = "192.168.1.73"
+    },
+    {
+      name  = "test-worker-2"
+      vm_id = 904
+      ip    = "192.168.1.74"
     }
   ]
   cloudflare_zone_id = var.cloudflare_zone_id
