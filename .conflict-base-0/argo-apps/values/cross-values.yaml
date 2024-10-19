@@ -1,4 +1,0 @@
-provider:
-  # -- A list of Provider packages to install.
-  packages:
-    - xpkg.upbound.io/upbound/provider-terraform:v0.16.0

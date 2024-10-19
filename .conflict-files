@@ -1,3 +1,0 @@
-ancestorEntries = ["terraform/talos-cluster-module/variables.tf", "terraform/talos-cluster-module/vm.tf"]
-ourEntries = ["terraform/talos-cluster-module/variables.tf", "terraform/talos-cluster-module/vm.tf"]
-theirEntries = ["terraform/talos-cluster-module/variables.tf", "terraform/talos-cluster-module/vm.tf"]
