@@ -10,37 +10,37 @@ variable "default_gateway" {
 }
 
 variable "external_ip" {
-  type = string
+  type    = string
   default = "192.168.1.250"
 }
 
 variable "cp_cpu_cores" {
-  type = number
+  type    = number
   default = 4
 }
 
 variable "cp_memory" {
-  type = number
+  type    = number
   default = 4096
 }
 
 variable "cp_disk_size" {
-  type = number
+  type    = number
   default = 20
 }
 
 variable "worker_cpu_cores" {
-  type = number
+  type    = number
   default = 4
 }
 
 variable "worker_memory" {
-  type = number
+  type    = number
   default = 4096
 }
 
 variable "worker_disk_size" {
-  type = number
+  type    = number
   default = 40
 }
 

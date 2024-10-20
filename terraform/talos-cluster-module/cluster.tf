@@ -5,6 +5,29 @@ locals {
   talos_worker_ips = [
     for vm in var.talos_workers : vm.ip
   ]
+  config_patches = [
+    yamlencode({
+      cluster = {
+        network = {
+          cni = {
+            name = "none"
+          }
+        }
+      },
+      machine = {
+        kubelet = {
+          extraMounts = [
+            { destination = "/var/lib/longhorn",
+              type        = "bind",
+              source      = "/var/lib/longhorn",
+              options = [
+                "bind", "rshared", "rw"
+            ] }
+          ]
+        }
+      }
+    })
+  ]
 }
 
 resource "talos_machine_secrets" "machine_secrets" {}
@@ -28,29 +51,7 @@ resource "talos_machine_configuration_apply" "cp_config_apply" {
   client_configuration        = talos_machine_secrets.machine_secrets.client_configuration
   machine_configuration_input = data.talos_machine_configuration.machineconfig_cp.machine_configuration
   node                        = each.key
-  config_patches = [
-    yamlencode({
-      cluster = {
-        network = {
-          cni = {
-            name = "none"
-          }
-        }
-      },
-      machine = {
-        kubelet = {
-          extraMounts = [
-            { destination = "/var/lib/longhorn",
-              type        = "bind",
-              source      = "/var/lib/longhorn",
-              options = [
-                "bind", "rshared", "rw"
-            ] }
-          ]
-        }
-      }
-    })
-  ]
+  config_patches              = local.config_patches
 }
 
 data "talos_machine_configuration" "machineconfig_worker" {
@@ -66,30 +67,7 @@ resource "talos_machine_configuration_apply" "worker_config_apply" {
   client_configuration        = talos_machine_secrets.machine_secrets.client_configuration
   machine_configuration_input = data.talos_machine_configuration.machineconfig_worker.machine_configuration
   node                        = each.key
-  config_patches = [
-    yamlencode({
-      cluster = {
-        network = {
-          cni = {
-            name = "none"
-          }
-        }
-        clusterName = var.cluster_name
-      },
-      machine = {
-        kubelet = {
-          extraMounts = [
-            { destination = "/var/lib/longhorn",
-              type        = "bind",
-              source      = "/var/lib/longhorn",
-              options = [
-                "bind", "rshared", "rw"
-            ] }
-          ]
-        }
-      }
-    })
-  ]
+  config_patches              = local.config_patches
 }
 
 resource "talos_machine_bootstrap" "bootstrap" {

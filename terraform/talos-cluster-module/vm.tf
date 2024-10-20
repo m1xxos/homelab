@@ -1,8 +1,8 @@
 locals {
-  node_name = "pve"
-  cpu_type = "x86-64-v2-AES"
+  node_name             = "pve"
+  cpu_type              = "x86-64-v2-AES"
   operating_system_type = "l26"
-  datastore_id = "pve-nvme"
+  datastore_id          = "pve-nvme"
 }
 
 resource "proxmox_virtual_environment_vm" "talos_cp" {
