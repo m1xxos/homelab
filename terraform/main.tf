@@ -37,11 +37,6 @@ module "test-cluster" {
       name  = "test-cp-0"
       vm_id = 900
       ip    = "192.168.1.70"
-    },
-    {
-      name  = "test-cp-1"
-      vm_id = 901
-      ip    = "192.168.1.71"
     }
   ]
   talos_workers = [
