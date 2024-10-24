@@ -1,4 +1,0 @@
-/k3s-ansible
-*.pem
-.vault_pass
-config

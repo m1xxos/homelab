@@ -1,3 +1,0 @@
-ancestorEntries = ["terraform/.terraform.lock.hcl"]
-ourEntries = ["terraform/.terraform.lock.hcl"]
-theirEntries = ["terraform/.terraform.lock.hcl"]
