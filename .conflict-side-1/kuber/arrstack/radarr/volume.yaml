@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: radarr-config-pvc
+  namespace: arr-stack
+spec:
+  resources:
+    requests:
+      storage: 200Mi
+  volumeMode: Filesystem
+  accessModes:
+  - ReadWriteMany

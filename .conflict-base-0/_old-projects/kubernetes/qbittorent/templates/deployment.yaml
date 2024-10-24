@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: {{ .Values.namespace }}
+  name: {{ .Values.name }}
+  labels:
+    app: {{ .Values.labels }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Values.labels }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.labels }}
+    spec:
+      containers:
+      - name: {{ .Values.name }}
+        image: "{{ .Values.image.name }}:{{ .Values.image.tag }}"
+        volumeMounts:
+        - name: {{ .Values.name }}
+          mountPath: "/downloads"
+        - name: {{ .Values.name }}-config
+          mountPath: "/config"
+        - name: {{ .Values.name }}-torrents
+          mountPath: "/torrents"
+
+        resources:
+          requests:
+            memory: "200Mi" 
+            cpu: "100m"
+          limits:
+            memory: "500Mi"
+            cpu: "1000m"
+        
+        securityContext:
+            allowPrivilegeEscalation: true
+            runAsNonRoot: false
+        
+        ports:
+        - containerPort: {{ .Values.service.httpPort }}
+        - containerPort: {{ .Values.service.connectionPort }}
+        - containerPort: {{ .Values.service.connectionPort }}
+          protocol: UDP
+        
+      volumes:
+        - name: {{ .Values.name }}
+          persistentVolumeClaim:
+            claimName: {{ .Values.name }}-claim
+        - name: {{ .Values.name }}-config
+          persistentVolumeClaim:
+            claimName: {{ .Values.name }}-claim-config
+        - name: {{ .Values.name }}-torrents
+          persistentVolumeClaim:
+            claimName: {{ .Values.name }}-claim-torrents

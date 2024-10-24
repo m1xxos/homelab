@@ -1,0 +1,51 @@
+global:
+  resolve_timeout: 5m
+  http_config:
+    follow_redirects: true
+    enable_http2: true
+  smtp_hello: localhost
+  smtp_require_tls: true
+  pagerduty_url: https://events.pagerduty.com/v2/enqueue
+  opsgenie_api_url: https://api.opsgenie.com/
+  wechat_api_url: https://qyapi.weixin.qq.com/cgi-bin/
+  victorops_api_url: https://alert.victorops.com/integrations/generic/20131114/alert/
+  telegram_api_url: https://api.telegram.org
+  webex_api_url: https://webexapis.com/v1/messages
+route:
+  receiver: tg
+  group_by:
+    - alertname
+  continue: false
+  group_wait: 30s
+  group_interval: 5m
+  repeat_interval: 1h
+inhibit_rules:
+  - source_match:
+      severity: critical
+    target_match:
+      severity: warning
+    equal:
+      - alertname
+      - dev
+      - instance
+receivers:
+  - name: web.hook
+    webhook_configs:
+      - send_resolved: true
+        http_config:
+          follow_redirects: true
+          enable_http2: true
+        url: "https://webhook.site/ff4785ac-399d-4f18-90f9-c54a9a71fad1"
+        url_file: ""
+        max_alerts: 0
+        
+  - name: tg
+    telegram_configs:
+      - send_resolved: true
+        bot_token_file: "/etc/tg-token.env"
+        chat_id: 421268717
+        parse_mode: "HTML"
+        message: '{{ template "telegram.yucca.message" . }}'
+
+templates:
+  - '/etc/alertmanager/templates/tg.tmpl'

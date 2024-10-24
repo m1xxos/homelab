@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: frog
+  name: frog
+  labels:
+    app: frog
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: frog
+  template:
+    metadata:
+      labels:
+        app: frog
+    spec:
+      containers:
+      - name: frog-front
+        image: m1xxos/frog_front
+        ports:
+        - name: test
+          containerPort: 8080
+        resources:
+          requests:
+            memory: "200Mi" 
+            cpu: "100m"
+          limits:
+            memory: "500Mi"
+            cpu: "1000m"
+        securityContext:
+          allowPrivilegeEscalation: false
+          runAsNonRoot: true
+          runAsUser: 9999
+      
+      automountServiceAccountToken: false
