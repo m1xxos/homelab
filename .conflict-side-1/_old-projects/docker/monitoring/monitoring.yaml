@@ -1,0 +1,148 @@
+services:
+  prometheus:
+    image: prom/prometheus:v2.55.0
+    container_name: prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yaml'
+    ports:
+      - 9090:9090
+    networks:
+      - monitoring_default
+      - proxynet
+    restart: unless-stopped
+    volumes:
+      - ./prometheus:/etc/prometheus
+      - prom_data:/prometheus
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.prometheus.entrypoints=websecure"
+      - "traefik.http.routers.prometheus.rule=Host(`prometheus.home.m1xxos.me`)"
+      - "traefik.http.services.prometheus.loadbalancer.server.port=9090"
+  
+  node-exporter:
+    image: prom/node-exporter:v1.8.2
+    container_name: node-exporter
+    command:
+      - '--path.procfs=/host/proc'
+      - '--path.rootfs=/rootfs'
+      - '--path.sysfs=/host/sys'
+      - '--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)'
+    expose:
+      - 9100
+    networks:
+      - monitoring_default
+    restart: unless-stopped
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    
+  alert-manager:
+    image: prom/alertmanager:v0.27.0
+    container_name: alert-manager
+    command:
+      - '--config.file=/etc/alertmanager/alertmanager.yaml'
+    networks:
+      - proxynet
+      - monitoring_default
+    ports:
+      - 9093:9093
+    restart: unless-stopped
+    volumes:
+      - ./alertmanager:/etc/alertmanager
+      - /home/m1xxos/home/tg-token.env:/etc/tg-token.env
+      - alert_data:/alertmanager
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.alert-manager.entrypoints=websecure"
+      - "traefik.http.routers.alert-manager.rule=Host(`alerts.home.m1xxos.me`)"
+      - "traefik.http.services.alert-manager.loadbalancer.server.port=9093"
+    
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:v0.50.0
+    container_name: cadvisor
+    ports:
+      - 8081:8080
+    networks:
+      - monitoring_default
+    restart: unless-stopped
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+      - /dev/disk/:/dev/disk:ro
+    privileged: true
+    devices:
+      - /dev/kmsg
+
+  grafana:
+    image: grafana/grafana:11.3.0
+    container_name: grafana
+    ports:
+      - 3000:3000
+    networks:
+      - proxynet
+      - monitoring_default
+    restart: unless-stopped
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=$GF_SECURITY_ADMIN_PASSWORD
+      - GF_SERVER_DOMAIN=grafana.home.m1xxos.me
+      - GF_SERVER_ROOT_URL=https://grafana.home.m1xxos.me
+      - GF_AUTH_GENERIC_OAUTH_ENABLED=true
+      - GF_AUTH_GENERIC_OAUTH_NAME=authentik
+      - GF_AUTH_GENERIC_OAUTH_CLIENT_ID=WNiDX3dFM59uPZCWsT2P6cUTOa380Id6BnAwwjxV
+      - GF_AUTH_GENERIC_OAUTH_CLIENT_SECRET=$GF_AUTH_GENERIC_OAUTH_CLIENT_SECRET
+      - GF_AUTH_GENERIC_OAUTH_SCOPES=openid profile email
+      - GF_AUTH_GENERIC_OAUTH_AUTH_URL=https://auth.home.m1xxos.me/application/o/authorize/
+      - GF_AUTH_GENERIC_OAUTH_TOKEN_URL=https://auth.home.m1xxos.me/application/o/token/
+      - GF_AUTH_GENERIC_OAUTH_API_URL=https://auth.home.m1xxos.me/application/o/userinfo/
+      - GF_AUTH_SIGNOUT_REDIRECT_URL=https://auth.home.m1xxos.me/application/o/grafana/end-session/
+      - GF_AUTH_OAUTH_AUTO_LOGIN=true
+      - GF_AUTH_GENERIC_OAUTH_ROLE_ATTRIBUTE_PATH=contains(groups, 'Grafana Admins') && 'Admin' || contains(groups, 'Grafana Editors') && 'Editor' || 'Viewer'
+    volumes:
+      - ./grafana:/etc/grafana/provisioning/datasources/
+      - 'grafana_storage:/var/lib/grafana'
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.grafana.entrypoints=websecure"
+      - "traefik.http.routers.grafana.rule=Host(`grafana.home.m1xxos.me`)"
+      - "traefik.http.services.grafana.loadbalancer.server.port=3000"
+    
+  loki:
+    image: grafana/loki:3.2.1
+    container_name: loki
+    command: "-config.file=/etc/loki/config.yaml"
+    ports:
+      - 3100:3100
+    networks:
+      - monitoring_default
+    restart: unless-stopped
+    volumes:
+      - ./loki-config.yaml:/etc/loki/config.yaml
+  
+  alloy:
+    image: grafana/alloy:v1.4.3
+    container_name: alloy
+    ports:
+      - 12345:12345
+    networks:
+      - monitoring_default
+    restart: unless-stopped
+    volumes:
+      - ./alloy-config.alloy:/etc/alloy/config.alloy
+      - /var/run:/var/run:ro
+    command: run --server.http.listen-addr=0.0.0.0:12345 --storage.path=/var/lib/alloy/data /etc/alloy/config.alloy
+    depends_on:
+      - loki
+
+volumes:
+  prom_data:
+  alert_data:
+  grafana_storage:
+networks:
+  proxynet:
+    name: home-stuff_default
+    external: true
+  monitoring_default:

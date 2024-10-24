@@ -1,0 +1,21 @@
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: acme-issuer
+spec:
+  acme:
+    email: bulynin.misha@gmail.com
+    server: https://acme-v02.api.letsencrypt.org/directory
+
+    privateKeySecretRef:
+      name: acme-issuer
+
+    solvers:
+    - dns01:
+        cloudflare:
+          apiTokenSecretRef:
+            name: cloudflare-api-token-secret
+            key: api-token
+      selector:
+        dnsZones:
+          - "m1xxos.me"
