@@ -12,7 +12,7 @@ resource "helm_release" "cilium_cni" {
 }
 
 resource "helm_release" "metrics-server" {
-  depends_on = [data.talos_cluster_kubeconfig.kubeconfig]
+  depends_on = [data.talos_cluster_kubeconfig.kubeconfig, helm_release.cilium_cni]
   name       = "metrics-server"
   repository = "https://kubernetes-sigs.github.io/metrics-server/"
   chart      = "metrics-server"
@@ -20,7 +20,7 @@ resource "helm_release" "metrics-server" {
   version    = "3.12.1"
 
   set {
-    name = "args[0]"
+    name  = "args[0]"
     value = "--kubelet-insecure-tls"
   }
 }

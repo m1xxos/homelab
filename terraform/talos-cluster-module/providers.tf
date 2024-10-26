@@ -16,6 +16,10 @@ terraform {
       source  = "hashicorp/helm"
       version = "2.16.0"
     }
+    flux = {
+      source  = "fluxcd/flux"
+      version = "1.4.0"
+    }
   }
 }
 
@@ -25,10 +29,27 @@ locals {
 
 provider "helm" {
   kubernetes {
-    host                   = local.kube_config.clusters[0].cluster.server
-    cluster_ca_certificate = base64decode(local.kube_config.clusters[0].cluster.certificate-authority-data)
+    host = local.kube_config.clusters[0].cluster.server
 
-    client_certificate = base64decode(local.kube_config.users[0].user.client-certificate-data)
-    client_key         = base64decode(local.kube_config.users[0].user.client-key-data)
+    cluster_ca_certificate = base64decode(local.kube_config.clusters[0].cluster.certificate-authority-data)
+    client_certificate     = base64decode(local.kube_config.users[0].user.client-certificate-data)
+    client_key             = base64decode(local.kube_config.users[0].user.client-key-data)
+  }
+}
+
+provider "flux" {
+  kubernetes = {
+    host = local.kube_config.clusters[0].cluster.server
+
+    cluster_ca_certificate = base64decode(local.kube_config.clusters[0].cluster.certificate-authority-data)
+    client_certificate     = base64decode(local.kube_config.users[0].user.client-certificate-data)
+    client_key             = base64decode(local.kube_config.users[0].user.client-key-data)
+  }
+  git = {
+    url = "https://github.com/m1xxos/homelab.git"
+    http = {
+      password = var.github_token
+    }
+    branch = var.branch
   }
 }

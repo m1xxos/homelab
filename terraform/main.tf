@@ -30,38 +30,36 @@ module "proxmox-home" {
   size      = 60
 }
 
-module "test-cluster" {
+module "main-cluster" {
   source = "./talos-cluster-module"
   talos_cps = [
     {
-      name  = "test-cp-0"
+      name  = "main-cp-0"
       vm_id = 900
       ip    = "192.168.1.70"
-    },
-    {
-      name  = "test-cp-1"
-      vm_id = 901
-      ip    = "192.168.1.71"
     }
   ]
   talos_workers = [
     {
-      name  = "test-worker-0"
-      vm_id = 902
-      ip    = "192.168.1.72"
+      name  = "main-worker-0"
+      vm_id = 910
+      ip    = "192.168.1.75"
     },
     {
-      name  = "test-worker-1"
-      vm_id = 903
-      ip    = "192.168.1.73"
+      name  = "main-worker-1"
+      vm_id = 911
+      ip    = "192.168.1.76"
     },
     {
-      name  = "test-worker-2"
-      vm_id = 904
-      ip    = "192.168.1.74"
+      name  = "main-worker-2"
+      vm_id = 912
+      ip    = "192.168.1.77"
     }
   ]
+  worker_disk_size   = 40
   cloudflare_zone_id = var.cloudflare_zone_id
-  cluster_name       = "test-cluster"
+  cluster_name       = "main"
   talos_image_id     = proxmox_virtual_environment_download_file.talos_nocloud_image.id
+  github_token       = var.github_token
+  branch             = "167-big-rebuild"
 }
