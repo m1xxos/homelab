@@ -56,6 +56,8 @@ module "main-cluster" {
       ip    = "192.168.1.77"
     }
   ]
+
+  external_ip        = "192.168.1.80"
   worker_disk_size   = 40
   cloudflare_zone_id = var.cloudflare_zone_id
   cluster_name       = "main"

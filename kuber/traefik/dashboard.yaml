@@ -5,12 +5,13 @@ metadata:
   namespace: default
 spec:
   entryPoints:
-    - websecure
+  - websecure
+  - web
   routes:
-    - match: Host(`traefik.local.m1xxos.me`) && (PathPrefix(`/dashboard`) || PathPrefix(`/api`))
-      kind: Rule
-      services:
-        - name: api@internal
-          kind: TraefikService
-  tls:
-   secretName: local-m1xxos-me
+  - match: Host(`traefik.main.m1xxos.me `) && (PathPrefix(`/dashboard`) || PathPrefix(`/api`))
+    kind: Rule
+    services:
+    - name: api@internal
+      kind: TraefikService
+  # tls:
+  #  secretName: local-m1xxos-me
