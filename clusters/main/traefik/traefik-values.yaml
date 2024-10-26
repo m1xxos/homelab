@@ -1,0 +1,31 @@
+providers:
+  kubernetesIngress:
+    enabled: false
+  kubernetesGateway:
+    enabled: true
+
+gateway:
+  listeners:
+    web:
+      port: 8000
+      hostname: ""
+      protocol: HTTP
+      namespacePolicy: All
+    websecure:
+      port: 8443
+      hostname:
+      protocol: HTTPS
+      namespacePolicy: All
+      # certificateRefs:
+      # - kind: Secret
+      #   name: talos-m1xxos-me
+
+accessLog:
+  enabled: true
+  format: json
+
+# metrics:
+#   prometheus:
+#     serviceMonitor:
+#       enabled: true
+#       namespace: monitoring
