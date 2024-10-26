@@ -61,5 +61,5 @@ module "main-cluster" {
   cluster_name       = "main"
   talos_image_id     = proxmox_virtual_environment_download_file.talos_nocloud_image.id
   github_token       = var.github_token
-  branch             = "167-big-rebuild"
+  branch             = "main"
 }
