@@ -4,3 +4,4 @@ k3s-ansible
 *.kubeconfig
 settings.py
 kuber/arrstack/radarr/VPN-2500.ovpn
+config
