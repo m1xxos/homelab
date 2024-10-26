@@ -1,6 +1,13 @@
 # This file is maintained automatically by "terraform init".
 # Manual edits may be lost in future updates.
 
+provider "registry.terraform.io/bpg/proxmox" {
+  version = "0.66.3"
+  hashes = [
+    "h1:lOAzNYVZvq5svjoikkV0ma2jS6cW9+JBku3kgwOPtfo=",
+  ]
+}
+
 provider "registry.terraform.io/cloudflare/cloudflare" {
   version     = "4.43.0"
   constraints = "4.43.0"
@@ -34,6 +41,13 @@ provider "registry.terraform.io/cloudflare/cloudflare" {
     "zh:bbafdbef631b5c80570087817b42b16b1a76d556d692853a71c47fb48663cf00",
     "zh:be91b3f2a697cbbb41f65aad2600972d0ede1e962a7d8a00bb3177cb77d86666",
     "zh:efe168ad4aaa6156ce5a31d4e50e9d54d38ee5a5888412f9e690c0de5d619683",
+  ]
+}
+
+provider "registry.terraform.io/fluxcd/flux" {
+  version = "1.4.0"
+  hashes = [
+    "h1:x3iRDj3FnUAbO6svHA1wxnMA27JX6IcQajnn8SHyvCg=",
   ]
 }
 
@@ -72,11 +86,25 @@ provider "registry.terraform.io/goauthentik/authentik" {
   ]
 }
 
+provider "registry.terraform.io/hashicorp/helm" {
+  version = "2.16.1"
+  hashes = [
+    "h1:3VdXbh+m09VEAdSguT7Ea2MMnOVPZBYx4sUqvo6NPxo=",
+  ]
+}
+
 provider "registry.terraform.io/sander0542/nginxproxymanager" {
   version     = "0.0.33"
   constraints = "0.0.33"
   hashes = [
     "h1:BOT+mtYCCzP1zlo6BMMCxtSZzcZx+3K3RmxvXrtT7ZY=",
+  ]
+}
+
+provider "registry.terraform.io/siderolabs/talos" {
+  version = "0.6.1"
+  hashes = [
+    "h1:hrKCQJH5lT23NT93+Ok58e8JHUIMbmEOEpYqLBvXwyI=",
   ]
 }
 
