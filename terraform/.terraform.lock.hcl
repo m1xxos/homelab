@@ -10,8 +10,8 @@ provider "registry.terraform.io/bpg/proxmox" {
 }
 
 provider "registry.terraform.io/cloudflare/cloudflare" {
-  version     = "4.43.0"
-  constraints = "4.43.0"
+  version     = "4.44.0"
+  constraints = "4.44.0"
   hashes = [
     "h1:A1WPQFcdD+7FrFBFrKcx4CiSr75xSmsO93C0e5NBAeQ=",
   ]
