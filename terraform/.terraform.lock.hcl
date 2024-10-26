@@ -2,10 +2,9 @@
 # Manual edits may be lost in future updates.
 
 provider "registry.terraform.io/bpg/proxmox" {
-  version     = "0.60.0"
-  constraints = "0.60.0"
+  version = "0.66.3"
   hashes = [
-    "h1:ZC+6RI6NKsTB8Y0Lm0onj6N/+k8RZP//GwGqQZN/UVM=",
+    "h1:lOAzNYVZvq5svjoikkV0ma2jS6cW9+JBku3kgwOPtfo=",
   ]
 }
 
@@ -14,6 +13,13 @@ provider "registry.terraform.io/cloudflare/cloudflare" {
   constraints = "4.43.0"
   hashes = [
     "h1:A1WPQFcdD+7FrFBFrKcx4CiSr75xSmsO93C0e5NBAeQ=",
+  ]
+}
+
+provider "registry.terraform.io/fluxcd/flux" {
+  version = "1.4.0"
+  hashes = [
+    "h1:x3iRDj3FnUAbO6svHA1wxnMA27JX6IcQajnn8SHyvCg=",
   ]
 }
 
@@ -33,19 +39,18 @@ provider "registry.terraform.io/hashicorp/helm" {
   ]
 }
 
+provider "registry.terraform.io/hashicorp/helm" {
+  version = "2.16.1"
+  hashes = [
+    "h1:3VdXbh+m09VEAdSguT7Ea2MMnOVPZBYx4sUqvo6NPxo=",
+  ]
+}
+
 provider "registry.terraform.io/sander0542/nginxproxymanager" {
   version     = "0.0.33"
   constraints = "0.0.33"
   hashes = [
     "h1:BOT+mtYCCzP1zlo6BMMCxtSZzcZx+3K3RmxvXrtT7ZY=",
-  ]
-}
-
-provider "registry.terraform.io/siderolabs/talos" {
-  version     = "0.5.0"
-  constraints = "0.5.0"
-  hashes = [
-    "h1:YemD0Cy0cRa9LHtHzIKMQcbTV2aIo9Wh2TEeRTVdVB8=",
   ]
 }
 
