@@ -1,6 +1,6 @@
 services:
   prometheus:
-    image: prom/prometheus:v2.54.1
+    image: prom/prometheus:v2.55.0
     container_name: prometheus
     command:
       - '--config.file=/etc/prometheus/prometheus.yaml'
@@ -77,7 +77,7 @@ services:
       - /dev/kmsg
 
   grafana:
-    image: grafana/grafana:11.2.2
+    image: grafana/grafana:11.3.0
     container_name: grafana
     ports:
       - 3000:3000
@@ -111,7 +111,7 @@ services:
       - "traefik.http.services.grafana.loadbalancer.server.port=3000"
     
   loki:
-    image: grafana/loki:3.2.0
+    image: grafana/loki:3.2.1
     container_name: loki
     command: "-config.file=/etc/loki/config.yaml"
     ports:
@@ -123,7 +123,7 @@ services:
       - ./loki-config.yaml:/etc/loki/config.yaml
   
   alloy:
-    image: grafana/alloy:v1.4.2
+    image: grafana/alloy:v1.4.3
     container_name: alloy
     ports:
       - 12345:12345

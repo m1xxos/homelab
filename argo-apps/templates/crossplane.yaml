@@ -13,7 +13,7 @@ spec:
   sources:
     - chart: crossplane
       repoURL: https://charts.crossplane.io/stable
-      targetRevision: 1.17.1
+      targetRevision: 1.17.2
       helm:
         valueFiles:
           - $values/argo-apps/values/cross-values.yaml

@@ -50,7 +50,7 @@ services:
 
 
   jellyseerr:
-    image: fallenbagel/jellyseerr:1.9.2
+    image: fallenbagel/jellyseerr:2.0.1
     container_name: jellyseerr
     environment:
     - LOG_LEVEL=debug
@@ -112,7 +112,7 @@ services:
     - "traefik.http.services.sonarr.loadbalancer.server.port=8989"
 
   prowlarr:
-    image: lscr.io/linuxserver/prowlarr:1.24.3
+    image: lscr.io/linuxserver/prowlarr:1.25.4
     container_name: prowlarr
     environment:
     - PUID=1000
@@ -191,7 +191,7 @@ services:
 
   homarr:
     container_name: homarr
-    image: ghcr.io/ajnart/homarr:0.15.4
+    image: ghcr.io/ajnart/homarr:0.15.6
     volumes:
     - /var/run/docker.sock:/var/run/docker.sock
     - ~/homarr/configs:/app/data/configs
@@ -207,7 +207,7 @@ services:
     - "traefik.http.services.homarr.loadbalancer.server.port=7575"
 
   postgresql:
-    image: docker.io/library/postgres:17-alpine
+    image: docker.io/library/postgres:16-alpine
     container_name: postgresql
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -d $${POSTGRES_DB} -U $${POSTGRES_USER}"]
