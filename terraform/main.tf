@@ -160,4 +160,6 @@ module "test-cluster" {
   cloudflare_zone_id = var.cloudflare_zone_id
   cluster_name       = "test-cluster"
   talos_image_id     = proxmox_virtual_environment_download_file.talos_nocloud_image.id
+  github_token       = var.github_token
+  branch             = "main"
 }

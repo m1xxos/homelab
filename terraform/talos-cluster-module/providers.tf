@@ -2,19 +2,23 @@ terraform {
   required_providers {
     proxmox = {
       source  = "bpg/proxmox"
-      version = "0.60.0"
+      version = ">= 0.60.0"
     }
     cloudflare = {
       source  = "cloudflare/cloudflare"
-      version = "4.43.0"
+      version = ">= 4.43.0"
     }
     talos = {
       source  = "siderolabs/talos"
-      version = "0.5.0"
+      version = ">= 0.5.0"
     }
     helm = {
       source  = "hashicorp/helm"
-      version = "2.16.0"
+      version = ">= 2.16.0"
+    }
+    flux = {
+      source  = "fluxcd/flux"
+      version = ">= 1.4.0"
     }
   }
 }

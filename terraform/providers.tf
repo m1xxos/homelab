@@ -6,7 +6,7 @@ terraform {
     }
     cloudflare = {
       source  = "cloudflare/cloudflare"
-      version = "4.43.0"
+      version = "4.44.0"
     }
     nginxproxymanager = {
       source  = "Sander0542/nginxproxymanager"
@@ -22,7 +22,7 @@ terraform {
     }
     talos = {
       source  = "siderolabs/talos"
-      version = "0.5.0"
+      version = "0.6.1"
     }
   }
   backend "s3" {
