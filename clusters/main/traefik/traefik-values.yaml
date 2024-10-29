@@ -18,7 +18,7 @@ gateway:
       namespacePolicy: All
       certificateRefs:
       - kind: Secret
-        name: talos-m1xxos-me
+        name: main-m1xxos-me
 
 accessLog:
   enabled: true
