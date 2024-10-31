@@ -59,7 +59,7 @@ services:
       - "traefik.http.services.alert-manager.loadbalancer.server.port=9093"
     
   cadvisor:
-    image: gcr.io/cadvisor/cadvisor:v0.50.0
+    image: gcr.io/cadvisor/cadvisor:v0.51.0
     container_name: cadvisor
     ports:
       - 8081:8080
