@@ -1,0 +1,25 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: longhorn
+  namespace: longhorn-system
+spec:
+  releaseName: longhorn
+  chart:
+    spec:
+      chart: longhorn
+      sourceRef:
+        kind: HelmRepository
+        name: longhorn
+        namespace: flux-system
+      version: 1.7.1
+  interval: 10m
+  values:
+    persistence:
+      defaultClass: true
+    ingress:
+      enabled: true
+      hosts:
+      - host: longhorn.main.m1xxos.me
+        paths:
+        - /
