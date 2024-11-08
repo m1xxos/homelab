@@ -68,3 +68,13 @@ variable "cloudflare_zone_id" {
   type      = string
   sensitive = true
 }
+
+variable "github_token" {
+  type      = string
+  sensitive = true
+}
+
+variable "branch" {
+  type    = string
+  default = "main"
+}
