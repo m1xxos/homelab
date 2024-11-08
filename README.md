@@ -1,6 +1,9 @@
 
 <h1 align="center">
   <br>
+  <a href="https://github.com/m1xxos/homelab">
+    <img src="icon.png" alt="Logo" width="80" height="80">
+  </a>
   <br>
   Homelab
   <br>
