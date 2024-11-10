@@ -17,6 +17,7 @@ spec:
   install:
     createNamespace: true
   targetNamespace: vault
+  releaseName: vault
   values:
     server:
       ha:
