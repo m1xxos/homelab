@@ -19,9 +19,9 @@ spec:
   targetNamespace: vault
   releaseName: vault
   values:
-    ui:
-      enabled: true
     server:
+      ui:
+        enabled: true
       ha:
         enabled: true
         replicas: 3
