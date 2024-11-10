@@ -17,3 +17,8 @@ spec:
   install:
     createNamespace: true
   targetNamespace: vault
+  values:
+    server:
+      ha:
+        enabled: true
+        replicas: 3
