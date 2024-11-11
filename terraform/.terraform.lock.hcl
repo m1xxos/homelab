@@ -124,10 +124,10 @@ provider "registry.terraform.io/hashicorp/helm" {
 }
 
 provider "registry.terraform.io/sander0542/nginxproxymanager" {
-  version     = "0.0.33"
-  constraints = "0.0.33"
+  version     = "0.0.36"
+  constraints = "0.0.36"
   hashes = [
-    "h1:BOT+mtYCCzP1zlo6BMMCxtSZzcZx+3K3RmxvXrtT7ZY=",
+    "h1:Gu1e1BT7eg38T/5E58IkI132soow/C+pQoA5u5djBsc=",
   ]
 }
 
