@@ -20,8 +20,6 @@ spec:
   releaseName: vault
   values:
     server:
-      ui:
-        enabled: true
       ha:
         enabled: true
         replicas: 3
@@ -40,3 +38,5 @@ spec:
                tls_disable = "true"
             }
             service_registration "kubernetes" {}
+    ui:
+        enabled: true
