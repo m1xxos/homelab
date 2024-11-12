@@ -2,7 +2,7 @@
 <h1 align="center">
   <br>
   <a href="https://github.com/m1xxos/homelab">
-    <img src="icon.png" alt="Logo" width="80" height="80">
+    <img src="assets/icon.png" alt="Logo" width="80" height="80">
   </a>
   <br>
   Homelab
@@ -21,7 +21,7 @@
 
 ## Architecture diagram
 
-![Architecture](/architecture_v2.png?raw=true "Architecture")
+![Architecture](/assets/architecture_v2.png?raw=true "Architecture")
 
 ## Made with
 
@@ -80,4 +80,4 @@ This software uses the following open source packages:
 
 ## Architecture diagram v1
 
-![Alt text](/architecture.png?raw=true "Title")
+![Alt text](/assets/architecture.png?raw=true "Title")
