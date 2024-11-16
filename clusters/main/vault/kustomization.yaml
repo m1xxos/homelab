@@ -4,6 +4,7 @@ namespace: vault
 resources:
 - repository.yaml
 - release.yaml
+- ingressRoute.yaml
 configMapGenerator:
 - name: vault-values
   files:
