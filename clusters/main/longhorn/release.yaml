@@ -15,6 +15,7 @@ spec:
       version: 1.7.1
   interval: 10m
   values:
+    defaultClassReplicaCount: 2
     persistence:
       defaultClass: true
     ingress:
