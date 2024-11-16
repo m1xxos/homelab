@@ -8,6 +8,9 @@ server:
     initialDelaySeconds: 60
   extraEnvironmentVars:
     VAULT_CACERT: /vault/userconfig/tls-ca/ca.crt
+  dataStorage:
+    enabled: true
+    size: 5Gi
   ha:
     enabled: true
     replicas: 3
