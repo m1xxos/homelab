@@ -1,0 +1,12 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: vault
+resources:
+- repository.yaml
+- release.yaml
+configMapGenerator:
+- name: vault-values
+  files:
+  - values.yaml=vault-values.yaml
+configurations:
+- kustomizeconfig.yaml

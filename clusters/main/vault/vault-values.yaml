@@ -1,0 +1,40 @@
+server:
+  readinessProbe:
+    enabled: true
+    path: "/v1/sys/health?standbyok=true&sealedcode=204&uninitcode=204"
+  livenessProbe:
+    enabled: true
+    path: "/v1/sys/health?standbyok=true"
+    initialDelaySeconds: 60
+  extraEnvironmentVars:
+    VAULT_CACERT: /vault/userconfig/tls-ca/ca.crt
+  ha:
+    enabled: true
+    replicas: 3
+    raft:
+      enabled: true
+      setNodeId: false
+      config: |
+        ui = true
+        cluster_name = "main-vault"
+        storage "raft" {
+           path    = "/vault/data/"
+           retry_join = {
+              leader_api_addr = "http://vault-0.vault-internal:8200"
+           }
+           retry_join = {
+              leader_api_addr = "http://vault-1.vault-internal:8200"
+           }
+           retry_join = {
+              leader_api_addr = "http://vault-2.vault-internal:8200"
+           }
+        }
+
+        listener "tcp" {
+           address = "[::]:8200"
+           cluster_address = "[::]:8201"
+           tls_disable = "true"
+        }
+        service_registration "kubernetes" {}
+ui:
+  enabled: true
