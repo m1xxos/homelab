@@ -6,8 +6,6 @@ server:
     enabled: true
     path: "/v1/sys/health?standbyok=true"
     initialDelaySeconds: 60
-  extraEnvironmentVars:
-    VAULT_CACERT: /vault/userconfig/tls-ca/ca.crt
   dataStorage:
     enabled: true
     size: 5Gi
