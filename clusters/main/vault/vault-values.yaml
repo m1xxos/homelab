@@ -9,12 +9,16 @@ server:
   dataStorage:
     enabled: true
     size: 5Gi
+
+  standalone:
+    enabled: false
+
   ha:
     enabled: true
     replicas: 3
     raft:
       enabled: true
-      setNodeId: false
+      setNodeId: true
       config: |
         ui = true
         cluster_name = "main-vault"
