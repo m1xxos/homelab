@@ -77,7 +77,7 @@ services:
       - /dev/kmsg
 
   grafana:
-    image: grafana/grafana:11.3.0
+    image: grafana/grafana:11.3.1
     container_name: grafana
     ports:
       - 3000:3000
@@ -111,7 +111,7 @@ services:
       - "traefik.http.services.grafana.loadbalancer.server.port=3000"
     
   loki:
-    image: grafana/loki:3.2.1
+    image: grafana/loki:3.3.0
     container_name: loki
     command: "-config.file=/etc/loki/config.yaml"
     ports:
