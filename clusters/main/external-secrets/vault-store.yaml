@@ -2,10 +2,11 @@ apiVersion: external-secrets.io/v1beta1
 kind: SecretStore
 metadata:
   name: vault-backend
+  namespace: external-secrets
 spec:
   provider:
     vault:
-      server: "http://svc.vault.vault:8200"
+      server: "http://vault.vault.svc:8200"
       path: "secret"
       version: "v2"
       auth:
