@@ -14,3 +14,5 @@ spec:
     - name: vault-ui
       kind: Service
       port: 8200
+  tls:
+    secretName: local-m1xxos-me
