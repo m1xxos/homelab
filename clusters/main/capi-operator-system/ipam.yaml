@@ -5,4 +5,4 @@ metadata:
   name: in-cluster
   namespace: proxmox-infrastructure-system
 spec:
-  version: v0.2.6
+  version: v1.0.0
