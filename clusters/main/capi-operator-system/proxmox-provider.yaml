@@ -1,0 +1,10 @@
+---
+apiVersion: operator.cluster.x-k8s.io/v1alpha1
+kind: InfrastructureProvider
+metadata:
+  name: proxmox
+  namespace: proxmox-infrastructure-system
+spec:
+  version: v0.1.5
+  configSecret:
+    name: proxmox-variables
