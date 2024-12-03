@@ -51,6 +51,17 @@ spec:
   controlPlaneConfig:
     controlplane:
       generateType: controlplane
+      hostname:
+        source: MachineName
+      strategicPatches:
+      - |-
+        machine:
+        network:
+          interfaces:
+          - deviceSelector:
+              busPath: "0*" # should select any hardware network device, if you have just one, it will be selected
+            vip:
+              ip: 192.168.1.110
 ---
 apiVersion: infrastructure.cluster.x-k8s.io/v1alpha1
 kind: ProxmoxMachineTemplate
@@ -137,3 +148,5 @@ spec:
     spec:
       generateType: worker
       talosVersion: v1.8.1
+      hostname:
+        source: MachineName
