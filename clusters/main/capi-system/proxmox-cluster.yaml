@@ -43,7 +43,7 @@ metadata:
   name: dev-control-plane
   namespace: capi-system
 spec:
-  version: v1.18.0
+  version: v1.31.1
   replicas: 1
   infrastructureTemplate:
     kind: ProxmoxMachineTemplate
