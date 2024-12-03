@@ -77,9 +77,6 @@ spec:
       numSockets: 1
       sourceNode: pve
       templateID: 110
-      checks:
-        skipQemuGuestAgent: true
-        skipCloudInitStatus: true
 ---
 apiVersion: cluster.x-k8s.io/v1beta1
 kind: MachineDeployment
@@ -131,9 +128,6 @@ spec:
       numSockets: 1
       sourceNode: pve
       templateID: 110
-      checks:
-        skipQemuGuestAgent: true
-        skipCloudInitStatus: true
 ---
 apiVersion: bootstrap.cluster.x-k8s.io/v1alpha3
 kind: TalosConfigTemplate

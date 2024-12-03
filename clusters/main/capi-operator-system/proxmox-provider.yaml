@@ -5,6 +5,6 @@ metadata:
   name: proxmox
   namespace: proxmox-infrastructure-system
 spec:
-  version: sha256:42b31287be6af9486596256c57665f4521fc5a01060dde8c171f059502a0b064
+  version: v0.5.1
   configSecret:
     name: proxmox-variables
