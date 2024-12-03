@@ -26,7 +26,7 @@ services:
     - "traefik.http.services.traefik.loadbalancer.server.port=8080"
 
   jellyfin:
-    image: lscr.io/linuxserver/jellyfin:10.10.3
+    image: lscr.io/linuxserver/jellyfin:2021.12.16
     container_name: jellyfin
     environment:
     - PUID=1000
