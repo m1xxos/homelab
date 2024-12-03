@@ -25,8 +25,6 @@ resource "authentik_provider_oauth2" "portainer" {
 
   authorization_flow = data.authentik_flow.default-provider-authorization-implicit-consent.id
 
-  redirect_uris = ["https://portainer.local.m1xxos.me/"]
-
   invalidation_flow = "51ce57fe-6a6a-4c3b-ba13-47d29223e4ef"
 
   property_mappings = [
