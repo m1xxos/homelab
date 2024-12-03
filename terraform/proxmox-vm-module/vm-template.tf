@@ -45,6 +45,7 @@ resource "proxmox_vm_qemu" "template_vm" {
   network {
     bridge = "vmbr0"
     model  = "virtio"
+    id = 0
   }
 
   ipconfig0 = var.ipconfig0

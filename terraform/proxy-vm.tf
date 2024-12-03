@@ -45,6 +45,7 @@ resource "proxmox_vm_qemu" "proxy-vm" {
   network {
     bridge = "vmbr0"
     model  = "virtio"
+    id = 0
   }
 
   ipconfig0 = "ip=192.168.1.250/24,gw=192.168.1.1"
