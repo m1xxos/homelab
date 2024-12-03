@@ -1,0 +1,140 @@
+apiVersion: cluster.x-k8s.io/v1beta1
+kind: Cluster
+metadata:
+  name: dev
+  namespace: capi-system
+spec:
+  controlPlaneRef:
+    apiVersion: controlplane.cluster.x-k8s.io/v1alpha3
+    kind: TalosControlPlane
+    name: dev-control-plane
+  infrastructureRef:
+    apiVersion: infrastructure.cluster.x-k8s.io/v1alpha1
+    kind: ProxmoxCluster
+    name: dev
+---
+apiVersion: infrastructure.cluster.x-k8s.io/v1alpha1
+kind: ProxmoxCluster
+metadata:
+  name: dev
+  namespace: capi-system
+spec:
+  # memory fix
+  schedulerHints:
+    memoryAdjustment: 0
+
+  allowedNodes:
+  - pve
+  controlPlaneEndpoint:
+    host: 192.168.1.110
+    port: 6443
+  dnsServers:
+  - 1.1.1.1
+  - 1.1.0.0
+  ipv4Config:
+    addresses:
+    - 192.168.1.111-192.168.1.120
+    gateway: 192.168.1.1
+    prefix: 24
+---
+apiVersion: controlplane.cluster.x-k8s.io/v1alpha3
+kind: TalosControlPlane
+metadata:
+  name: dev-control-plane
+  namespace: capi-system
+spec:
+  version: v1.18.0
+  replicas: 1
+  infrastructureTemplate:
+    kind: ProxmoxMachineTemplate
+    apiVersion: infrastructure.cluster.x-k8s.io/v1alpha1
+    name: dev-control-plane
+  controlPlaneConfig:
+    controlplane:
+      generateType: controlplane
+---
+apiVersion: infrastructure.cluster.x-k8s.io/v1alpha1
+kind: ProxmoxMachineTemplate
+metadata:
+  name: dev-control-plane
+  namespace: capi-system
+spec:
+  template:
+    spec:
+      disks:
+        bootVolume:
+          disk: scsi0
+          sizeGb: 20
+      format: qcow2
+      full: true
+      memoryMiB: 4096
+      network:
+        default:
+          bridge: vmbr0
+          model: virtio
+      numCores: 4
+      numSockets: 1
+      sourceNode: pve
+      templateID: 110
+---
+apiVersion: cluster.x-k8s.io/v1beta1
+kind: MachineDeployment
+metadata:
+  name: dev-workers
+  namespace: capi-system
+spec:
+  clusterName: dev
+  replicas: 3
+  selector:
+    matchLabels: null
+  template:
+    metadata:
+      labels:
+        node-role.kubernetes.io/node: ""
+    spec:
+      bootstrap:
+        configRef:
+          apiVersion: bootstrap.cluster.x-k8s.io/v1alpha3
+          kind: TalosConfigTemplate
+          name: dev-worker
+      clusterName: dev
+      infrastructureRef:
+        apiVersion: infrastructure.cluster.x-k8s.io/v1alpha1
+        kind: ProxmoxMachineTemplate
+        name: dev-worker
+      version: v1.31.1
+---
+apiVersion: infrastructure.cluster.x-k8s.io/v1alpha1
+kind: ProxmoxMachineTemplate
+metadata:
+  name: dev-worker
+  namespace: capi-system
+spec:
+  template:
+    spec:
+      disks:
+        bootVolume:
+          disk: scsi0
+          sizeGb: 20
+      format: qcow2
+      full: true
+      memoryMiB: 4096
+      network:
+        default:
+          bridge: vmbr0
+          model: virtio
+      numCores: 4
+      numSockets: 1
+      sourceNode: pve
+      templateID: 110
+---
+apiVersion: bootstrap.cluster.x-k8s.io/v1alpha3
+kind: TalosConfigTemplate
+metadata:
+  name: dev-worker
+  namespace: capi-system
+spec:
+  template:
+    spec:
+      generateType: worker
+      talosVersion: v1.8.1
