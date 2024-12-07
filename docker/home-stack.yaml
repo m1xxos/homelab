@@ -131,7 +131,7 @@ services:
     - "traefik.http.services.prowlarr.loadbalancer.server.port=9696"
 
   qbittorrent:
-    image: lscr.io/linuxserver/qbittorrent:20.04.1
+    image: lscr.io/linuxserver/qbittorrent:5.0.2
     container_name: qbittorrent
     environment:
     - PUID=1000
