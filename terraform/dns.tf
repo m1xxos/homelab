@@ -49,3 +49,11 @@ resource "cloudflare_record" "minikube-extra" {
   type    = "CNAME"
   ttl     = 3600
 }
+
+resource "cloudflare_record" "omnivore" {
+  zone_id = var.cloudflare_zone_id
+  name    = "minikube.m1xxos.me"
+  content = "192.168.1.211"
+  type    = "A"
+  ttl     = 3600
+}

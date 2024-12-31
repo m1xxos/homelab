@@ -86,6 +86,7 @@ controllers:
 service:
   main:
     enabled: false
+    controller: main
   api:
     controller: api
     ports:
