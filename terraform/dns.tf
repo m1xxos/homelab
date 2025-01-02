@@ -7,7 +7,7 @@ resource "cloudflare_record" "main" {
   name    = local.local_name
   content = "192.168.1.250"
   type    = "A"
-  ttl     = 3600
+  ttl     = 300
 }
 
 resource "cloudflare_record" "traefik" {
@@ -15,7 +15,7 @@ resource "cloudflare_record" "traefik" {
   name    = "*.local"
   content = local.local_name
   type    = "CNAME"
-  ttl     = 3600
+  ttl     = 300
 }
 
 resource "cloudflare_record" "home" {
@@ -23,7 +23,7 @@ resource "cloudflare_record" "home" {
   name    = "home"
   content = "192.168.1.250"
   type    = "A"
-  ttl     = 3600
+  ttl     = 300
 }
 
 resource "cloudflare_record" "home-extra" {
@@ -31,7 +31,7 @@ resource "cloudflare_record" "home-extra" {
   name    = "*.home"
   content = "home.m1xxos.me"
   type    = "CNAME"
-  ttl     = 3600
+  ttl     = 300
 }
 
 resource "cloudflare_record" "minikube" {
@@ -39,7 +39,7 @@ resource "cloudflare_record" "minikube" {
   name    = "minikube.m1xxos.me"
   content = "127.0.0.1"
   type    = "A"
-  ttl     = 3600
+  ttl     = 300
 }
 
 resource "cloudflare_record" "minikube-extra" {
@@ -47,13 +47,13 @@ resource "cloudflare_record" "minikube-extra" {
   name    = "*.minikube"
   content = "minikube.m1xxos.me"
   type    = "CNAME"
-  ttl     = 3600
+  ttl     = 300
 }
 
 resource "cloudflare_record" "omnivore" {
   zone_id = var.cloudflare_zone_id
-  name    = "minikube.m1xxos.me"
-  content = "192.168.1.211"
+  name    = "omnivore.m1xxos.me"
+  content = "192.168.1.77"
   type    = "A"
-  ttl     = 3600
+  ttl     = 300
 }
