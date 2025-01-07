@@ -50,10 +50,18 @@ resource "cloudflare_record" "minikube-extra" {
   ttl     = 300
 }
 
-resource "cloudflare_record" "omnivore" {
+resource "cloudflare_record" "pi" {
   zone_id = var.cloudflare_zone_id
-  name    = "omnivore.m1xxos.me"
+  name    = "pi.m1xxos.me"
   content = "192.168.1.77"
   type    = "A"
+  ttl     = 300
+}
+
+resource "cloudflare_record" "pi-extra" {
+  zone_id = var.cloudflare_zone_id
+  name    = "*.pi"
+  content = "pi.m1xxos.me"
+  type    = "CNAME"
   ttl     = 300
 }
