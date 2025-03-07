@@ -38,7 +38,7 @@ services:
       - /:/rootfs:ro
     
   alert-manager:
-    image: prom/alertmanager:v0.28.0
+    image: prom/alertmanager:v0.28.1
     container_name: alert-manager
     command:
       - '--config.file=/etc/alertmanager/alertmanager.yaml'
