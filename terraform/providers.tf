@@ -10,7 +10,7 @@ terraform {
     }
     nginxproxymanager = {
       source  = "Sander0542/nginxproxymanager"
-      version = "0.1.6"
+      version = "1.0.1"
     }
     authentik = {
       source  = "goauthentik/authentik"
