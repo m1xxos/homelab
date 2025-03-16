@@ -4,7 +4,7 @@ resource "helm_release" "cilium_cni" {
   repository = "https://helm.cilium.io/"
   chart      = "cilium"
   namespace  = "kube-system"
-  version    = "1.17.1"
+  version    = "1.17.2"
 
   values = [
     "${file("cilium-values.yaml")}"
