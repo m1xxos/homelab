@@ -6,7 +6,7 @@ terraform {
     }
     cloudflare = {
       source  = "cloudflare/cloudflare"
-      version = "5.1.0"
+      version = "5.2.0"
     }
     nginxproxymanager = {
       source  = "Sander0542/nginxproxymanager"
@@ -18,7 +18,7 @@ terraform {
     }
     proxmox-talos = {
       source  = "bpg/proxmox"
-      version = "0.73.1"
+      version = "0.73.2"
     }
     talos = {
       source  = "siderolabs/talos"
