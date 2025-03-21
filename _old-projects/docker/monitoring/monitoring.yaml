@@ -59,7 +59,7 @@ services:
       - "traefik.http.services.alert-manager.loadbalancer.server.port=9093"
     
   cadvisor:
-    image: gcr.io/cadvisor/cadvisor:v0.51.0
+    image: gcr.io/cadvisor/cadvisor:v0.52.1
     container_name: cadvisor
     ports:
       - 8081:8080
@@ -123,7 +123,7 @@ services:
       - ./loki-config.yaml:/etc/loki/config.yaml
   
   alloy:
-    image: grafana/alloy:v1.7.4
+    image: grafana/alloy:v1.7.5
     container_name: alloy
     ports:
       - 12345:12345
