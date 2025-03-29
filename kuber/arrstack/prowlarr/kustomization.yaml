@@ -18,7 +18,7 @@ images:
 - name: lscr.io/linuxserver/prowlarr
   newTag: 1.32.2
 - name: ghcr.io/onedr0p/exportarr
-  newTag: v2.0
+  newTag: v2.1
 
 secretGenerator:
 - name: api-key

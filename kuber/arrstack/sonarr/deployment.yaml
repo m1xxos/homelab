@@ -29,7 +29,7 @@ spec:
         - containerPort: 8989
       initContainers:
       - name: metrics
-        image: ghcr.io/onedr0p/exportarr:v2.0
+        image: ghcr.io/onedr0p/exportarr:v2.1
         restartPolicy: Always
         args: ["sonarr"]
         env:
