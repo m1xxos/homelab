@@ -14,7 +14,7 @@ metrics:
   enabled: true
   image:
     repository: ghcr.io/onedr0p/exportarr
-    tag: "v2.0"
+    tag: "v2.1"
   port: 9708
   type: "radarr"
   secretKeyRef:

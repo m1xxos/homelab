@@ -23,7 +23,7 @@ spec:
         - containerPort: 9696
       initContainers:
       - name: metrics
-        image: ghcr.io/onedr0p/exportarr:v2.0
+        image: ghcr.io/onedr0p/exportarr:v2.1
         restartPolicy: Always
         args: ["prowlarr"]
         env:

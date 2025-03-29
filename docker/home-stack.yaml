@@ -154,7 +154,7 @@ services:
     - "traefik.http.services.qbittorrent.loadbalancer.server.port=8080"
 
   sonarr-exporter:
-    image: ghcr.io/onedr0p/exportarr:v2.0
+    image: ghcr.io/onedr0p/exportarr:v2.1
     container_name: sonarr-exporter
     command: ["sonarr"]
     environment:
@@ -166,7 +166,7 @@ services:
     restart: unless-stopped
 
   radarr-exporter:
-    image: ghcr.io/onedr0p/exportarr:v2.0
+    image: ghcr.io/onedr0p/exportarr:v2.1
     container_name: radarr-exporter
     command: ["radarr"]
     environment:
@@ -178,7 +178,7 @@ services:
     restart: unless-stopped
 
   prowlarr-exporter:
-    image: ghcr.io/onedr0p/exportarr:v2.0
+    image: ghcr.io/onedr0p/exportarr:v2.1
     container_name: prowlarr-exporter
     command: ["prowlarr"]
     environment:
