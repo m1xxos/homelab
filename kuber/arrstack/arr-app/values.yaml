@@ -8,13 +8,13 @@ image:
   repository: lscr.io/linuxserver/radarr
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "5.17.2"
+  tag: "5.21.1"
 
 metrics:
   enabled: true
   image:
     repository: ghcr.io/onedr0p/exportarr
-    tag: "v2.0"
+    tag: "v2.1"
   port: 9708
   type: "radarr"
   secretKeyRef:
