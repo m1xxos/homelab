@@ -20,7 +20,7 @@ services:
       - "traefik.http.services.prometheus.loadbalancer.server.port=9090"
   
   node-exporter:
-    image: prom/node-exporter:v1.9.0
+    image: prom/node-exporter:v1.9.1
     container_name: node-exporter
     command:
       - '--path.procfs=/host/proc'
