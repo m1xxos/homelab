@@ -2,11 +2,11 @@ terraform {
   required_providers {
     proxmox = {
       source  = "Telmate/proxmox"
-      version = "3.0.1-rc7"
+      version = "3.0.1-rc8"
     }
     cloudflare = {
       source  = "cloudflare/cloudflare"
-      version = "5.2.0"
+      version = "5.3.0"
     }
     nginxproxymanager = {
       source  = "Sander0542/nginxproxymanager"
@@ -18,7 +18,7 @@ terraform {
     }
     proxmox-talos = {
       source  = "bpg/proxmox"
-      version = "0.74.1"
+      version = "0.75.0"
     }
     talos = {
       source  = "siderolabs/talos"
