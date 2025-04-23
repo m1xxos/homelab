@@ -111,7 +111,7 @@ services:
       - "traefik.http.services.grafana.loadbalancer.server.port=3000"
     
   loki:
-    image: grafana/loki:3.4.3
+    image: grafana/loki:3.5.0
     container_name: loki
     command: "-config.file=/etc/loki/config.yaml"
     ports:
@@ -123,7 +123,7 @@ services:
       - ./loki-config.yaml:/etc/loki/config.yaml
   
   alloy:
-    image: grafana/alloy:v1.8.1
+    image: grafana/alloy:v1.8.2
     container_name: alloy
     ports:
       - 12345:12345
