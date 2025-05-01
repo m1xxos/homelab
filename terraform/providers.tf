@@ -14,15 +14,15 @@ terraform {
     }
     authentik = {
       source  = "goauthentik/authentik"
-      version = "2025.2.0"
+      version = "2025.4.0"
     }
     proxmox-talos = {
       source  = "bpg/proxmox"
-      version = "0.76.1"
+      version = "0.77.0"
     }
     talos = {
       source  = "siderolabs/talos"
-      version = "0.7.1"
+      version = "0.8.0"
     }
   }
   backend "s3" {
