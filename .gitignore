@@ -6,3 +6,6 @@ settings.py
 kuber/arrstack/radarr/VPN-2500.ovpn
 config
 cluster-keys.json
+*.pem
+.vault_pass
+config
