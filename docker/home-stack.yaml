@@ -225,7 +225,7 @@ services:
 
   redis:
     container_name: redis
-    image: docker.io/library/redis:7.4-alpine
+    image: docker.io/library/redis:8.0-alpine
     command: --save 60 1 --loglevel warning
     healthcheck:
       test: ["CMD-SHELL", "redis-cli ping | grep PONG"]
