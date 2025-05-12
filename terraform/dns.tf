@@ -10,7 +10,7 @@ resource "cloudflare_dns_record" "main" {
   ttl     = 300
 }
 
-resource "cloudflare_dns_record" "traefik" {
+resource "cloudflare_dns_record" "main-extra" {
   zone_id = var.cloudflare_zone_id
   name    = "*.local"
   content = local.local_name

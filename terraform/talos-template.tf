@@ -12,6 +12,7 @@ resource "proxmox_virtual_environment_vm" "talos_template" {
   node_name   = local.node_name
   vm_id       = 110
   on_boot     = true
+  template    = true
 
 
   cpu {
