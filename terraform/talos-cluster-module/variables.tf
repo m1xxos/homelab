@@ -4,6 +4,11 @@ variable "cluster_name" {
   default = "homelab"
 }
 
+variable "cluster_dns" {
+  type    = string
+  default = "homelab.m1xxos.tech"
+}
+
 variable "default_gateway" {
   type    = string
   default = "192.168.1.1"
