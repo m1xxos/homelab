@@ -46,7 +46,7 @@ provider "flux" {
     client_key             = base64decode(local.kube_config.users[0].user.client-key-data)
   }
   git = {
-    url = "https://github.com/m1xxos/homelab.git"
+    url = var.git_url
     http = {
       password = var.github_token
     }
