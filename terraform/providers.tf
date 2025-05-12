@@ -1,22 +1,10 @@
 terraform {
   required_providers {
-    proxmox = {
-      source  = "Telmate/proxmox"
-      version = "3.0.1-rc8"
-    }
     cloudflare = {
       source  = "cloudflare/cloudflare"
       version = "5.3.0"
     }
-    nginxproxymanager = {
-      source  = "Sander0542/nginxproxymanager"
-      version = "1.1.1"
-    }
-    authentik = {
-      source  = "goauthentik/authentik"
-      version = "2025.4.0"
-    }
-    proxmox-talos = {
+    proxmox = {
       source  = "bpg/proxmox"
       version = "0.77.0"
     }
@@ -40,13 +28,6 @@ terraform {
 }
 
 provider "proxmox" {
-  pm_api_url          = var.proxmox_api_url
-  pm_api_token_id     = var.proxmox_api_token_id
-  pm_api_token_secret = var.proxmox_api_token_secret
-  pm_tls_insecure     = true
-}
-
-provider "proxmox-talos" {
   endpoint  = var.proxmox_api_url
   username  = var.proxmox_api_token_id
   api_token = var.proxmox_talos_api_token
@@ -61,9 +42,4 @@ provider "proxmox-talos" {
 
 provider "cloudflare" {
   api_token = var.cloudflare_api_token
-}
-
-provider "authentik" {
-  url   = "https://auth.home.m1xxos.me"
-  token = var.authentik_token
 }

@@ -6,7 +6,6 @@ locals {
 }
 
 resource "proxmox_virtual_environment_vm" "talos_template" {
-  provider    = proxmox-talos
   name        = "talos-template"
   description = "Managed by Terraform, talos"
   tags        = ["talos"]

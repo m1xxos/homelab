@@ -5,7 +5,6 @@ locals {
 }
 
 resource "proxmox_virtual_environment_download_file" "talos_nocloud_image" {
-  provider     = proxmox-talos
   content_type = "iso"
   datastore_id = "local"
   node_name    = "pve"
