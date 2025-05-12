@@ -12,7 +12,7 @@ resource "cloudflare_dns_record" "main" {
 
 resource "cloudflare_dns_record" "main-extra" {
   zone_id = var.cloudflare_zone_id
-  name    = "*.local"
+  name    = "*.${local.local_name}"
   content = local.local_name
   type    = "CNAME"
   ttl     = 300
@@ -28,7 +28,7 @@ resource "cloudflare_dns_record" "pi" {
 
 resource "cloudflare_dns_record" "pi-extra" {
   zone_id = var.cloudflare_zone_id
-  name    = "*.pi"
+  name    = "*.pi.m1xxos.tech"
   content = "pi.m1xxos.tech"
   type    = "CNAME"
   ttl     = 300
