@@ -7,7 +7,7 @@ resource "helm_release" "cilium_cni" {
   version    = var.cilium_version
 
   values = [
-    yamldecode(<<EOT
+    yamlencode(<<EOT
     ipam:
       mode: kubernetes
 
