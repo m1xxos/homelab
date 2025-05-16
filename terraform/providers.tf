@@ -2,7 +2,7 @@ terraform {
   required_providers {
     proxmox = {
       source  = "Telmate/proxmox"
-      version = "3.0.1-rc8"
+      version = "3.0.1-rc9"
     }
     cloudflare = {
       source  = "cloudflare/cloudflare"
@@ -22,7 +22,7 @@ terraform {
     }
     talos = {
       source  = "siderolabs/talos"
-      version = "0.8.0"
+      version = "0.8.1"
     }
   }
   backend "s3" {
