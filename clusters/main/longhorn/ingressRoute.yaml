@@ -8,11 +8,11 @@ spec:
   - websecure
   - web
   routes:
-  - match: Host(`longhorn.main.m1xxos.tech`)
+  - match: Host(`longhorn.local.m1xxos.tech`)
     kind: Rule
     services:
     - name: longhorn-frontend
       kind: Service
       port: 80
   tls:
-    secretName: local-m1xxos-me
+    secretName: local-m1xxos-tech

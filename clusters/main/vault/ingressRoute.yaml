@@ -8,11 +8,11 @@ spec:
   - websecure
   - web
   routes:
-  - match: Host(`vault.main.m1xxos.tech`)
+  - match: Host(`vault.local.m1xxos.tech`)
     kind: Rule
     services:
     - name: vault-ui
       kind: Service
       port: 8200
   tls:
-    secretName: local-m1xxos-me
+    secretName: local-m1xxos-tech
