@@ -18,7 +18,7 @@ terraform {
     }
     flux = {
       source  = "fluxcd/flux"
-      version = ">= 1.4.0"
+      version = ">= 1.6.0"
     }
   }
 }
@@ -48,6 +48,7 @@ provider "flux" {
   git = {
     url = var.git_url
     http = {
+      username = "flux"
       password = var.github_token
     }
     branch = var.branch

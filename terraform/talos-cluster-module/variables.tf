@@ -81,7 +81,7 @@ variable "github_token" {
 
 variable "git_url" {
   type = string
-  default = "https://github.com/m1xxos/homelab.git"
+  default = "https://flux@github.com/m1xxos/homelab.git"
 }
 
 variable "branch" {
