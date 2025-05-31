@@ -32,5 +32,5 @@ module "main-cluster" {
   cluster_dns        = "main.k8s.m1xxos.tech"
   talos_image_id     = proxmox_virtual_environment_download_file.talos_nocloud_image.id
   github_token       = var.github_token
-  branch             = "main"
+  branch             = "v2.1"
 }
