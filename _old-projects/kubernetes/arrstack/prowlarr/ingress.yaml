@@ -6,12 +6,12 @@ spec:
   entryPoints:
   - web
   routes:
-  - match: Host(`prowlarr.minikube.m1xxos.me`)
+  - match: Host(`prowlarr.minikube.m1xxos.tech`)
     kind: Rule
     services:
     - name: prowlarr
       port: 9696
-  - match: Host(`prowlarr.minikube.m1xxos.me`) && PathPrefix(`/metrics`)
+  - match: Host(`prowlarr.minikube.m1xxos.tech`) && PathPrefix(`/metrics`)
     kind: Rule
     services:
     - name: prowlarr

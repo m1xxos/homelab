@@ -6,14 +6,14 @@ spec:
   entryPoints:
   - web
   routes:
-  - match: Host(`radarr.minikube.m1xxos.me`)
+  - match: Host(`radarr.minikube.m1xxos.tech`)
     kind: Rule
     services:
     - name: radarr
       port: 7878
       sticky:
         cookie: {}
-  - match: Host(`radarr.minikube.m1xxos.me`) && PathPrefix(`/metrics`)
+  - match: Host(`radarr.minikube.m1xxos.tech`) && PathPrefix(`/metrics`)
     kind: Rule
     services:
     - name: radarr

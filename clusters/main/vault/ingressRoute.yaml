@@ -8,7 +8,7 @@ spec:
   - websecure
   - web
   routes:
-  - match: Host(`vault.main.m1xxos.me`)
+  - match: Host(`vault.main.m1xxos.tech`)
     kind: Rule
     services:
     - name: vault-ui

@@ -8,10 +8,10 @@ spec:
   - websecure
   - web
   routes:
-  - match: Host(`traefik.main.m1xxos.me`) && (PathPrefix(`/dashboard`) || PathPrefix(`/api`))
+  - match: Host(`traefik.main.m1xxos.tech`) && (PathPrefix(`/dashboard`) || PathPrefix(`/api`))
     kind: Rule
     services:
     - name: api@internal
       kind: TraefikService
   tls:
-   secretName: local-m1xxos-me
+    secretName: local-m1xxos-me

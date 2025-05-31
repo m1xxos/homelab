@@ -6,8 +6,8 @@ metadata:
 spec:
   secretName: main-m1xxos-me
   dnsNames:
-  - "main.m1xxos.me"
-  - "*.main.m1xxos.me"
+  - "main.m1xxos.tech"
+  - "*.main.m1xxos.tech"
   issuerRef:
     name: acme-issuer
     kind: ClusterIssuer

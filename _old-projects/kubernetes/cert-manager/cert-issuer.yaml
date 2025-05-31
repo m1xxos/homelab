@@ -18,4 +18,4 @@ spec:
             key: api-token
       selector:
         dnsZones:
-          - "m1xxos.me"
+        - "m1xxos.tech"

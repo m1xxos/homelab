@@ -6,14 +6,14 @@ spec:
   entryPoints:
   - web
   routes:
-  - match: Host(`sonarr.minikube.m1xxos.me`)
+  - match: Host(`sonarr.minikube.m1xxos.tech`)
     kind: Rule
     services:
     - name: sonarr
       port: 8989
       sticky:
         cookie: {}
-  - match: Host(`sonarr.minikube.m1xxos.me`) && PathPrefix(`/metrics`)
+  - match: Host(`sonarr.minikube.m1xxos.tech`) && PathPrefix(`/metrics`)
     kind: Rule
     services:
     - name: sonarr

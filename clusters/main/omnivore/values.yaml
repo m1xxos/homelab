@@ -18,7 +18,7 @@ controllers:
           PG_DB: omnivore
           PG_PORT: 5432
           PG_POOL_MAX: 20
-          CLIENT_URL: https://omnivore.m1xxos.me # URL any client can use to reach the server
+          CLIENT_URL: https://omnivore.m1xxos.tech # URL any client can use to reach the server
           GATEWAY_URL: http://omnivore-api:8080/api
           CONTENT_FETCH_URL: http://omnivore-content-fetch:8080/?token=$(VERIFICATION_TOKEN)
         envFrom:

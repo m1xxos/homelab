@@ -1,6 +1,5 @@
 path: ~/.cluster-api/clusterctl.yaml
 
-
 providers:
 - name: incluster
   url: https://github.com/kubernetes-sigs/cluster-api-ipam-provider-in-cluster/releases/latest/ipam-components.yaml
@@ -11,35 +10,34 @@ providers:
 - name: "microk8s"
   url: "https://github.com/canonical/cluster-api-control-plane-provider-microk8s/releases/latest/control-plane-components.yaml"
   type: "ControlPlaneProvider"
-  
-## -- Controller settings -- ##
-PROXMOX_URL: "https://proxmox.local.m1xxos.me"                       # The Proxmox VE host
-PROXMOX_TOKEN: "root@pam!packer"                                # The Proxmox VE TokenID for authentication
-PROXMOX_SECRET: ""                                    # The secret associated with the TokenID
 
+## -- Controller settings -- ##
+PROXMOX_URL: "https://proxmox.local.m1xxos.tech" # The Proxmox VE host
+PROXMOX_TOKEN: "root@pam!packer" # The Proxmox VE TokenID for authentication
+PROXMOX_SECRET: "" # The secret associated with the TokenID
 
 ## -- Required workload cluster default settings -- ##
-PROXMOX_SOURCENODE: "pve"                                     # The node that hosts the VM template to be used to provision VMs
-TEMPLATE_VMID: "100"                                          # The template VM ID used for cloning VMs
-ALLOWED_NODES: "[pve]"                        # The Proxmox VE nodes used for VM deployments
+PROXMOX_SOURCENODE: "pve" # The node that hosts the VM template to be used to provision VMs
+TEMPLATE_VMID: "100" # The template VM ID used for cloning VMs
+ALLOWED_NODES: "[pve]" # The Proxmox VE nodes used for VM deployments
 VM_SSH_KEYS: ""
 
 ## -- networking configuration-- ##
-CONTROL_PLANE_ENDPOINT_IP: "192.168.1.110"                       # The IP that kube-vip is going to use as a control plane endpoint
-NODE_IP_RANGES: "[192.168.1.111-192.168.1.120]"               # The IP ranges for Cluster nodes
-GATEWAY: "192.168.1.1"                                         # The gateway for the machines network-config.
-IP_PREFIX: "24"                                               # Subnet Mask in CIDR notation for your node IP ranges
-DNS_SERVERS: "[1.1.1.1,1.1.0.0]"                              # The dns nameservers for the machines network-config.
-BRIDGE: "vmbr0"                                               # The network bridge device for Proxmox VE VMs
+CONTROL_PLANE_ENDPOINT_IP: "192.168.1.110" # The IP that kube-vip is going to use as a control plane endpoint
+NODE_IP_RANGES: "[192.168.1.111-192.168.1.120]" # The IP ranges for Cluster nodes
+GATEWAY: "192.168.1.1" # The gateway for the machines network-config.
+IP_PREFIX: "24" # Subnet Mask in CIDR notation for your node IP ranges
+DNS_SERVERS: "[1.1.1.1,1.1.0.0]" # The dns nameservers for the machines network-config.
+BRIDGE: "vmbr0" # The network bridge device for Proxmox VE VMs
 
 ## -- small node -- ##
-BOOT_VOLUME_DEVICE: "scsi0"                                   # The device used for the boot disk.
-BOOT_VOLUME_SIZE: "20"                                       # The size of the boot disk in GB.
-NUM_SOCKETS: "1"                                              # The number of sockets for the VMs.
-NUM_CORES: "4"                                                # The number of cores for the VMs.
-MEMORY_MIB: "4096"                                            # The memory size for the VMs.
+BOOT_VOLUME_DEVICE: "scsi0" # The device used for the boot disk.
+BOOT_VOLUME_SIZE: "20" # The size of the boot disk in GB.
+NUM_SOCKETS: "1" # The number of sockets for the VMs.
+NUM_CORES: "4" # The number of cores for the VMs.
+MEMORY_MIB: "4096" # The memory size for the VMs.
 
 PROXMOX_STORAGE_POOL: "pve-nvme"
 
-EXP_CLUSTER_RESOURCE_SET: "true"                              # This enables the ClusterResourceSet feature that we are using to deploy CNI
-CLUSTER_TOPOLOGY: "true"                                      # This enables experimental ClusterClass templating
+EXP_CLUSTER_RESOURCE_SET: "true" # This enables the ClusterResourceSet feature that we are using to deploy CNI
+CLUSTER_TOPOLOGY: "true" # This enables experimental ClusterClass templating

@@ -5,12 +5,12 @@ metadata:
   namespace: frog
 spec:
   entryPoints:
-    - websecure
+  - websecure
   routes:
-  - match: Host(`frog.local.m1xxos.me`)
+  - match: Host(`frog.local.m1xxos.tech`)
     kind: Rule
     services:
     - name: frog
       port: 8080
   tls:
-   secretName: local-m1xxos-me
+    secretName: local-m1xxos-me

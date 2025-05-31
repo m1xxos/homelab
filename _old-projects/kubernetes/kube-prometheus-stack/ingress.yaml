@@ -5,17 +5,16 @@ metadata:
   namespace: monitoring
 spec:
   entryPoints:
-    - websecure
+  - websecure
   routes:
-    - match: Host(`grafana.local.m1xxos.me`)
-      kind: Rule
-      services:
-        - name: grafana
-          namespace: monitoring
-          port: 80
+  - match: Host(`grafana.local.m1xxos.tech`)
+    kind: Rule
+    services:
+    - name: grafana
+      namespace: monitoring
+      port: 80
   tls:
-   secretName: local-m1xxos-me
-
+    secretName: local-m1xxos-me
 ---
 
 apiVersion: traefik.containo.us/v1alpha1
@@ -25,14 +24,13 @@ metadata:
   namespace: monitoring
 spec:
   entryPoints:
-    - web
+  - web
   routes:
-    - kind: Rule
-      match: Host(`metrics.local.m1xxos.me`) || PathPrefix(`/metrics`)
-      services:
-        - name: prometheus@internal
-          kind: TraefikService
-  
+  - kind: Rule
+    match: Host(`metrics.local.m1xxos.tech`) || PathPrefix(`/metrics`)
+    services:
+    - name: prometheus@internal
+      kind: TraefikService
 ---
 
 apiVersion: traefik.io/v1alpha1
@@ -42,13 +40,13 @@ metadata:
   namespace: monitoring
 spec:
   entryPoints:
-    - websecure
+  - websecure
   routes:
-    - match: Host(`prometheus.local.m1xxos.me`)
-      kind: Rule
-      services:
-        - name: prometheus-prometheus
-          namespace: monitoring
-          port: 9090
+  - match: Host(`prometheus.local.m1xxos.tech`)
+    kind: Rule
+    services:
+    - name: prometheus-prometheus
+      namespace: monitoring
+      port: 9090
   tls:
-   secretName: local-m1xxos-me
+    secretName: local-m1xxos-me

@@ -13,12 +13,11 @@ image:
   name: wernight/qbittorrent
   tag: "latest"
 
-
 service:
   httpPort: 8080
   connectionPort: 6881
 
 ingress:
-  hostname: torrent.local.m1xxos.me
+  hostname: torrent.local.m1xxos.tech
 
 storageClass: nfs-client

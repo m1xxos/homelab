@@ -21,6 +21,6 @@ spec:
     ingress:
       enabled: true
       hosts:
-      - host: longhorn.main.m1xxos.me
+      - host: longhorn.main.m1xxos.tech
         paths:
         - /

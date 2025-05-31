@@ -5,13 +5,13 @@ metadata:
   namespace: sonarqube
 spec:
   entryPoints:
-    - websecure
+  - websecure
   routes:
-    - match: Host(`sonar.m1xxos.me`)
-      kind: Rule
-      services:
-        - name: sonarqube-sonarqube
-          namespace: sonarqube
-          port: 9000
+  - match: Host(`sonar.m1xxos.tech`)
+    kind: Rule
+    services:
+    - name: sonarqube-sonarqube
+      namespace: sonarqube
+      port: 9000
   tls:
-   secretName: m1xxos-me
+    secretName: m1xxos-me

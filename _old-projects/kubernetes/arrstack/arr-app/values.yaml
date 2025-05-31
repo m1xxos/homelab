@@ -62,7 +62,7 @@ ingress:
   # kubernetes.io/ingress.class: nginx
   # kubernetes.io/tls-acme: "true"
   hosts:
-    app: sonarr.minikube.m1xxos.me
+    app: sonarr.minikube.m1xxos.tech
   tls: []
   #  - secretName: chart-example-tls
   #    hosts:
@@ -96,7 +96,7 @@ autoscaling:
   targetCPUUtilizationPercentage: 80
   # targetMemoryUtilizationPercentage: 80
 
-# Additional volumes on the output Deployment definition.
+  # Additional volumes on the output Deployment definition.
 persistentConfig:
   enabled: true
 
