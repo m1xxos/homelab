@@ -1,9 +1,11 @@
 ---
 apiVersion: source.toolkit.fluxcd.io/v1
-kind: HelmRepository
+kind: OCIRepository
 metadata:
   name: vault
   namespace: flux-system
 spec:
   interval: 1h
-  url: https://m1xxos.github.io/hashicorp-helm/
+  url: oci://cr.yandex/yc-marketplace/yandex-cloud/vault/chart/vault
+  ref:
+    tag: "0.28.1+yckms"
