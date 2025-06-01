@@ -1,9 +1,10 @@
 ---
 apiVersion: source.toolkit.fluxcd.io/v1
-kind: OCIRepository
+kind: HelmRepository
 metadata:
   name: vault
   namespace: flux-system
 spec:
-  interval: 1h
+  type: "oci"
+  interval: 10m
   url: oci://cr.yandex/yc-marketplace/yandex-cloud/vault/chart/vault
