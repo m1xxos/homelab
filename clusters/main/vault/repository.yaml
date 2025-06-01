@@ -7,5 +7,3 @@ metadata:
 spec:
   interval: 1h
   url: oci://cr.yandex/yc-marketplace/yandex-cloud/vault/chart/vault
-  ref:
-    tag: "0.28.1+yckms"
