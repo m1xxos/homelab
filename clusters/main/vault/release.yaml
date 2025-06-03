@@ -9,7 +9,7 @@ spec:
   chart:
     spec:
       chart: vault
-      version: "0.29.0_yckms"
+      version: "0.29.0+yckms"
       sourceRef:
         kind: HelmRepository
         name: vault
