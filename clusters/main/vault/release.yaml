@@ -20,3 +20,5 @@ spec:
   valuesFrom:
   - kind: ConfigMap
     name: vault-values
+  - kind: Secret
+    name: vault-key
