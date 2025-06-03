@@ -1,3 +1,5 @@
+yandexKmsKeyId: abjtfaoscrnq4foir8di
+
 server:
   readinessProbe:
     enabled: true

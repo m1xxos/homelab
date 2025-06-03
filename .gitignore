@@ -9,4 +9,4 @@ cluster-keys.json
 *.pem
 .vault_pass
 config
-clusters/authorized-key.yaml
+clusters/values.yaml
