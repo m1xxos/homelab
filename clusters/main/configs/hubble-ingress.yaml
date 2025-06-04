@@ -2,7 +2,7 @@ apiVersion: traefik.io/v1alpha1
 kind: IngressRoute
 metadata:
   name: hubble-ui
-  namespace: traefik
+  namespace: kube-system
 spec:
   entryPoints:
   - websecure
@@ -13,7 +13,6 @@ spec:
     services:
     - name: hubble-ui
       kind: Service
-      namespace: kube-system
       port: 80
   tls:
     secretName: local-m1xxos-tech
