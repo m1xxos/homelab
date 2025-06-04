@@ -13,6 +13,7 @@ spec:
     services:
     - name: hubble-ui
       kind: Service
+      namespace: kube-system
       port: 80
   tls:
     secretName: local-m1xxos-tech
