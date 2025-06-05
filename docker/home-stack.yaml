@@ -112,7 +112,7 @@ services:
     - "traefik.http.services.sonarr.loadbalancer.server.port=8989"
 
   prowlarr:
-    image: lscr.io/linuxserver/prowlarr:1.36.3
+    image: lscr.io/linuxserver/prowlarr:1.37.0
     container_name: prowlarr
     environment:
     - PUID=1000
@@ -239,7 +239,7 @@ services:
 
   server:
     container_name: authentik-server
-    image: ghcr.io/goauthentik/server:2025.4.1
+    image: ghcr.io/goauthentik/server:2025.6.0
     command: server
     environment:
       AUTHENTIK_REDIS__HOST: redis
@@ -265,7 +265,7 @@ services:
 
   worker:
     container_name: authentik-worker
-    image: ghcr.io/goauthentik/server:2025.4.1
+    image: ghcr.io/goauthentik/server:2025.6.0
     restart: unless-stopped
     command: worker
     environment:
