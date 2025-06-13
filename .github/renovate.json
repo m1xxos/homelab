@@ -4,15 +4,20 @@
     "config:recommended"
   ],
   "kubernetes": {
-    "fileMatch": ["\\.yaml$", "\\.ya?ml$"]
+    "managerFilePatterns": [
+      "/\\.yaml$/",
+      "/\\.ya?ml$/"
+    ]
   },
   "argocd": {
-    "fileMatch": ["argo-apps/.+\\.ya?ml$"]
+    "managerFilePatterns": [
+      "/argo-apps/.+\\.ya?ml$/"
+    ]
   },
   "docker-compose": {
-    "fileMatch": [
-      "docker/.+\\.yaml$",
-      "(^|/)(?:docker-)?compose[^/]*\\.ya?ml$"
+    "managerFilePatterns": [
+      "/docker/.+\\.yaml$/",
+      "/(^|/)(?:docker-)?compose[^/]*\\.ya?ml$/"
     ]
   },
   "packageRules": [
