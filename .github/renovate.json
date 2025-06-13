@@ -14,7 +14,12 @@
       "/argo-apps/.+\\.ya?ml$/"
     ]
   },
-  "docker-compose": {
+  {
+  "flux": {
+    "managerFilePatterns": ["/clusters/.+\\.yaml$/"]
+  }
+ },
+ "docker-compose": {
     "managerFilePatterns": [
       "/docker/.+\\.yaml$/",
       "/(^|/)(?:docker-)?compose[^/]*\\.ya?ml$/"
