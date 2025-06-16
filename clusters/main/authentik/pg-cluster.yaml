@@ -7,3 +7,6 @@ spec:
   instances: 2
   storage:
     size: 1Gi
+  bootstrap:
+    initdb:
+      database: authentik
