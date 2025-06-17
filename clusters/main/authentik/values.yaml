@@ -34,7 +34,7 @@ data:
         valueFrom:
           secretKeyRef:
             name: authentik-key
-            key: secret-key
+            key: secret_key
     worker:
       volumes:
       - name: postgres-creds
@@ -49,6 +49,6 @@ data:
         valueFrom:
           secretKeyRef:
             name: authentik-key
-            key: secret-key
+            key: secret_key
     redis:
       enabled: true
