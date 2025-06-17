@@ -1,6 +1,6 @@
 providers:
   kubernetesIngress:
-    enabled: false
+    enabled: true
   kubernetesGateway:
     enabled: true
 
