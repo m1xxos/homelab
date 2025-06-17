@@ -44,5 +44,11 @@ data:
       - name: postgres-creds
         mountPath: /postgres-creds
         readOnly: true
+      env:
+      - name: AUTHENTIK_SECRET_KEY
+        valueFrom:
+          secretKeyRef:
+            name: authentik-key
+            key: secret-key
     redis:
       enabled: true
