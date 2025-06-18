@@ -1,4 +1,6 @@
 providers:
+  kubernetesCRD:
+    allowExternalNameServices: true
   kubernetesIngress:
     enabled: true
   kubernetesGateway:
