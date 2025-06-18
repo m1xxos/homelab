@@ -20,7 +20,7 @@ gateway:
       namespacePolicy: All
       certificateRefs:
       - kind: Secret
-        name: main-m1xxos-tech
+        name: local-m1xxos-tech
 
 accessLog:
   enabled: true
