@@ -6,6 +6,7 @@ metadata:
   namespace: flux-system
 data:
   values.yaml: |
+    nameOverride: "vm"
     vmagent:
       ingress:
         hosts:
