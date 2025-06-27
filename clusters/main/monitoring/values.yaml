@@ -1,0 +1,27 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: vm-values
+  namespace: flux-system
+data:
+  values.yaml: |
+    vmagent:
+      ingress:
+        hosts:
+        - vmagent.local.m1xxos.tech
+        tls:
+        - secretName: local-m1xxos-tech
+          hosts:
+          - vmagent.local.m1xxos.tech 
+    grafana:
+      persistence:
+        type: pvc
+        enabled: false
+      ingress:
+        hosts:
+        - grafana.local.m1xxos.tech
+        tls:
+        - secretName: local-m1xxos-tech
+          hosts:
+          - grafana.local.m1xxos.tech 
