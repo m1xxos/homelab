@@ -9,6 +9,7 @@ data:
     nameOverride: "vm"
     vmagent:
       ingress:
+        enabled: true
         hosts:
         - vmagent.local.m1xxos.tech
         tls:
@@ -20,6 +21,7 @@ data:
         type: pvc
         enabled: false
       ingress:
+        enabled: true
         hosts:
         - grafana.local.m1xxos.tech
         tls:
