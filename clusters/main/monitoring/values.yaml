@@ -20,7 +20,8 @@ data:
     grafana:
       persistence:
         type: pvc
-        enabled: false
+        enabled: true
+        size: 5Gi
       ingress:
         enabled: true
         hosts:
