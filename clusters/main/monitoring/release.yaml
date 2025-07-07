@@ -14,8 +14,6 @@ spec:
         kind: HelmRepository
         name: vm
         namespace: flux-system
-  install:
-    createNamespace: true
   targetNamespace: monitoring
   valuesFrom:
   - kind: ConfigMap
