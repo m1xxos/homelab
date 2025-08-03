@@ -10,3 +10,4 @@ cluster-keys.json
 .vault_pass
 config
 clusters/values.yaml
+.DS_Store

@@ -37,7 +37,7 @@ resource "cloudflare_dns_record" "pi-extra" {
 resource "cloudflare_dns_record" "home" {
   zone_id = var.cloudflare_zone_id
   name    = "home.m1xxos.tech"
-  content = "192.168.1.77"
+  content = "192.168.1.128"
   type    = "A"
   ttl     = 300
 }
