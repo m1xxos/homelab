@@ -33,3 +33,19 @@ resource "cloudflare_dns_record" "pi-extra" {
   type    = "CNAME"
   ttl     = 300
 }
+
+resource "cloudflare_dns_record" "home" {
+  zone_id = var.cloudflare_zone_id
+  name    = "home.m1xxos.tech"
+  content = "192.168.1.77"
+  type    = "A"
+  ttl     = 300
+}
+
+resource "cloudflare_dns_record" "home-extra" {
+  zone_id = var.cloudflare_zone_id
+  name    = "*.home.m1xxos.tech"
+  content = "home.m1xxos.tech"
+  type    = "CNAME"
+  ttl     = 300
+}
