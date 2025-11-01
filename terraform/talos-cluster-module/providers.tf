@@ -2,29 +2,29 @@ terraform {
   required_providers {
     proxmox = {
       source  = "bpg/proxmox"
-      version = ">= 0.60.0"
+      version = "= 0.77.0"
     }
     cloudflare = {
       source  = "cloudflare/cloudflare"
-      version = ">= 4.43.0"
+      version = "= 5.3.0"
     }
     talos = {
       source  = "siderolabs/talos"
-      version = ">= 0.5.0"
+      version = "= 0.8.0"
     }
     helm = {
       source  = "hashicorp/helm"
-      version = ">= 2.16.0"
+      version = "= 3.1.0"
     }
     flux = {
       source  = "fluxcd/flux"
-      version = ">= 1.6.0"
+      version = "= 1.7.4"
     }
   }
 }
 
 locals {
-  kube_config = yamldecode(data.talos_cluster_kubeconfig.kubeconfig.kubeconfig_raw)
+  kube_config = yamldecode(talos_cluster_kubeconfig.kubeconfig.kubeconfig_raw)
 }
 
 provider "helm" {

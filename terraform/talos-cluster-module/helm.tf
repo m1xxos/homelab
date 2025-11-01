@@ -1,5 +1,5 @@
 resource "helm_release" "cilium_cni" {
-  depends_on = [data.talos_cluster_kubeconfig.kubeconfig]
+  depends_on = [talos_cluster_kubeconfig.kubeconfig]
   name       = "cilium"
   repository = "https://helm.cilium.io/"
   chart      = "cilium"
@@ -12,7 +12,7 @@ resource "helm_release" "cilium_cni" {
 }
 
 resource "helm_release" "metrics-server" {
-  depends_on = [data.talos_cluster_kubeconfig.kubeconfig, helm_release.cilium_cni]
+  depends_on = [talos_cluster_kubeconfig.kubeconfig, helm_release.cilium_cni]
   name       = "metrics-server"
   repository = "https://kubernetes-sigs.github.io/metrics-server/"
   chart      = "metrics-server"
