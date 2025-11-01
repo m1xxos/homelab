@@ -1,5 +1,5 @@
 locals {
-  node_name             = "pve"
+  node_name             = "plusha"
   cpu_type              = "x86-64-v2-AES"
   operating_system_type = "l26"
   datastore_id          = "pve-nvme"
