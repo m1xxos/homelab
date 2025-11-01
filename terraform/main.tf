@@ -26,7 +26,7 @@ module "main-cluster" {
   ]
 
   external_ip        = "192.168.1.80"
-  node_name          = "plush"
+  node_name          = "plusha"
   worker_disk_size   = 40
   cloudflare_zone_id = var.cloudflare_zone_id
   cluster_name       = "main"

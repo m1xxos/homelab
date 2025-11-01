@@ -19,8 +19,10 @@ resource "helm_release" "metrics-server" {
   namespace  = "kube-system"
   version    = var.metrics_server_version
 
-  set = {
-    name  = "args[0]"
-    value = "--kubelet-insecure-tls"
-  }
+  set = [
+    {
+      name = "args[0]"
+      value = "--kubelet-insecure-tls"
+    }
+  ]
 }
