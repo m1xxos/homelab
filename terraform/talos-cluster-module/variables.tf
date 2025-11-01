@@ -98,3 +98,7 @@ variable "metrics_server_version" {
   type = string
   default = "3.12.2"
 }
+
+variable "node_name" {
+  type = string
+}
