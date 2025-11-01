@@ -63,7 +63,7 @@ provider "registry.terraform.io/cloudflare/cloudflare" {
 
 provider "registry.terraform.io/fluxcd/flux" {
   version     = "1.7.4"
-  constraints = ">= 1.6.0"
+  constraints = "1.7.4"
   hashes = [
     "h1:ghEypxw0SCvu5f15mOTmfi9fiKH7THnpJkhmy9JQOqM=",
   ]
