@@ -12,12 +12,10 @@ gateway:
       port: 8000
       hostname: ""
       protocol: HTTP
-      namespacePolicy: All
     websecure:
       port: 8443
       hostname:
       protocol: HTTPS
-      namespacePolicy: All
       certificateRefs:
       - kind: Secret
         name: local-m1xxos-tech
