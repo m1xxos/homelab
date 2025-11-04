@@ -27,7 +27,7 @@ module "main-cluster" {
 
   external_ip        = "192.168.1.80"
   node_name          = "plusha"
-  worker_disk_size   = 40
+  worker_disk_size   = 70
   cloudflare_zone_id = var.cloudflare_zone_id
   cluster_name       = "main"
   cluster_dns        = "main.k8s.m1xxos.tech"
