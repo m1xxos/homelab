@@ -3,7 +3,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: vm-values
-  namespace: flux-system
+  namespace: monitoring
 data:
   values.yaml: |
     nameOverride: "vm"
