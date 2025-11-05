@@ -13,7 +13,7 @@ spec:
         kind: HelmRepository
         name: cert-manager
         namespace: flux-system
-      version: 1.17.2
+      version: v1.19.1
   install:
     createNamespace: true
   interval: 1m0s
