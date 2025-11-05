@@ -3,26 +3,9 @@
   "extends": [
     "config:recommended"
   ],
-  "kubernetes": {
-    "managerFilePatterns": [
-      "/\\.yaml$/",
-      "/\\.ya?ml$/"
-    ]
-  },
-  "argocd": {
-    "managerFilePatterns": [
-      "/argo-apps/.+\\.ya?ml$/"
-    ]
-  },
   "flux": {
     "managerFilePatterns": [
       "/clusters/.+\\.yaml$/"
-    ]
-  },
- "docker-compose": {
-    "managerFilePatterns": [
-      "/docker/.+\\.yaml$/",
-      "/(^|/)(?:docker-)?compose[^/]*\\.ya?ml$/"
     ]
   },
   "packageRules": [
