@@ -2,6 +2,6 @@
 namespace: metallb-system
 
 resources:
-- github.com/metallb/metallb/config/native?ref=v0.15.2
+- github.com/metallb/metallb/tree/v0.15.2/config/native
 - addressPool.yaml
 - l2Advertisement.yaml
