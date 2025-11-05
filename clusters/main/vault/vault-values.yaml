@@ -10,7 +10,7 @@ server:
     initialDelaySeconds: 60
   dataStorage:
     enabled: true
-    size: 5Gi
+    size: 2Gi
 
   standalone:
     enabled: false
