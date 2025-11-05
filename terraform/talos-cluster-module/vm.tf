@@ -93,7 +93,7 @@ resource "proxmox_virtual_environment_vm" "talos_worker" {
 
   disk {
     datastore_id = local.datastore_id
-    file_id      = var.talos_image_id
+    file_id      = each.value.talos_image_id
     file_format  = "raw"
     interface    = "virtio0"
     size         = var.worker_disk_size
