@@ -17,6 +17,14 @@ data:
         - secretName: local-m1xxos-tech
           hosts:
           - vmagent.local.m1xxos.tech 
+    vmsingle:
+      spec:
+        storage:
+          accessModes:
+            - ReadWriteMany
+          resources:
+            requests:
+              storage: 5Gi
     grafana:
       persistence:
         type: pvc
