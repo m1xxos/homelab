@@ -2,15 +2,15 @@ terraform {
   required_providers {
     cloudflare = {
       source  = "cloudflare/cloudflare"
-      version = "5.3.0"
+      version = "5.12.0"
     }
     proxmox = {
       source  = "bpg/proxmox"
-      version = "0.77.0"
+      version = "0.86.0"
     }
     talos = {
       source  = "siderolabs/talos"
-      version = "0.8.0"
+      version = "0.9.0"
     }
   }
   backend "s3" {
