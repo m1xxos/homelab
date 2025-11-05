@@ -16,7 +16,7 @@ labels:
 
 images:
 - name: lscr.io/linuxserver/sonarr
-  newTag: 4.0.14
+  newTag: 4.0.15
 - name: ghcr.io/onedr0p/exportarr
   newTag: v2.2
 
