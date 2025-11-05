@@ -111,7 +111,7 @@ services:
     - "traefik.http.services.sonarr.loadbalancer.server.port=8989"
 
   prowlarr:
-    image: lscr.io/linuxserver/prowlarr:1.37.0
+    image: lscr.io/linuxserver/prowlarr:2.1.5
     container_name: prowlarr
     environment:
     - PUID=1000
