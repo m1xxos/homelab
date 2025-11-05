@@ -59,9 +59,10 @@ variable "talos_cps" {
 
 variable "talos_workers" {
   type = list(object({
-    name  = string
-    vm_id = number
-    ip    = string
+    name           = string
+    vm_id          = number
+    ip             = string
+    talos_image_id = string
   }))
 }
 
@@ -80,7 +81,7 @@ variable "github_token" {
 }
 
 variable "git_url" {
-  type = string
+  type    = string
   default = "https://github.com/m1xxos/homelab.git"
 }
 
@@ -90,12 +91,12 @@ variable "branch" {
 }
 
 variable "cilium_version" {
-  type = string
+  type    = string
   default = "1.17.3"
 }
 
 variable "metrics_server_version" {
-  type = string
+  type    = string
   default = "3.12.2"
 }
 
