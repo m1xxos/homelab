@@ -2,7 +2,6 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 namespace: vault
 resources:
-- repository.yaml
 - release.yaml
 - ingressRoute.yaml
 configMapGenerator:

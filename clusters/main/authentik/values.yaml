@@ -1,0 +1,54 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: authentik-values
+  namespace: flux-system
+data:
+  values.yaml: |
+    authentik:
+      postgresql:
+        host: authentik-rw.authentik
+        user: file:///postgres-creds/username
+        password: file:///postgres-creds/password
+    server:
+      ingress:
+        ingressClassName: traefik
+        enabled: true
+        hosts:
+        - authentik.local.m1xxos.tech
+        tls:
+        - secretName: local-m1xxos-tech
+          hosts:
+          - authentik.local.m1xxos.tech
+      volumes:
+      - name: postgres-creds
+        secret:
+          secretName: authentik-app
+      volumeMounts:
+      - name: postgres-creds
+        mountPath: /postgres-creds
+        readOnly: true
+      env:
+      - name: AUTHENTIK_SECRET_KEY
+        valueFrom:
+          secretKeyRef:
+            name: authentik-key
+            key: secret_key
+    worker:
+      volumes:
+      - name: postgres-creds
+        secret:
+          secretName: authentik-app
+      volumeMounts:
+      - name: postgres-creds
+        mountPath: /postgres-creds
+        readOnly: true
+      env:
+      - name: AUTHENTIK_SECRET_KEY
+        valueFrom:
+          secretKeyRef:
+            name: authentik-key
+            key: secret_key
+    redis:
+      enabled: true

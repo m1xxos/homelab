@@ -22,7 +22,7 @@ services:
     labels:
     - "traefik.enable=true"
     - "traefik.http.routers.traefik.entrypoints=websecure"
-    - "traefik.http.routers.traefik.rule=Host(`traefik.home.m1xxos.me`)"
+    - "traefik.http.routers.traefik.rule=Host(`traefik.home.m1xxos.tech`)"
     - "traefik.http.services.traefik.loadbalancer.server.port=8080"
 
   jellyfin:
@@ -45,9 +45,8 @@ services:
     labels:
     - "traefik.enable=true"
     - "traefik.http.routers.jellyfin.entrypoints=websecure"
-    - "traefik.http.routers.jellyfin.rule=Host(`jellyfin.home.m1xxos.me`)"
+    - "traefik.http.routers.jellyfin.rule=Host(`jellyfin.home.m1xxos.tech`)"
     - "traefik.http.services.jellyfin.loadbalancer.server.port=8096"
-
 
   jellyseerr:
     image: fallenbagel/jellyseerr:2.7.2
@@ -66,7 +65,7 @@ services:
     labels:
     - "traefik.enable=true"
     - "traefik.http.routers.jellyseerr.entrypoints=websecure"
-    - "traefik.http.routers.jellyseerr.rule=Host(`jellyseerr.home.m1xxos.me`)"
+    - "traefik.http.routers.jellyseerr.rule=Host(`jellyseerr.home.m1xxos.tech`)"
     - "traefik.http.services.jellyseerr.loadbalancer.server.port=5055"
 
   radarr:
@@ -86,7 +85,7 @@ services:
     labels:
     - "traefik.enable=true"
     - "traefik.http.routers.radarr.entrypoints=websecure"
-    - "traefik.http.routers.radarr.rule=Host(`radarr.home.m1xxos.me`)"
+    - "traefik.http.routers.radarr.rule=Host(`radarr.home.m1xxos.tech`)"
     - "traefik.http.routers.radarr.service=radarr"
     - "traefik.http.services.radarr.loadbalancer.server.port=7878"
 
@@ -108,7 +107,7 @@ services:
     - "traefik.enable=true"
     - "traefik.http.routers.sonarr.entrypoints=websecure"
     - "traefik.http.routers.sonarr.service=sonarr"
-    - "traefik.http.routers.sonarr.rule=Host(`sonarr.home.m1xxos.me`)"
+    - "traefik.http.routers.sonarr.rule=Host(`sonarr.home.m1xxos.tech`)"
     - "traefik.http.services.sonarr.loadbalancer.server.port=8989"
 
   prowlarr:
@@ -127,7 +126,7 @@ services:
     - "traefik.enable=true"
     - "traefik.http.routers.prowlarr.entrypoints=websecure"
     - "traefik.http.routers.prowlarr.service=prowlarr"
-    - "traefik.http.routers.prowlarr.rule=Host(`prowlarr.home.m1xxos.me`)"
+    - "traefik.http.routers.prowlarr.rule=Host(`prowlarr.home.m1xxos.tech`)"
     - "traefik.http.services.prowlarr.loadbalancer.server.port=9696"
 
   qbittorrent:
@@ -150,13 +149,13 @@ services:
     labels:
     - "traefik.enable=true"
     - "traefik.http.routers.qbittorrent.entrypoints=websecure"
-    - "traefik.http.routers.qbittorrent.rule=Host(`torrent.home.m1xxos.me`)"
+    - "traefik.http.routers.qbittorrent.rule=Host(`torrent.home.m1xxos.tech`)"
     - "traefik.http.services.qbittorrent.loadbalancer.server.port=8080"
 
   sonarr-exporter:
     image: ghcr.io/onedr0p/exportarr:v2.2
     container_name: sonarr-exporter
-    command: ["sonarr"]
+    command: [ "sonarr" ]
     environment:
       PORT: 9707
       URL: "http://sonarr:8989"
@@ -168,7 +167,7 @@ services:
   radarr-exporter:
     image: ghcr.io/onedr0p/exportarr:v2.2
     container_name: radarr-exporter
-    command: ["radarr"]
+    command: [ "radarr" ]
     environment:
       PORT: 9708
       URL: "http://radarr:7878"
@@ -180,7 +179,7 @@ services:
   prowlarr-exporter:
     image: ghcr.io/onedr0p/exportarr:v2.2
     container_name: prowlarr-exporter
-    command: ["prowlarr"]
+    command: [ "prowlarr" ]
     environment:
       PORT: 9709
       URL: "http://prowlarr:9696"
@@ -203,14 +202,14 @@ services:
     labels:
     - "traefik.enable=true"
     - "traefik.http.routers.homarr.entrypoints=websecure"
-    - "traefik.http.routers.homarr.rule=Host(`home.m1xxos.me`)"
+    - "traefik.http.routers.homarr.rule=Host(`home.m1xxos.tech`)"
     - "traefik.http.services.homarr.loadbalancer.server.port=7575"
 
   postgresql:
     image: docker.io/library/postgres:16-alpine
     container_name: postgresql
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -d $${POSTGRES_DB} -U $${POSTGRES_USER}"]
+      test: [ "CMD-SHELL", "pg_isready -d $${POSTGRES_DB} -U $${POSTGRES_USER}" ]
       start_period: 20s
       interval: 30s
       retries: 5
@@ -228,7 +227,7 @@ services:
     image: docker.io/library/redis:8.0-alpine
     command: --save 60 1 --loglevel warning
     healthcheck:
-      test: ["CMD-SHELL", "redis-cli ping | grep PONG"]
+      test: [ "CMD-SHELL", "redis-cli ping | grep PONG" ]
       start_period: 20s
       interval: 30s
       retries: 5
@@ -260,7 +259,7 @@ services:
     labels:
     - "traefik.enable=true"
     - "traefik.http.routers.auth.entrypoints=websecure"
-    - "traefik.http.routers.auth.rule=Host(`auth.home.m1xxos.me`)"
+    - "traefik.http.routers.auth.rule=Host(`auth.home.m1xxos.tech`)"
     - "traefik.http.services.auth.loadbalancer.server.port=9000"
 
   worker:

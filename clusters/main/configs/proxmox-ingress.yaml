@@ -1,0 +1,30 @@
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: proxmox-ui
+  namespace: default
+spec:
+  entryPoints:
+  - websecure
+  - web
+  routes:
+  - match: Host(`proxmox.local.m1xxos.tech`)
+    kind: Rule
+    services:
+    - name: proxmox
+      kind: Service
+      port: 8006
+  tls:
+    secretName: local-m1xxos-tech
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: proxmox
+  namespace: default
+spec:
+  externalName: 192.168.1.122
+  type: ExternalName
+  ports:
+  - port: 8006

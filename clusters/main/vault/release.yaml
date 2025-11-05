@@ -8,12 +8,11 @@ spec:
   interval: 5m
   chart:
     spec:
-      chart: vault
-      version: "0.29.0"
+      chart: ./assets/vault
       sourceRef:
-        kind: HelmRepository
-        name: vault
-        namespace: vault
+        kind: GitRepository
+        name: flux-system
+        namespace: flux-system
   install:
     createNamespace: true
   targetNamespace: vault
@@ -21,3 +20,5 @@ spec:
   valuesFrom:
   - kind: ConfigMap
     name: vault-values
+  - kind: Secret
+    name: vault-key

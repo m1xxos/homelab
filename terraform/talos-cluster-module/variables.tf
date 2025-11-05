@@ -4,6 +4,11 @@ variable "cluster_name" {
   default = "homelab"
 }
 
+variable "cluster_dns" {
+  type    = string
+  default = "homelab.m1xxos.tech"
+}
+
 variable "default_gateway" {
   type    = string
   default = "192.168.1.1"
@@ -74,7 +79,26 @@ variable "github_token" {
   sensitive = true
 }
 
+variable "git_url" {
+  type = string
+  default = "https://github.com/m1xxos/homelab.git"
+}
+
 variable "branch" {
   type    = string
   default = "main"
+}
+
+variable "cilium_version" {
+  type = string
+  default = "1.17.3"
+}
+
+variable "metrics_server_version" {
+  type = string
+  default = "3.12.2"
+}
+
+variable "node_name" {
+  type = string
 }

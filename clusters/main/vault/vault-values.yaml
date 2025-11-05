@@ -1,4 +1,6 @@
 server:
+  extraEnvironmentVars:
+    YANDEXCLOUD_KMS_KEY_ID: abjc7mkspu26rij5khdc
   readinessProbe:
     enabled: true
     path: "/v1/sys/health?standbyok=true&sealedcode=204&uninitcode=204"
@@ -8,7 +10,7 @@ server:
     initialDelaySeconds: 60
   dataStorage:
     enabled: true
-    size: 5Gi
+    size: 2Gi
 
   standalone:
     enabled: false

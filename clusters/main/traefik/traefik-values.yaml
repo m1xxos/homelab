@@ -1,6 +1,8 @@
 providers:
+  kubernetesCRD:
+    allowExternalNameServices: true
   kubernetesIngress:
-    enabled: false
+    enabled: true
   kubernetesGateway:
     enabled: true
 
@@ -10,15 +12,13 @@ gateway:
       port: 8000
       hostname: ""
       protocol: HTTP
-      namespacePolicy: All
     websecure:
       port: 8443
       hostname:
       protocol: HTTPS
-      namespacePolicy: All
       certificateRefs:
       - kind: Secret
-        name: main-m1xxos-me
+        name: local-m1xxos-tech
 
 accessLog:
   enabled: true

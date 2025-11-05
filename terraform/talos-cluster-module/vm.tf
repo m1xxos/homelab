@@ -1,5 +1,4 @@
 locals {
-  node_name             = "pve"
   cpu_type              = "x86-64-v2-AES"
   operating_system_type = "l26"
   datastore_id          = "pve-nvme"
@@ -13,7 +12,7 @@ resource "proxmox_virtual_environment_vm" "talos_cp" {
   name        = each.value.name
   description = "Managed by Terraform, talos"
   tags        = ["talos", var.cluster_name]
-  node_name   = local.node_name
+  node_name   = var.node_name
   vm_id       = each.value.vm_id
   on_boot     = true
 
@@ -70,7 +69,7 @@ resource "proxmox_virtual_environment_vm" "talos_worker" {
   name        = each.value.name
   description = "Managed by Terraform"
   tags        = ["talos", var.cluster_name]
-  node_name   = local.node_name
+  node_name   = var.node_name
   vm_id       = each.value.vm_id
   on_boot     = true
 
