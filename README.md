@@ -13,11 +13,9 @@
 
 ## Key Features
 
-* Ubuntu base vms build with Packer
+* Talos k8s vms
 * Deployed on proxmox with Terraform
-* Provisioned by Ansible
-* Kubernetes with k3s
-* GitOps systems with Portainer and ArgoCD
+* GitOps systems with Portainer and fluxcd
 
 ## Architecture diagram
 
@@ -31,15 +29,15 @@ This software uses the following open source packages:
 
 * Proxmox
 * Docker
-* Ubuntu Cloud init
-* Maas
+* Cloud init
+* Talos
 
 ### IaC tools
 
 * Packer
 * Terraform
 * Ansible
-* Crossplane
+* FluxCD
 
 ### k8s systems
 
@@ -51,6 +49,8 @@ This software uses the following open source packages:
 * Cert-manager
 * Nfs file provisioner
 * MetalLB
+* Vault
+* Authentik
 
 ### Docker systems
 
