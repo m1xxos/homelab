@@ -3,7 +3,7 @@ apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
   name: capi-operator
-  namespace: flux-system
+  namespace: capi-operator-system
 spec:
   interval: 5m
   chart:
@@ -20,6 +20,9 @@ spec:
   targetNamespace: capi-operator-system
   releaseName: capi-operator
   values:
-    bootstrap: talos
-    controlPlane: talos
-    infrastructure: proxmox
+    bootstrap:
+      talos:
+    controlPlane:
+      talos:
+    infrastructure:
+      proxmox:
