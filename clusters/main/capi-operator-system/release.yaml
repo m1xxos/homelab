@@ -21,8 +21,8 @@ spec:
   releaseName: capi-operator
   values:
     bootstrap:
-      talos:
+      talos: {}
     controlPlane:
-      talos:
+      talos: {}
     infrastructure:
-      proxmox:
+      proxmox: {}
