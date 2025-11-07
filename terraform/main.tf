@@ -5,7 +5,7 @@ module "main-cluster" {
       name           = "main-cp-0"
       vm_id          = 900
       ip             = "192.168.1.70"
-      talos_image_id = proxmox_virtual_environment_download_file.talos_nocloud_image.id
+      talos_image_id = proxmox_virtual_environment_download_file.talos_nocloud_image_1_11_3.id
     },
     {
       name           = "main-cp-1"
