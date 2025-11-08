@@ -17,6 +17,9 @@ spec:
   install:
     createNamespace: true
     timeout: 90s
+    crds: CreateReplace
+  upgrade:
+    crds: CreateReplace
   targetNamespace: capi-operator-system
   releaseName: capi-operator
   values:
