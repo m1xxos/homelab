@@ -52,6 +52,9 @@ resource "talos_machine_configuration_apply" "cp_config_apply" {
   machine_configuration_input = data.talos_machine_configuration.machineconfig_cp.machine_configuration
   node                        = each.key
   config_patches              = local.config_patches
+  lifecycle {
+    replace_triggered_by = [ proxmox_virtual_environment_vm.talos_cp ]
+  }
 }
 
 data "talos_machine_configuration" "machineconfig_worker" {
@@ -68,6 +71,9 @@ resource "talos_machine_configuration_apply" "worker_config_apply" {
   machine_configuration_input = data.talos_machine_configuration.machineconfig_worker.machine_configuration
   node                        = each.key
   config_patches              = local.config_patches
+  lifecycle {
+    replace_triggered_by = [ proxmox_virtual_environment_vm.talos_worker ]
+  }
 }
 
 resource "talos_machine_bootstrap" "bootstrap" {
