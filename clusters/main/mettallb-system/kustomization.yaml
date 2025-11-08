@@ -3,5 +3,3 @@ namespace: metallb-system
 
 resources:
 - https://raw.githubusercontent.com/metallb/metallb/v0.15.2/config/manifests/metallb-native.yaml
-- addressPool.yaml
-- l2Advertisement.yaml

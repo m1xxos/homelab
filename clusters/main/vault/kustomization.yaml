@@ -3,7 +3,6 @@ kind: Kustomization
 namespace: vault
 resources:
 - release.yaml
-- ingressRoute.yaml
 configMapGenerator:
 - name: vault-values
   files:

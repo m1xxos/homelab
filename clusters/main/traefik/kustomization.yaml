@@ -5,7 +5,6 @@ resources:
 - namespace.yaml
 - repository.yaml
 - release.yaml
-- dashboard.yaml
 configMapGenerator:
 - name: traefik-values
   files:
