@@ -18,6 +18,8 @@ spec:
     persistence:
       defaultClass: true
       defaultClassReplicaCount: 2
+    defaultSettings:
+      storageReservedPercentageForDefaultDisk: 10
     ingress:
       enabled: true
       hosts:
