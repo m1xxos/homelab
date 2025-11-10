@@ -18,3 +18,8 @@ terraform {
     skip_s3_checksum            = true
   }
 }
+
+provider "vault" {
+  address = "https://vault.local.m1xxos.tech/"
+  token = var.vault_token
+}
