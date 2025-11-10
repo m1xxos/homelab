@@ -1,11 +1,11 @@
 terraform {
   required_providers {
     vault = {
-      source = "hashicorp/vault"
+      source  = "hashicorp/vault"
       version = "5.4.0"
     }
     random = {
-      source = "hashicorp/random"
+      source  = "hashicorp/random"
       version = "3.7.2"
     }
   }
@@ -25,5 +25,5 @@ terraform {
 
 provider "vault" {
   address = "https://vault.local.m1xxos.tech/"
-  token = var.vault_token
+  token   = var.vault_token
 }

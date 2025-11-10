@@ -13,11 +13,11 @@ variable "secret_key" {
 }
 
 variable "vault_token" {
-  type = string
+  type      = string
   sensitive = true
 }
 
 variable "authentik-sa-name" {
-  type = string
+  type    = string
   default = "authentik-reader"
 }
