@@ -43,7 +43,5 @@ server:
            tls_disable = "true"
         }
         service_registration "kubernetes" {}
-        log_requests_level = "debug"
-        log_level = "debug"
 ui:
   enabled: true
