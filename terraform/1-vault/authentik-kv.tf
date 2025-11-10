@@ -5,16 +5,16 @@ resource "random_string" "authentik-secret-key" {
   min_upper = 10
 }
 
-resource "vault_mount" "authentik" {
-  path        = "authentik"
+resource "vault_mount" "main" {
+  path        = "main"
   type        = "kv"
   options     = { version = "2" }
-  description = "authentik kv engine"
+  description = "main cluster kv engine"
 }
 
 resource "vault_kv_secret_v2" "authentik-secret-key" {
-  mount = vault_mount.authentik.path
-  name = "secret-key"
+  mount = vault_mount.main.path
+  name = "authentik/secret-key"
   data_json = jsonencode({
     secret-key = random_string.authentik-secret-key.result
   }
