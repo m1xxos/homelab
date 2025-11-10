@@ -1,8 +1,11 @@
 resource "vault_policy" "authentik-reader" {
   name   = var.authentik-sa-name
   policy = <<EOT
-path "main/authentik/*" {
-  capabilities = [ "list", "read" ]
+path "main/data/authentik/*" {
+  capabilities = ["read", "list"]
+}
+path "main/metadata/*" {
+  capabilities = [ "list" ]
 }
 EOT
 }
