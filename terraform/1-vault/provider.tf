@@ -4,6 +4,10 @@ terraform {
       source = "hashicorp/vault"
       version = "5.4.0"
     }
+    random = {
+      source = "hashicorp/random"
+      version = "3.7.2"
+    }
   }
   backend "s3" {
     endpoint                    = "https://storage.yandexcloud.net"
