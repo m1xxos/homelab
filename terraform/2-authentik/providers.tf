@@ -4,6 +4,10 @@ terraform {
       source = "goauthentik/authentik"
       version = "2025.10.0"
     }
+    vault = {
+      source  = "hashicorp/vault"
+      version = "5.4.0"
+    }
   }
   backend "s3" {
     endpoint                    = "https://storage.yandexcloud.net"
@@ -17,4 +21,14 @@ terraform {
     skip_requesting_account_id  = true
     skip_s3_checksum            = true
   }
+}
+
+provider "authentik" {
+  url = "https://authentik.local.m1xxos.tech/"
+  token = ephemeral.vault_kv_secret_v2.authentik_token.data.token
+}
+
+provider "vault" {
+  address = "https://vault.local.m1xxos.tech/"
+  token   = var.vault_token
 }
