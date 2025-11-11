@@ -11,7 +11,7 @@ EOT
 }
 
 resource "vault_policy" "users-reader" {
-  name   = ""
+  name   = "users-reader"
   policy = <<EOT
 path "user-secrets/data/*" {
   capabilities = ["read", "list"]
