@@ -33,6 +33,6 @@ provider "authentik" {
 }
 
 provider "vault" {
-  address = "https://vault.local.m1xxos.tech/"
+  address = var.vault_address
   token   = var.vault_token
 }

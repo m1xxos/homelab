@@ -16,4 +16,17 @@ resource "authentik_provider_oauth2" "name" {
   client_secret      = random_password.vault-auth-secret.result
   authorization_flow = data.authentik_flow.default-authorization-flow.id
   invalidation_flow  = data.authentik_flow.default-invalidation-flow.id
+  allowed_redirect_uris = [ {
+        matching_mode = "strict",
+        url = "${var.vault_address}/ui/vault/auth/oidc/oidc/callback"
+    },
+    {
+        matching_mode = "strict",
+        url = "${var.vault_address}/oidc/callback"
+    },
+    {
+        matching_mode = "strict",
+        url = "http://localhost:8250/oidc/callback"
+    }
+   ]
 }
