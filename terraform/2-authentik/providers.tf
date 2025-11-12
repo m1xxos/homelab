@@ -1,12 +1,16 @@
 terraform {
   required_providers {
     authentik = {
-      source = "goauthentik/authentik"
+      source  = "goauthentik/authentik"
       version = "2025.10.0"
     }
     vault = {
       source  = "hashicorp/vault"
       version = "5.4.0"
+    }
+    random = {
+      source  = "hashicorp/random"
+      version = "3.7.2"
     }
   }
   backend "s3" {
@@ -24,7 +28,7 @@ terraform {
 }
 
 provider "authentik" {
-  url = "https://authentik.local.m1xxos.tech/"
+  url   = "https://authentik.local.m1xxos.tech/"
   token = ephemeral.vault_kv_secret_v2.authentik_token.data.token
 }
 
