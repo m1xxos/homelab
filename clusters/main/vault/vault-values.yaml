@@ -1,3 +1,7 @@
+injector:
+  webhook:
+    failurePolicy: "Fail"
+
 server:
   extraEnvironmentVars:
     YANDEXCLOUD_KMS_KEY_ID: abjc7mkspu26rij5khdc
