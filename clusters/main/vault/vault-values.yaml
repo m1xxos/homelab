@@ -1,4 +1,5 @@
 injector:
+  failurePolicy: "Fail"
   webhook:
     failurePolicy: "Fail"
 
