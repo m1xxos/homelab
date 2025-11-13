@@ -1,7 +1,5 @@
 injector:
   failurePolicy: "Fail"
-  webhook:
-    failurePolicy: "Fail"
 
 server:
   extraEnvironmentVars:
