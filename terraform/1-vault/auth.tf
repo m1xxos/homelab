@@ -15,3 +15,13 @@ resource "vault_kubernetes_auth_backend_role" "authentik-reader" {
   token_policies                   = [vault_policy.authentik-reader.name]
   token_ttl                        = 3600
 }
+
+resource "vault_jwt_auth_backend" "oidc" {
+    description         = "Authentik OIDC"
+    path                = "oidc"
+    type                = "oidc"
+    oidc_discovery_url  = "https://authentik.local.m1xxos.tech/application/o/vault/"
+    oidc_client_id      = data.vault_kv_secret_v2.authentik-auth.data.oidc_client_id
+    oidc_client_secret  = data.vault_kv_secret_v2.authentik-auth.data.oidc_client_secret
+    default_role        = "reader"
+}

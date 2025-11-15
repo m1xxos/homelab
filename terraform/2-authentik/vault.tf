@@ -36,3 +36,15 @@ resource "authentik_application" "vault" {
   slug = "vault"
   protocol_provider = authentik_provider_oauth2.vault.id
 }
+
+resource "vault_kv_secret_v2" "authentik-auth" {
+  name = "authentik-auth"
+  mount = "user-secrets"
+  namespace = authentik_provider_oauth2.vault.client_id
+  data_json = jsonencode(
+    {
+      oidc_client_id = authentik_provider_oauth2.vault.client_id
+      oidc_client_secret = authentik_provider_oauth2.vault.client_secret
+    }
+  )
+}
