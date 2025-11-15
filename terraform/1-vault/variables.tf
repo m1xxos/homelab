@@ -21,3 +21,8 @@ variable "authentik-sa-name" {
   type    = string
   default = "authentik-reader"
 }
+
+variable "vault_address" {
+  type = string
+  default = "https://vault.local.m1xxos.tech"
+}

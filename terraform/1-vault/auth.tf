@@ -24,4 +24,18 @@ resource "vault_jwt_auth_backend" "oidc" {
     oidc_client_id      = data.vault_kv_secret_v2.authentik-auth.data.oidc_client_id
     oidc_client_secret  = data.vault_kv_secret_v2.authentik-auth.data.oidc_client_secret
     default_role        = "reader"
+    jwt_supported_algs = [ "RS256", "HS256" ]
+}
+
+resource "vault_jwt_auth_backend_role" "name" {
+  backend = vault_jwt_auth_backend.oidc.path
+  role_name = "reader"
+  user_claim = "sub"
+  bound_audiences = ["Client ID"]
+  allowed_redirect_uris = [ 
+    "${var.vault_address}/ui/vault/auth/oidc/oidc/callback",
+    "${var.vault_address}/oidc/callback",
+    "http://localhost:8250/oidc/callback"
+   ]
+  token_policies = [ vault_policy.users-reader.name, vault_policy.authentik-reader.name ]
 }
