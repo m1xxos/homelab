@@ -23,6 +23,6 @@ variable "authentik-sa-name" {
 }
 
 variable "vault_address" {
-  type = string
+  type    = string
   default = "https://vault.local.m1xxos.tech"
 }
