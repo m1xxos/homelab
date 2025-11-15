@@ -41,6 +41,7 @@ resource "authentik_application" "vault" {
   name              = "vault"
   slug              = "vault"
   protocol_provider = authentik_provider_oauth2.vault.id
+  meta_icon         = "https://cdn.jsdelivr.net/gh/selfhst/icons/svg/hashicorp-vault.svg"
 }
 
 resource "vault_kv_secret_v2" "authentik-auth" {
