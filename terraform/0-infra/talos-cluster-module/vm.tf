@@ -24,6 +24,7 @@ resource "proxmox_virtual_environment_vm" "talos_cp" {
 
   memory {
     dedicated = var.cp_memory
+    floating  = var.cp_memory
   }
 
   agent {
@@ -81,6 +82,7 @@ resource "proxmox_virtual_environment_vm" "talos_worker" {
 
   memory {
     dedicated = var.worker_memory
+    floating  = var.worker_memory
   }
 
   agent {
