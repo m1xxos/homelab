@@ -60,8 +60,8 @@ data:
         auth.generic_oauth:
             name: authentik
             enabled: true
-            client_id: $__file{vault/secrets/client-id.txt}
-            client_secret: $__file{vault/secrets/client-secret.txt}
+            client_id: $__file{/vault/secrets/client-id.txt}
+            client_secret: $__file{/vault/secrets/client-secret.txt}
             scopes: "openid profile email"
             auth_url: "hhttps://authentik.local.m1xxos.tech/application/o/authorize/"
             token_url: "hhttps://authentik.local.m1xxos.tech/application/o/token/"
