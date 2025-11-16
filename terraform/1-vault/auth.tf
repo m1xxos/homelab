@@ -24,18 +24,45 @@ resource "vault_jwt_auth_backend" "oidc" {
   oidc_client_id     = data.vault_kv_secret_v2.authentik-auth.data.oidc_client_id
   oidc_client_secret = data.vault_kv_secret_v2.authentik-auth.data.oidc_client_secret
   default_role       = "reader"
-  jwt_supported_algs = [ "RS256", "RS384", "RS512", "ES256", "ES384", "ES512", "PS256", "PS384", "PS512", "EdDSA"]
+  jwt_supported_algs = ["RS256", "RS384", "RS512", "ES256", "ES384", "ES512", "PS256", "PS384", "PS512", "EdDSA"]
 }
 
-resource "vault_jwt_auth_backend_role" "name" {
+resource "vault_jwt_auth_backend_role" "reader" {
   backend         = vault_jwt_auth_backend.oidc.path
   role_name       = "reader"
   user_claim      = "sub"
-  bound_audiences = [ data.vault_kv_secret_v2.authentik-auth.data.oidc_client_id ]
+  bound_audiences = [data.vault_kv_secret_v2.authentik-auth.data.oidc_client_id]
   allowed_redirect_uris = [
     "${var.vault_address}/ui/vault/auth/oidc/oidc/callback",
     "${var.vault_address}/oidc/callback",
     "http://localhost:8250/oidc/callback"
   ]
   token_policies = [vault_policy.users-reader.name, vault_policy.authentik-reader.name]
+}
+
+resource "vault_jwt_auth_backend_role" "admin" {
+  backend         = vault_jwt_auth_backend.oidc.path
+  role_name       = "admin"
+  user_claim      = "sub"
+  bound_audiences = [data.vault_kv_secret_v2.authentik-auth.data.oidc_client_id]
+  allowed_redirect_uris = [
+    "${var.vault_address}/ui/vault/auth/oidc/oidc/callback",
+    "${var.vault_address}/oidc/callback",
+    "http://localhost:8250/oidc/callback"
+  ]
+  token_policies = ["admin"]
+  groups_claim   = "groups"
+  oidc_scopes    = ["openid", "profile", "email"]
+}
+
+resource "vault_identity_group" "admin" {
+  name     = "admin"
+  policies = [ "admin" ]
+  type     = "external"
+}
+
+resource "vault_identity_group_alias" "admin" {
+  name = "admin"
+  canonical_id = vault_identity_group.admin.id
+  mount_accessor = vault_jwt_auth_backend.oidc.accessor
 }
