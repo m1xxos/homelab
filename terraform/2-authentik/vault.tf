@@ -6,8 +6,12 @@ data "authentik_flow" "default-invalidation-flow" {
   slug = "default-provider-invalidation-flow"
 }
 
-data "authentik_certificate_key_pair" "name" {
+data "authentik_certificate_key_pair" "vault" {
   name = "vault"
+}
+
+data "authentik_property_mapping_provider_scope" "profile" {
+  managed = "goauthentik.io/providers/oauth2/scope-profile"
 }
 
 resource "random_password" "vault-auth-secret" {
@@ -21,7 +25,10 @@ resource "authentik_provider_oauth2" "vault" {
   authorization_flow = data.authentik_flow.default-authorization-flow.id
   invalidation_flow  = data.authentik_flow.default-invalidation-flow.id
   sub_mode           = "user_username"
-  signing_key        = data.authentik_certificate_key_pair.name.id
+  signing_key        = data.authentik_certificate_key_pair.vault.id
+  property_mappings = [
+    data.authentik_property_mapping_provider_scope.profile.id
+  ]
   allowed_redirect_uris = [{
     matching_mode = "strict",
     url           = "${var.vault_address}/ui/vault/auth/oidc/oidc/callback"
