@@ -40,7 +40,8 @@ module "main-cluster" {
       talos_image_id = proxmox_virtual_environment_download_file.talos_nocloud_image_1_11_3.id
     }
   ]
-
+  worker_cpu_cores   = 6
+  worker_memory      = 6144
   external_ip        = "192.168.1.80"
   node_name          = "plusha"
   worker_disk_size   = 70

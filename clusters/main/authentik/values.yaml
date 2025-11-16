@@ -6,12 +6,19 @@ metadata:
   namespace: authentik
 data:
   values.yaml: |
+    global:
+      podAnnotations:
+        vault.hashicorp.com/agent-inject: 'true'
+        vault.hashicorp.com/role: 'authentik-reader'
+        vault.hashicorp.com/agent-inject-secret-secret-key.txt: 'main/authentik/secret-key'
     authentik:
+      secret_key: file:///vault/secrets/secret-key.txt
       postgresql:
         host: authentik-rw.authentik
         user: file:///postgres-creds/username
         password: file:///postgres-creds/password
     server:
+      serviceAccountName: authentik-reader
       ingress:
         ingressClassName: traefik
         enabled: true
@@ -29,13 +36,8 @@ data:
       - name: postgres-creds
         mountPath: /postgres-creds
         readOnly: true
-      env:
-      - name: AUTHENTIK_SECRET_KEY
-        valueFrom:
-          secretKeyRef:
-            name: authentik-key
-            key: secret_key
     worker:
+      serviceAccountName: authentik-reader
       volumes:
       - name: postgres-creds
         secret:
@@ -44,11 +46,5 @@ data:
       - name: postgres-creds
         mountPath: /postgres-creds
         readOnly: true
-      env:
-      - name: AUTHENTIK_SECRET_KEY
-        valueFrom:
-          secretKeyRef:
-            name: authentik-key
-            key: secret_key
     redis:
       enabled: true
