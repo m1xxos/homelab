@@ -12,11 +12,6 @@ variable "secret_key" {
   sensitive = true
 }
 
-variable "vault_token" {
-  type      = string
-  sensitive = true
-}
-
 variable "vault_address" {
   type    = string
   default = "https://vault.local.m1xxos.tech"

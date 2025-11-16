@@ -12,11 +12,6 @@ variable "secret_key" {
   sensitive = true
 }
 
-variable "vault_token" {
-  type      = string
-  sensitive = true
-}
-
 variable "authentik-sa-name" {
   type    = string
   default = "authentik-reader"

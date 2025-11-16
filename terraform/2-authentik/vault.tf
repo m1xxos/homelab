@@ -62,3 +62,7 @@ resource "vault_kv_secret_v2" "authentik-auth" {
     }
   )
 }
+
+resource "authentik_group" "admin" {
+  name = "admin"
+}

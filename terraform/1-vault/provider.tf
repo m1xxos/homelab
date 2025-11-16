@@ -25,5 +25,4 @@ terraform {
 
 provider "vault" {
   address = "https://vault.local.m1xxos.tech/"
-  token   = var.vault_token
 }
