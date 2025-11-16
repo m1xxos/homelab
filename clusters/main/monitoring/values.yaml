@@ -68,3 +68,5 @@ data:
             api_url: "hhttps://authentik.local.m1xxos.tech/application/o/userinfo/"
             # Optionally map user groups to Grafana roles
             role_attribute_path: contains(groups, 'Grafana Admins') && 'Admin' || contains(groups, 'Grafana Editors') && 'Editor' || 'Viewer'
+        server:
+          root_url: https://grafana.local.m1xxos.tech
