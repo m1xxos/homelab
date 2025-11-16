@@ -1,17 +1,5 @@
-data "authentik_flow" "default-authorization-flow" {
-  slug = "default-provider-authorization-implicit-consent"
-}
-
-data "authentik_flow" "default-invalidation-flow" {
-  slug = "default-provider-invalidation-flow"
-}
-
 data "authentik_certificate_key_pair" "vault" {
   name = "vault"
-}
-
-data "authentik_property_mapping_provider_scope" "profile" {
-  managed = "goauthentik.io/providers/oauth2/scope-profile"
 }
 
 resource "random_password" "vault-auth-secret" {
