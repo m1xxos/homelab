@@ -55,7 +55,7 @@ data:
           - grafana.local.m1xxos.tech 
       grafana.ini:
         auth:
-            signout_redirect_url: "hhttps://authentik.local.m1xxos.tech/application/o/grafana/end-session/"
+            signout_redirect_url: "https://authentik.local.m1xxos.tech/application/o/grafana/end-session/"
             oauth_auto_login: true
         auth.generic_oauth:
             name: authentik
@@ -63,9 +63,9 @@ data:
             client_id: $__file{/vault/secrets/client-id.txt}
             client_secret: $__file{/vault/secrets/client-secret.txt}
             scopes: "openid profile email"
-            auth_url: "hhttps://authentik.local.m1xxos.tech/application/o/authorize/"
-            token_url: "hhttps://authentik.local.m1xxos.tech/application/o/token/"
-            api_url: "hhttps://authentik.local.m1xxos.tech/application/o/userinfo/"
+            auth_url: "https://authentik.local.m1xxos.tech/application/o/authorize/"
+            token_url: "https://authentik.local.m1xxos.tech/application/o/token/"
+            api_url: "https://authentik.local.m1xxos.tech/application/o/userinfo/"
             # Optionally map user groups to Grafana roles
             role_attribute_path: contains(groups, 'Grafana Admins') && 'Admin' || contains(groups, 'Grafana Editors') && 'Editor' || 'Viewer'
         server:
