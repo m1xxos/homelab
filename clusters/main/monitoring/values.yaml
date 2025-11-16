@@ -26,6 +26,8 @@ data:
             requests:
               storage: 5Gi
     grafana:
+      serviceAccount:
+        name: grafana-reader
       podAnnotations:
         vault.hashicorp.com/agent-inject: 'true'
         vault.hashicorp.com/role: 'grafana-reader'
