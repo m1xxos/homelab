@@ -9,17 +9,6 @@ data:
     nameOverride: "vm"
     fullnameOverride: "vm"
     vmagent:
-      scrapeConfigGenerator:
-        enabled: true
-        disableControlplane: true
-      scrapeConfigs:
-        - job_name: talos-control-plane
-          scheme: https
-          metrics_path: /metrics/proxy
-          kubernetes_sd_configs:
-            - role: node
-          tls_config:
-            insecure_skip_verify: true
       ingress:
         enabled: true
         hosts:
