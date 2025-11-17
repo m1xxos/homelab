@@ -28,6 +28,5 @@ metrics:
   prometheus:
     addRoutersLabels: true
     addServicesLabels: true
-    serviceMonitor:
-      enabled: true
-      namespace: monitoring
+    service:
+      enabled: false
