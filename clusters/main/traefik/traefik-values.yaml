@@ -29,4 +29,4 @@ metrics:
     addRoutersLabels: true
     addServicesLabels: true
     service:
-      enabled: false
+      enabled: true
