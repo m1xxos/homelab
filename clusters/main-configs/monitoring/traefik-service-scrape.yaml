@@ -11,4 +11,5 @@ spec:
       app.kubernetes.io/component: metrics
       app.kubernetes.io/name: traefik
   namespaceSelector:
-    kubernetes.io/metadata.name: traefik
+    matchNames:
+    - traefik
