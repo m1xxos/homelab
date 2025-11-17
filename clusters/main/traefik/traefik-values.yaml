@@ -26,6 +26,8 @@ accessLog:
 
 metrics:
   prometheus:
-    entryPoint: metrics
     addRoutersLabels: true
     addServicesLabels: true
+    serviceMonitor:
+      enabled: true
+      namespace: monitoring
