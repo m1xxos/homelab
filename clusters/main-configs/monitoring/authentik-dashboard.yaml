@@ -15,7 +15,7 @@ data:
           "description": "",
           "type": "datasource",
           "pluginId": "prometheus",
-          "pluginName": "Prometheus"
+          "pluginName": "VictoriaMetrics"
         }
       ],
       "__requires": [
