@@ -17,6 +17,11 @@ variable "authentik-sa-name" {
   default = "authentik-reader"
 }
 
+variable "grafana-sa-name" {
+  type    = string
+  default = "grafana-reader"
+}
+
 variable "vault_address" {
   type    = string
   default = "https://vault.local.m1xxos.tech"

@@ -24,8 +24,9 @@ accessLog:
   enabled: true
   format: json
 
-# metrics:
-#   prometheus:
-#     serviceMonitor:
-#       enabled: true
-#       namespace: monitoring
+metrics:
+  prometheus:
+    addRoutersLabels: true
+    addServicesLabels: true
+    service:
+      enabled: true

@@ -1,0 +1,11 @@
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMPodScrape
+metadata:
+  name: authentik-pg
+  namespace: authentik
+spec:
+  selector:
+    matchLabels:
+      cnpg.io/cluster: authentik
+  podMetricsEndpoints:
+  - port: metrics

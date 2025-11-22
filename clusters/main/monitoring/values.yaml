@@ -26,6 +26,21 @@ data:
             requests:
               storage: 5Gi
     grafana:
+      serviceAccount:
+        name: grafana-reader
+      podAnnotations:
+        vault.hashicorp.com/agent-inject: 'true'
+        vault.hashicorp.com/role: 'grafana-reader'
+        vault.hashicorp.com/agent-inject-secret-client-id.txt: "main/grafana/grafana-auth"
+        vault.hashicorp.com/agent-inject-template-client-id.txt: |
+          {{- with secret "main/grafana/grafana-auth" -}}
+          {{ .Data.data.oidc_client_id }}
+          {{- end -}}
+        vault.hashicorp.com/agent-inject-secret-client-secret.txt: "main/grafana/grafana-auth"
+        vault.hashicorp.com/agent-inject-template-client-secret.txt: |
+          {{- with secret "main/grafana/grafana-auth" -}}
+          {{ .Data.data.oidc_client_secret }}
+          {{- end -}}
       persistence:
         type: pvc
         enabled: true
@@ -37,4 +52,42 @@ data:
         tls:
         - secretName: local-m1xxos-tech
           hosts:
-          - grafana.local.m1xxos.tech 
+          - grafana.local.m1xxos.tech
+      grafana.ini:
+        auth:
+            signout_redirect_url: "https://authentik.local.m1xxos.tech/application/o/grafana/end-session/"
+            oauth_auto_login: true
+        auth.generic_oauth:
+            name: authentik
+            enabled: true
+            client_id: $__file{/vault/secrets/client-id.txt}
+            client_secret: $__file{/vault/secrets/client-secret.txt}
+            scopes: "openid profile email"
+            auth_url: "https://authentik.local.m1xxos.tech/application/o/authorize/"
+            token_url: "https://authentik.local.m1xxos.tech/application/o/token/"
+            api_url: "https://authentik.local.m1xxos.tech/application/o/userinfo/"
+            # Optionally map user groups to Grafana roles
+            role_attribute_path: contains(groups, 'Grafana Admins') && 'Admin' || contains(groups, 'Grafana Editors') && 'Editor' || 'Viewer'
+        server:
+          root_url: https://grafana.local.m1xxos.tech
+    kubeScheduler:
+      vmScrape:
+        spec:
+          endpoints:
+          - bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
+            port: http-metrics
+            scheme: https
+            tlsConfig:
+              caFile: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+              insecureSkipVerify: true
+    kubeControllerManager:
+      vmScrape:
+        spec:
+          endpoints:
+          - bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
+            port: http-metrics
+            scheme: https
+            tlsConfig:
+              caFile: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+              serverName: kubernetes
+              insecureSkipVerify: true

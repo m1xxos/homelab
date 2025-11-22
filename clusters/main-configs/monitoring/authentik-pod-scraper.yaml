@@ -1,0 +1,14 @@
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMPodScrape
+metadata:
+  name: authentik
+  namespace: monitoring
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: authentik
+  podMetricsEndpoints:
+  - port: metrics
+  namespaceSelector:
+    matchNames:
+    - authentik

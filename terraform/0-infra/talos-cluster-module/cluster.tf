@@ -5,29 +5,41 @@ locals {
   talos_worker_ips = [
     for vm in var.talos_workers : vm.ip
   ]
-  config_patches = [
-    yamlencode({
-      cluster = {
-        network = {
-          cni = {
-            name = "none"
-          }
+  config_patches = yamlencode({
+    cluster = {
+      network = {
+        cni = {
+          name = "none"
         }
       },
-      machine = {
-        kubelet = {
-          extraMounts = [
-            { destination = "/var/lib/longhorn",
-              type        = "bind",
-              source      = "/var/lib/longhorn",
-              options = [
-                "bind", "rshared", "rw"
-            ] }
-          ]
-        }
+    },
+    machine = {
+      kubelet = {
+        extraMounts = [
+          { destination = "/var/lib/longhorn",
+            type        = "bind",
+            source      = "/var/lib/longhorn",
+            options = [
+              "bind", "rshared", "rw"
+          ] }
+        ]
       }
-    })
-  ]
+    }
+  })
+  control_plane_patches = yamlencode({
+    cluster = {
+      controllerManager = {
+        extraArgs = {
+          bind-address = "0.0.0.0"
+          }
+        },
+        scheduler = {
+          extraArgs = {
+            bind-address = "0.0.0.0",
+          }
+        }
+    }
+  })
 }
 
 resource "talos_machine_secrets" "machine_secrets" {}
@@ -51,9 +63,9 @@ resource "talos_machine_configuration_apply" "cp_config_apply" {
   client_configuration        = talos_machine_secrets.machine_secrets.client_configuration
   machine_configuration_input = data.talos_machine_configuration.machineconfig_cp.machine_configuration
   node                        = each.key
-  config_patches              = local.config_patches
+  config_patches              = [local.config_patches, local.control_plane_patches]
   lifecycle {
-    replace_triggered_by = [ proxmox_virtual_environment_vm.talos_cp ]
+    replace_triggered_by = [proxmox_virtual_environment_vm.talos_cp]
   }
 }
 
@@ -70,9 +82,9 @@ resource "talos_machine_configuration_apply" "worker_config_apply" {
   client_configuration        = talos_machine_secrets.machine_secrets.client_configuration
   machine_configuration_input = data.talos_machine_configuration.machineconfig_worker.machine_configuration
   node                        = each.key
-  config_patches              = local.config_patches
+  config_patches              = [local.config_patches]
   lifecycle {
-    replace_triggered_by = [ proxmox_virtual_environment_vm.talos_worker ]
+    replace_triggered_by = [proxmox_virtual_environment_vm.talos_worker]
   }
 }
 
