@@ -52,7 +52,7 @@ data:
         tls:
         - secretName: local-m1xxos-tech
           hosts:
-          - grafana.local.m1xxos.tech 
+          - grafana.local.m1xxos.tech
       grafana.ini:
         auth:
             signout_redirect_url: "https://authentik.local.m1xxos.tech/application/o/grafana/end-session/"
