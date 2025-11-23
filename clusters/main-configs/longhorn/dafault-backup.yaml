@@ -5,5 +5,5 @@ metadata:
   namespace: longhorn-system
 data:
   default-resource.yaml: |
-    "backup-target": "nfs://nas.home.m1xxos.tech:/mnt/main/lh-backup"
+    "backup-target": "nfs://192.168.1.138:/mnt/main/lh-backup"
     "backupstore-poll-interval": "300"
