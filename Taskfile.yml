@@ -14,3 +14,9 @@ tasks:
     cmds:
     - flux reconcile source git flux-system
     - flux reconcile kustomization flux-system
+    - flux reconcile kustomization flux-system-configs
+  tfplan:
+    cmds:
+    - terraform -chdir=terraform/0-infra/ plan
+    - terraform -chdir=terraform/1-vault/ plan
+    - terraform -chdir=terraform/2-authentik/ plan
