@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: longhorn-default-resource
+  namespace: longhorn-system
+data:
+  default-resource.yaml: |
+    "backup-target": "nfs://nas.home.m1xxos.tech:/mnt/main/lh-backup"
+    "backupstore-poll-interval": "300"
