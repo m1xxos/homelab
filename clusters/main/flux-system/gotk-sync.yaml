@@ -8,7 +8,7 @@ metadata:
 spec:
   interval: 1m0s
   ref:
-    branch: 346-k8s-monitoring
+    branch: 350-nfs-lh-volumes-backup
   secretRef:
     name: flux-system
   url: https://github.com/m1xxos/homelab.git
