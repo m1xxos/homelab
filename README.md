@@ -19,7 +19,7 @@
 
 ## Architecture diagram
 
-![Architecture](/assets/architecture_v2.png?raw=true "Architecture")
+![Architecture](/assets/architecture_v3.png?raw=true "Architecture")
 
 ## Made with
 
@@ -80,4 +80,8 @@ This software uses the following open source packages:
 
 ## Architecture diagram v1
 
-![Alt text](/assets/architecture.png?raw=true "Title")
+![Alt text](/assets/architecture.png?raw=true "Arch - v1")
+
+## Architecture diagram v2
+
+![Alt text](/assets/architecture_v2.png?raw=true "Arch - v2")
