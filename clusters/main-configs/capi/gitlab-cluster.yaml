@@ -1,0 +1,169 @@
+apiVersion: cluster.x-k8s.io/v1beta1
+kind: Cluster
+metadata:
+  name: proxmox-gitlab
+  namespace: proxmox-infrastructure-system
+spec:
+  clusterNetwork:
+    pods:
+      cidrBlocks:
+      - 10.168.0.0/16
+  controlPlaneRef:
+    apiVersion: controlplane.cluster.x-k8s.io/v1alpha3
+    kind: TalosControlPlane
+    name: proxmox-gitlab-control-plane
+  infrastructureRef:
+    apiVersion: infrastructure.cluster.x-k8s.io/v1alpha1
+    kind: ProxmoxCluster
+    name: proxmox-gitlab
+---
+apiVersion: infrastructure.cluster.x-k8s.io/v1alpha1
+kind: ProxmoxCluster
+metadata:
+  name: proxmox-gitlab
+  namespace: proxmox-infrastructure-system
+spec:
+  schedulerHints:
+    memoryAdjustment: 0
+  allowedNodes:
+  - plusha
+  controlPlaneEndpoint:
+    host: 192.168.1.20
+    port: 6443
+  dnsServers:
+  - 1.1.1.1
+  - 1.1.0.0
+  ipv4Config:
+    addresses:
+    - 192.168.1.21-192.168.1.30
+    gateway: 192.168.1.1
+    prefix: 24
+    metric: 100
+---
+apiVersion: controlplane.cluster.x-k8s.io/v1alpha3
+kind: TalosControlPlane
+metadata:
+  name: proxmox-gitlab-control-plane
+  namespace: proxmox-infrastructure-system
+spec:
+  version: v1.34.0
+  replicas: 1
+  infrastructureTemplate:
+    kind: ProxmoxMachineTemplate
+    apiVersion: infrastructure.cluster.x-k8s.io/v1alpha1
+    name: proxmox-gitlab-control-plane
+    namespace: proxmox-infrastructure-system
+  controlPlaneConfig:
+    controlplane:
+      generateType: controlplane
+      talosVersion: v1.11.3
+      configPatches:
+      - op: add
+        path: /cluster/network/cni
+        value:
+          name: custom
+          urls:
+          - https://raw.githubusercontent.com/m1xxos/homelab/refs/heads/352-cluster-api-proxmox-talos-iso/assets/cilium.yaml
+      - op: add
+        path: /machine/install/extraKernelArgs
+        value:
+        - net.ifnames=0
+      - op: add
+        path: /machine/network/interfaces
+        value:
+        - interface: eth0
+          dhcp: false
+          vip:
+            ip: 192.168.1.20
+---
+apiVersion: infrastructure.cluster.x-k8s.io/v1alpha1
+kind: ProxmoxMachineTemplate
+metadata:
+  name: proxmox-gitlab-control-plane
+  namespace: proxmox-infrastructure-system
+spec:
+  template:
+    spec:
+      disks:
+        bootVolume:
+          disk: scsi0
+          sizeGb: 30
+      format: qcow2
+      full: true
+      memoryMiB: 4096
+      network:
+        default:
+          bridge: vmbr0
+          model: virtio
+      numCores: 4
+      numSockets: 1
+      sourceNode: plusha
+      templateID: 110
+      checks:
+        skipCloudInitStatus: true
+---
+apiVersion: bootstrap.cluster.x-k8s.io/v1alpha3
+kind: TalosConfigTemplate
+metadata:
+  name: proxmox-gitlab-worker
+  namespace: proxmox-infrastructure-system
+spec:
+  template:
+    spec:
+      generateType: join
+      talosVersion: v1.11.3
+---
+apiVersion: cluster.x-k8s.io/v1beta1
+kind: MachineDeployment
+metadata:
+  name: proxmox-gitlab-workers
+  namespace: proxmox-infrastructure-system
+spec:
+  clusterName: proxmox-gitlab
+  replicas: 3
+  selector:
+    matchLabels:
+      cluster.x-k8s.io/cluster-name: proxmox-gitlab
+  template:
+    metadata:
+      labels:
+        node-role.kubernetes.io/node: "worker"
+        cluster.x-k8s.io/cluster-name: proxmox-gitlab
+    spec:
+      bootstrap:
+        configRef:
+          apiVersion: bootstrap.cluster.x-k8s.io/v1alpha3
+          kind: TalosConfigTemplate
+          name: proxmox-gitlab-worker
+      clusterName: proxmox-gitlab
+      infrastructureRef:
+        apiVersion: infrastructure.cluster.x-k8s.io/v1alpha1
+        kind: ProxmoxMachineTemplate
+        name: proxmox-gitlab-worker
+      version: v1.34.0
+---
+apiVersion: infrastructure.cluster.x-k8s.io/v1alpha1
+kind: ProxmoxMachineTemplate
+metadata:
+  name: proxmox-gitlab-worker
+  namespace: proxmox-infrastructure-system
+spec:
+  template:
+    spec:
+      disks:
+        bootVolume:
+          disk: scsi0
+          sizeGb: 30
+      format: qcow2
+      full: true
+      memoryMiB: 4096
+      network:
+        default:
+          bridge: vmbr0
+          model: virtio
+      numCores: 4
+      numSockets: 1
+      sourceNode: plusha
+      templateID: 110
+      checks:
+        skipCloudInitStatus: true
