@@ -49,5 +49,5 @@ module "main-cluster" {
   cluster_name       = "main"
   cluster_dns        = "main.k8s.m1xxos.tech"
   github_token       = var.github_token
-  branch             = "350-nfs-lh-volumes-backup"
+  branch             = "352-cluster-api-proxmox-talos-iso"
 }
