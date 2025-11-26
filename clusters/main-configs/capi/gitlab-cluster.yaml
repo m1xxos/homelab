@@ -141,7 +141,7 @@ spec:
         value:
           name: custom
           urls:
-          - https://raw.githubusercontent.com/m1xxos/homelab/refs/heads/352-cluster-api-proxmox-talos-iso/assets/cilium.yaml
+          - https://raw.githubusercontent.com/m1xxos/homelab/main/assets/cilium.yaml
       - op: add
         path: /machine/kubelet/extraArgs
         value:
