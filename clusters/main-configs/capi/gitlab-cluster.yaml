@@ -138,6 +138,12 @@ spec:
       talosVersion: v1.11.3
       configPatches:
       - op: add
+        path: /cluster/network/cni
+        value:
+          name: custom
+          urls:
+          - https://raw.githubusercontent.com/m1xxos/homelab/refs/heads/352-cluster-api-proxmox-talos-iso/assets/cilium.yaml
+      - op: add
         path: /machine/kubelet/extraArgs
         value:
           cloud-provider: external
