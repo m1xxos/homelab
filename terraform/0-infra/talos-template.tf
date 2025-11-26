@@ -22,6 +22,7 @@ resource "proxmox_virtual_environment_vm" "talos_template" {
 
   memory {
     dedicated = 4096
+    floating  = 4096
   }
 
   agent {
@@ -34,7 +35,7 @@ resource "proxmox_virtual_environment_vm" "talos_template" {
 
   disk {
     datastore_id = local.datastore_id
-    file_id      = proxmox_virtual_environment_download_file.talos_nocloud_image.id
+    file_id      = proxmox_virtual_environment_download_file.talos_nocloud_image_1_11_3.id
     file_format  = "raw"
     interface    = "virtio0"
     size         = 40
