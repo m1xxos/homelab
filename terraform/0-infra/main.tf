@@ -50,4 +50,5 @@ module "main-cluster" {
   cluster_dns        = "main.k8s.m1xxos.tech"
   github_token       = var.github_token
   branch             = "352-cluster-api-proxmox-talos-iso"
+  cilium_version     = "1.18.0"
 }
