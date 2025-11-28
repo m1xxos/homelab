@@ -47,7 +47,7 @@ locals {
               physical = true
             }
             vip = {
-              ip = var.vip_addres
+              ip = var.vip_address
             }
           }
         ]
