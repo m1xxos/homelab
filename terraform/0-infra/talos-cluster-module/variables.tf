@@ -100,3 +100,7 @@ variable "metrics_server_version" {
 variable "node_name" {
   type = string
 }
+
+variable "vip_address" {
+  type = string
+}

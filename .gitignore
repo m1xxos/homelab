@@ -11,6 +11,7 @@ cluster-keys.json
 config
 clusters/values.yaml
 .DS_Store
+kubeconfig
 
 .terraform.lock.hcl
 

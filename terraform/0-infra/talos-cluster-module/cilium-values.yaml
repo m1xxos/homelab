@@ -1,7 +1,7 @@
 ipam:
   mode: kubernetes
 
-kubeProxyReplacement: true
+kubeProxyReplacement: false
 
 securityContext:
   capabilities:
@@ -26,9 +26,6 @@ cgroup:
   autoMount:
     enabled: false
   hostRoot: /sys/fs/cgroup
-
-k8sServiceHost: localhost
-k8sServicePort: 7445
 
 hubble:
   enabled: true

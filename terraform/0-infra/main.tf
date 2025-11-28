@@ -43,6 +43,7 @@ module "main-cluster" {
   worker_cpu_cores   = 6
   worker_memory      = 6144
   external_ip        = "192.168.1.80"
+  vip_address        = "192.168.1.75"
   node_name          = "plusha"
   worker_disk_size   = 70
   cloudflare_zone_id = var.cloudflare_zone_id
@@ -50,4 +51,5 @@ module "main-cluster" {
   cluster_dns        = "main.k8s.m1xxos.tech"
   github_token       = var.github_token
   branch             = "352-cluster-api-proxmox-talos-iso"
+  cilium_version     = "1.18.0"
 }
