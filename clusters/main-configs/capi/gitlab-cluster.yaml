@@ -123,7 +123,7 @@ spec:
       numCores: 4
       numSockets: 1
       sourceNode: plusha
-      templateID: 110
+      templateID: 1011
       checks:
         skipCloudInitStatus: true
       metadataSettings:
@@ -209,7 +209,7 @@ spec:
       numCores: 4
       numSockets: 1
       sourceNode: plusha
-      templateID: 110
+      templateID: 1011
       checks:
         skipCloudInitStatus: true
       metadataSettings:
