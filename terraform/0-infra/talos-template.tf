@@ -39,6 +39,11 @@ resource "proxmox_virtual_environment_vm" "talos_template" {
     file_format  = "raw"
     interface    = "scsi0"
     size         = 5
+    aio          = "threads"
+    backup       = false
+    discard      = "on"
+    iothread     = true
+    ssd          = true
   }
 
   operating_system {
