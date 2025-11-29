@@ -56,7 +56,7 @@ spec:
   controlPlaneConfig:
     controlplane:
       generateType: controlplane
-      talosVersion: v1.11.3
+      talosVersion: v1.9.3
       configPatches:
       - op: replace
         path: /machine/install
@@ -138,18 +138,12 @@ spec:
   template:
     spec:
       generateType: worker
-      talosVersion: v1.11.3
+      talosVersion: v1.9.3
       configPatches:
       - op: replace
         path: /machine/install
         value:
           disk: /dev/sda
-      - op: add
-        path: /cluster/network/cni
-        value:
-          name: custom
-          urls:
-          - https://raw.githubusercontent.com/m1xxos/homelab/main/assets/cilium.yaml
       - op: add
         path: /machine/kubelet/extraArgs
         value:
