@@ -8,7 +8,7 @@ metadata:
 spec:
   interval: 1m0s
   ref:
-    branch: 352-cluster-api-proxmox-talos-iso
+    branch: 356-k8s-authentik-auth
   secretRef:
     name: flux-system
   url: https://github.com/m1xxos/homelab.git
