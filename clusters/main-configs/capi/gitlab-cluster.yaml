@@ -111,7 +111,7 @@ spec:
     spec:
       disks:
         bootVolume:
-          disk: virtio0
+          disk: scsi0
           sizeGb: 30
       format: qcow2
       full: true
@@ -197,7 +197,7 @@ spec:
     spec:
       disks:
         bootVolume:
-          disk: virtio0
+          disk: scsi0
           sizeGb: 30
       format: qcow2
       full: true
