@@ -38,7 +38,7 @@ resource "proxmox_virtual_environment_vm" "talos_template" {
     file_id      = proxmox_virtual_environment_download_file.talos_nocloud_image_1_11_3.id
     file_format  = "raw"
     interface    = "virtio0"
-    size         = 40
+    size         = 5
   }
 
   operating_system {
