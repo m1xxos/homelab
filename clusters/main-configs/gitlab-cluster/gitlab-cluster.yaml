@@ -2,7 +2,7 @@ apiVersion: cluster.x-k8s.io/v1beta1
 kind: Cluster
 metadata:
   name: proxmox-gitlab
-  namespace: proxmox-infrastructure-system
+  namespace: gitlab-cluster
 spec:
   clusterNetwork:
     pods:
@@ -21,7 +21,7 @@ apiVersion: infrastructure.cluster.x-k8s.io/v1alpha1
 kind: ProxmoxCluster
 metadata:
   name: proxmox-gitlab
-  namespace: proxmox-infrastructure-system
+  namespace: gitlab-cluster
 spec:
   schedulerHints:
     memoryAdjustment: 0
@@ -44,7 +44,7 @@ apiVersion: controlplane.cluster.x-k8s.io/v1alpha3
 kind: TalosControlPlane
 metadata:
   name: proxmox-gitlab-control-plane
-  namespace: proxmox-infrastructure-system
+  namespace: gitlab-cluster
 spec:
   version: v1.34.0
   replicas: 1
@@ -52,7 +52,7 @@ spec:
     kind: ProxmoxMachineTemplate
     apiVersion: infrastructure.cluster.x-k8s.io/v1alpha1
     name: proxmox-gitlab-control-plane
-    namespace: proxmox-infrastructure-system
+    namespace: gitlab-cluster
   controlPlaneConfig:
     controlplane:
       generateType: controlplane
@@ -105,7 +105,7 @@ apiVersion: infrastructure.cluster.x-k8s.io/v1alpha1
 kind: ProxmoxMachineTemplate
 metadata:
   name: proxmox-gitlab-control-plane
-  namespace: proxmox-infrastructure-system
+  namespace: gitlab-cluster
 spec:
   template:
     spec:
@@ -133,7 +133,7 @@ apiVersion: bootstrap.cluster.x-k8s.io/v1alpha3
 kind: TalosConfigTemplate
 metadata:
   name: proxmox-gitlab-worker
-  namespace: proxmox-infrastructure-system
+  namespace: gitlab-cluster
 spec:
   template:
     spec:
@@ -156,7 +156,7 @@ apiVersion: cluster.x-k8s.io/v1beta1
 kind: MachineDeployment
 metadata:
   name: proxmox-gitlab-workers
-  namespace: proxmox-infrastructure-system
+  namespace: gitlab-cluster
 spec:
   clusterName: proxmox-gitlab
   replicas: 3
@@ -185,7 +185,7 @@ apiVersion: infrastructure.cluster.x-k8s.io/v1alpha1
 kind: ProxmoxMachineTemplate
 metadata:
   name: proxmox-gitlab-worker
-  namespace: proxmox-infrastructure-system
+  namespace: gitlab-cluster
 spec:
   template:
     spec:
