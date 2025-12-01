@@ -15,6 +15,7 @@ tasks:
     - flux reconcile source git flux-system
     - flux reconcile kustomization flux-system
     - flux reconcile kustomization flux-system-configs
+    - flux reconcile kustomization gitlab-cluster-system -n gitlab-cluster
   tfplan:
     cmds:
     - terraform -chdir=terraform/0-infra/ plan
