@@ -1,0 +1,18 @@
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: gitlab-cluster-system
+  namespace: gitlab-cluster
+spec:
+  dependsOn:
+  - name: flux-system
+  - name: flux-system-configs
+  interval: 10m0s
+  path: ./clusters/gitlab
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+  kubeConfig:
+    secretRef:
+      name: proxmox-gitlab-kubeconfig
