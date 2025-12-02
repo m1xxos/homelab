@@ -23,6 +23,6 @@ spec:
     ingress:
       enabled: true
       hosts:
-      - host: longhorn.flux.m1xxos.tech
+      - host: longhorn.pulsar.k8s.m1xxos.tech
         paths:
         - /
