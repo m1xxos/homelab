@@ -15,4 +15,4 @@ spec:
   interval: 10m
   values:
     volumes:
-      persistence: true
+      persistence: false
