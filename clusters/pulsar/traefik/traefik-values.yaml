@@ -12,13 +12,6 @@ gateway:
       port: 8000
       hostname: ""
       protocol: HTTP
-    websecure:
-      port: 8443
-      hostname:
-      protocol: HTTPS
-      # certificateRefs:
-      # - kind: Secret
-      #   name: local-m1xxos-tech
 
 accessLog:
   enabled: true
