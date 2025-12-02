@@ -13,3 +13,6 @@ spec:
         name: pulsar
         namespace: flux-system
   interval: 10m
+  values:
+    volumes:
+      persistence: true
