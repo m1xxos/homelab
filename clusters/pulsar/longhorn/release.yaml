@@ -22,7 +22,4 @@ spec:
       storageReservedPercentageForDefaultDisk: "10"
     ingress:
       enabled: true
-      hosts:
-      - host: longhorn.pulsar.k8s.m1xxos.tech
-        paths:
-        - /
+      host: longhorn.pulsar.k8s.m1xxos.tech
