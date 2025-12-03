@@ -3,15 +3,6 @@ providers:
     allowExternalNameServices: true
   kubernetesIngress:
     enabled: true
-  kubernetesGateway:
-    enabled: true
-
-gateway:
-  listeners:
-    web:
-      port: 8000
-      hostname: ""
-      protocol: HTTP
 
 accessLog:
   enabled: true
