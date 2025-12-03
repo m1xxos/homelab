@@ -38,6 +38,12 @@ module "pulsar-cluster" {
       vm_id          = 812
       ip             = "192.168.1.32"
       talos_image_id = proxmox_virtual_environment_download_file.talos_nocloud_template.id
+    },
+    {
+      name           = "pulsar-worker-3"
+      vm_id          = 813
+      ip             = "192.168.1.33"
+      talos_image_id = proxmox_virtual_environment_download_file.talos_nocloud_template.id
     }
   ]
   worker_cpu_cores   = 12
