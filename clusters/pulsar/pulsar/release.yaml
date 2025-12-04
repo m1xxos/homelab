@@ -20,12 +20,12 @@ spec:
       volumes:
         journal:
          size: 1Gi
-        ledGiers:
+        ledgers:
           size: 2Gi
     zookeeper:
       volumes:
         data:
           size: 2Gi
-        dataloGi:
+        datalog:
           size: 2Gi
     
