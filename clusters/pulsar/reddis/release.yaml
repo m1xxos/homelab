@@ -1,13 +1,13 @@
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: redis
+  name: redis-cluster
   namespace: redis
 spec:
-  releaseName: redis
+  releaseName: redis-cluster
   chart:
     spec:
-      chart: redis
+      chart: redis-cluster
       sourceRef:
         kind: HelmRepository
         name: bitnamicharts
