@@ -16,4 +16,16 @@ spec:
   values:
     victoria-metrics-k8s-stack:
       enabled: false
+    bookkeeper:
+      volumes:
+        journal:
+         size: 1Gi
+        ledGiers:
+          size: 2Gi
+    zookeeper:
+      volumes:
+        data:
+          size: 2Gi
+        dataloGi:
+          size: 2Gi
     
