@@ -14,9 +14,6 @@ spec:
         namespace: flux-system
   interval: 10m
   values:
-    volumes:
-      persistence: false
     victoria-metrics-k8s-stack:
       enabled: false
-    components:
-      pulsar_manager: true
+    
