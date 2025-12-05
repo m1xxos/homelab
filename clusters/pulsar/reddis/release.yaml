@@ -15,3 +15,6 @@ spec:
   interval: 10m
   install:
     createNamespace: true
+  values:
+    persistence:
+      size: 2Gi
