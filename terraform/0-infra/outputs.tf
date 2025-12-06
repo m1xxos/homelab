@@ -7,8 +7,3 @@ output "kubeconfig" {
   value     = module.main-cluster.kubeconfig
   sensitive = true
 }
-
-output "pulsar-kubeconfig" {
-  value = module.pulsar-cluster.kubeconfig
-  sensitive = true
-}
