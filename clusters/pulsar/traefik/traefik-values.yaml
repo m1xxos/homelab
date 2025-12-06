@@ -1,0 +1,16 @@
+providers:
+  kubernetesCRD:
+    allowExternalNameServices: true
+  kubernetesIngress:
+    enabled: true
+
+accessLog:
+  enabled: true
+  format: json
+
+metrics:
+  prometheus:
+    addRoutersLabels: true
+    addServicesLabels: true
+    service:
+      enabled: true
