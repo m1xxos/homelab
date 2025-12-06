@@ -19,7 +19,7 @@ spec:
     bookkeeper:
       volumes:
         journal:
-         size: 1Gi
+          size: 1Gi
         ledgers:
           size: 2Gi
     zookeeper:
@@ -28,4 +28,3 @@ spec:
           size: 2Gi
         datalog:
           size: 2Gi
-    
