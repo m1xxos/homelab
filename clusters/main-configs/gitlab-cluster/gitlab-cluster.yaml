@@ -62,12 +62,10 @@ spec:
         path: /machine/install
         value:
           disk: /dev/sda
-      # - op: add
-      #   path: /cluster/network/cni
-      #   value:
-      #     name: custom
-      #     urls:
-      #     - https://raw.githubusercontent.com/m1xxos/homelab/main/assets/cilium.yaml
+      - op: add
+        path: /cluster/network/cni
+        value:
+          name: none
       - op: add
         path: /machine/install/extraKernelArgs
         value:
