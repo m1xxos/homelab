@@ -21,7 +21,7 @@ spec:
       name: proxmox-gitlab-kubeconfig
   postBuild:
     substitute:
-      CLUSTER_NAME: gitlab
+      CLUSTER_NAME: gitlab-cluster
 ---
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
