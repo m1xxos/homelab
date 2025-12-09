@@ -22,7 +22,6 @@ resource "proxmox_virtual_environment_vm" "talos_template" {
 
   memory {
     dedicated = 512
-    floating  = 512
   }
 
   agent {
