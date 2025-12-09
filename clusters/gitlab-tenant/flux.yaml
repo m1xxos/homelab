@@ -4,6 +4,7 @@ metadata:
   name: "${CLUSTER_NAME}"
   labels:
     toolkit.fluxcd.io/tenant: sre-team
+    pod-security.kubernetes.io/enforce: privileged
 ---
 apiVersion: v1
 kind: ServiceAccount
