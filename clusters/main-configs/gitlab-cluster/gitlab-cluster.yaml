@@ -87,9 +87,9 @@ spec:
       #     enabled: true
       #     manifests:
       #     - https://raw.githubusercontent.com/siderolabs/talos-cloud-controller-manager/main/docs/deploy/cloud-controller-manager.yml
-      # - op: add
-      #   path: /machine/kubelet/extraArgs/rotate-server-certificates
-      #   value: "true"
+      - op: add
+        path: /machine/kubelet/extraArgs/rotate-server-certificates
+        value: "true"
       - op: add
         path: /machine/features/kubernetesTalosAPIAccess
         value:
