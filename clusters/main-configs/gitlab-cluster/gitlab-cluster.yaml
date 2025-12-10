@@ -63,12 +63,13 @@ spec:
         value:
           disk: /dev/sda
       - op: add
-        path: /cluster/network
+        path: /cluster/network/cni
         value:
-          cni:
-            name: none
-          proxy:
-            disabled: true
+          name: none
+      - op: add
+        path: /cluster/proxy
+        value:
+          disabled: true
       - op: add
         path: /machine/install/extraKernelArgs
         value:
