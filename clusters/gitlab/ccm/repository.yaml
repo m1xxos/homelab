@@ -1,0 +1,10 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: GitRepository
+metadata:
+  name: talos-ccm
+spec:
+  interval: 1h
+  url: https://github.com/siderolabs/talos-cloud-controller-manager/
+  ref:
+    tag: v1.11.0
