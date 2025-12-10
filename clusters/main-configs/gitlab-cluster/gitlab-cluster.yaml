@@ -58,6 +58,10 @@ spec:
       generateType: controlplane
       talosVersion: v1.11.5
       configPatches:
+      - op: replace
+        path: /machine/install
+        value:
+          disk: /dev/sda
       - op: add
         path: /cluster/network
         value:
