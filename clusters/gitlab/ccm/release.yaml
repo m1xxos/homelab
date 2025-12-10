@@ -10,7 +10,7 @@ spec:
       chart: charts/talos-cloud-controller-manager
       version: 0.5.2
       sourceRef:
-        kind: HelmRepository
+        kind: GitRepository
         name: talos-ccm
         namespace: gitlab-cluster
   targetNamespace: kube-system
