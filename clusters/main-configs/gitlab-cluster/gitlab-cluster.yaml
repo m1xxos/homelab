@@ -58,14 +58,13 @@ spec:
       generateType: controlplane
       talosVersion: v1.11.5
       configPatches:
-      - op: replace
-        path: /machine/install
-        value:
-          disk: /dev/sda
       - op: add
-        path: /cluster/network/cni
+        path: /cluster/network
         value:
-          name: none
+          cni:
+            name: none
+          proxy:
+            disabled: true
       - op: add
         path: /machine/install/extraKernelArgs
         value:
@@ -77,12 +76,6 @@ spec:
           dhcp: false
           vip:
             ip: 192.168.1.20
-      # - op: add
-      #   path: /cluster/externalCloudProvider
-      #   value:
-      #     enabled: true
-      #     manifests:
-      #     - https://raw.githubusercontent.com/siderolabs/talos-cloud-controller-manager/main/docs/deploy/cloud-controller-manager.yml
       - op: add
         path: /machine/kubelet/extraArgs
         value:
