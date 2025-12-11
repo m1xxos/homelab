@@ -99,7 +99,7 @@ spec:
         value:
           oidc-issuer-url: "https://authentik.local.m1xxos.tech/application/o/k8s/"
           oidc-client-id: "k8s"
-          oidc-username-claim: email
+          oidc-username-claim: name
           oidc-groups-claim: groups
           oidc-signing-algs: "ES256,RS256"
 ---
