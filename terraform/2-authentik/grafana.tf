@@ -38,8 +38,8 @@ resource "authentik_group" "grafana_viewers" {
 }
 
 resource "vault_kv_secret_v2" "grafana-auth" {
-  name      = "grafana/grafana-auth"
-  mount     = "main"
+  name  = "grafana/grafana-auth"
+  mount = "main"
   data_json = jsonencode(
     {
       oidc_client_id     = authentik_provider_oauth2.grafana.client_id
