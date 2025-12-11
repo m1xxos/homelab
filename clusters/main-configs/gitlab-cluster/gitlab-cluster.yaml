@@ -94,6 +94,13 @@ spec:
           - os:reader
           allowedKubernetesNamespaces:
           - kube-system
+      - op: add
+        path: /cluster/apiServer/extraArgs
+        value:
+          oidc-issuer-url: "https://authentik.local.m1xxos.tech/application/o/k8s"
+          oidc-client-id: "k8s"
+          oidc-username-claim: email
+          oidc-groups-claim: groups
 ---
 apiVersion: infrastructure.cluster.x-k8s.io/v1alpha1
 kind: ProxmoxMachineTemplate
