@@ -14,7 +14,7 @@ resource "authentik_provider_oauth2" "k8s" {
     data.authentik_property_mapping_provider_scope.openid.id,
     data.authentik_property_mapping_provider_scope.profile.id,
   ]
-  sub_mode                   = "user_username"
+  sub_mode                   = "user_email"
   include_claims_in_id_token = true
 }
 
