@@ -16,6 +16,7 @@ resource "authentik_provider_oauth2" "k8s" {
   ]
   sub_mode                   = "user_email"
   include_claims_in_id_token = true
+  signing_key                = data.authentik_certificate_key_pair.vault.id
 }
 
 resource "authentik_application" "k8s" {
