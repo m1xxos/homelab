@@ -1,3 +1,9 @@
+resource "authentik_property_mapping_provider_scope" "email-verified" {
+  scope_name = "email"
+  name       = "email"
+  expression = "return {\"email\": user.email,\"email_verified\": True,}"
+}
+
 resource "authentik_provider_oauth2" "k8s" {
   name               = "k8s"
   client_id          = "k8s"
@@ -10,7 +16,7 @@ resource "authentik_provider_oauth2" "k8s" {
     }
   ]
   property_mappings = [
-    data.authentik_property_mapping_provider_scope.email.id,
+    authentik_property_mapping_provider_scope.email-verified.id,
     data.authentik_property_mapping_provider_scope.openid.id,
     data.authentik_property_mapping_provider_scope.profile.id,
   ]
