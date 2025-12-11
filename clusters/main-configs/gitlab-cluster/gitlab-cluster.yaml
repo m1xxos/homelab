@@ -97,7 +97,7 @@ spec:
       - op: add
         path: /cluster/apiServer/extraArgs
         value:
-          oidc-issuer-url: "https://authentik.local.m1xxos.tech/application/o/k8s"
+          oidc-issuer-url: "https://authentik.local.m1xxos.tech/application/o/k8s/"
           oidc-client-id: "k8s"
           oidc-username-claim: email
           oidc-groups-claim: groups
