@@ -13,7 +13,7 @@ resource "cloudflare_dns_record" "cluster-record" {
 resource "cloudflare_dns_record" "cluster-record-extra" {
   zone_id = var.cloudflare_zone_id
   name    = "*.${var.cluster_dns}"
-  content = var.cluster_name
+  content = var.cluster_dns
   type    = "CNAME"
   ttl     = local.ttl
 }

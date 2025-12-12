@@ -2,7 +2,7 @@ apiVersion: cluster.x-k8s.io/v1beta1
 kind: Cluster
 metadata:
   name: proxmox-gitlab
-  namespace: proxmox-infrastructure-system
+  namespace: gitlab-cluster
 spec:
   clusterNetwork:
     pods:
@@ -21,7 +21,7 @@ apiVersion: infrastructure.cluster.x-k8s.io/v1alpha1
 kind: ProxmoxCluster
 metadata:
   name: proxmox-gitlab
-  namespace: proxmox-infrastructure-system
+  namespace: gitlab-cluster
 spec:
   schedulerHints:
     memoryAdjustment: 0
@@ -44,7 +44,7 @@ apiVersion: controlplane.cluster.x-k8s.io/v1alpha3
 kind: TalosControlPlane
 metadata:
   name: proxmox-gitlab-control-plane
-  namespace: proxmox-infrastructure-system
+  namespace: gitlab-cluster
 spec:
   version: v1.34.0
   replicas: 1
@@ -52,18 +52,24 @@ spec:
     kind: ProxmoxMachineTemplate
     apiVersion: infrastructure.cluster.x-k8s.io/v1alpha1
     name: proxmox-gitlab-control-plane
-    namespace: proxmox-infrastructure-system
+    namespace: gitlab-cluster
   controlPlaneConfig:
     controlplane:
       generateType: controlplane
-      talosVersion: v1.11.3
+      talosVersion: v1.11.5
       configPatches:
+      - op: replace
+        path: /machine/install
+        value:
+          disk: /dev/sda
       - op: add
         path: /cluster/network/cni
         value:
-          name: custom
-          urls:
-          - https://raw.githubusercontent.com/m1xxos/homelab/main/assets/cilium.yaml
+          name: none
+      - op: add
+        path: /cluster/proxy
+        value:
+          disabled: true
       - op: add
         path: /machine/install/extraKernelArgs
         value:
@@ -78,16 +84,8 @@ spec:
       - op: add
         path: /machine/kubelet/extraArgs
         value:
+          rotate-server-certificates: true
           cloud-provider: external
-      - op: add
-        path: /cluster/externalCloudProvider
-        value:
-          enabled: true
-          manifests:
-          - https://raw.githubusercontent.com/siderolabs/talos-cloud-controller-manager/main/docs/deploy/cloud-controller-manager.yml
-      - op: add
-        path: /machine/kubelet/extraArgs/rotate-server-certificates
-        value: "true"
       - op: add
         path: /machine/features/kubernetesTalosAPIAccess
         value:
@@ -96,12 +94,20 @@ spec:
           - os:reader
           allowedKubernetesNamespaces:
           - kube-system
+      - op: add
+        path: /cluster/apiServer/extraArgs
+        value:
+          oidc-issuer-url: "https://authentik.local.m1xxos.tech/application/o/k8s/"
+          oidc-client-id: "k8s"
+          oidc-username-claim: name
+          oidc-groups-claim: groups
+          oidc-signing-algs: "ES256,RS256"
 ---
 apiVersion: infrastructure.cluster.x-k8s.io/v1alpha1
 kind: ProxmoxMachineTemplate
 metadata:
   name: proxmox-gitlab-control-plane
-  namespace: proxmox-infrastructure-system
+  namespace: gitlab-cluster
 spec:
   template:
     spec:
@@ -129,19 +135,17 @@ apiVersion: bootstrap.cluster.x-k8s.io/v1alpha3
 kind: TalosConfigTemplate
 metadata:
   name: proxmox-gitlab-worker
-  namespace: proxmox-infrastructure-system
+  namespace: gitlab-cluster
 spec:
   template:
     spec:
       generateType: worker
-      talosVersion: v1.11.3
+      talosVersion: v1.11.5
       configPatches:
-      - op: add
-        path: /cluster/network/cni
+      - op: replace
+        path: /machine/install
         value:
-          name: custom
-          urls:
-          - https://raw.githubusercontent.com/m1xxos/homelab/main/assets/cilium.yaml
+          disk: /dev/sda
       - op: add
         path: /machine/kubelet/extraArgs
         value:
@@ -154,7 +158,7 @@ apiVersion: cluster.x-k8s.io/v1beta1
 kind: MachineDeployment
 metadata:
   name: proxmox-gitlab-workers
-  namespace: proxmox-infrastructure-system
+  namespace: gitlab-cluster
 spec:
   clusterName: proxmox-gitlab
   replicas: 3
@@ -183,7 +187,7 @@ apiVersion: infrastructure.cluster.x-k8s.io/v1alpha1
 kind: ProxmoxMachineTemplate
 metadata:
   name: proxmox-gitlab-worker
-  namespace: proxmox-infrastructure-system
+  namespace: gitlab-cluster
 spec:
   template:
     spec:

@@ -40,8 +40,8 @@ resource "authentik_application" "vault" {
 }
 
 resource "vault_kv_secret_v2" "authentik-auth" {
-  name      = "authentik-auth"
-  mount     = "user-secrets"
+  name  = "authentik-auth"
+  mount = "user-secrets"
   data_json = jsonencode(
     {
       oidc_client_id     = authentik_provider_oauth2.vault.client_id
