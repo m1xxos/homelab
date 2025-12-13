@@ -50,6 +50,6 @@ module "main-cluster" {
   cluster_name       = "main"
   cluster_dns        = "main.k8s.m1xxos.tech"
   github_token       = var.github_token
-  branch             = "356-k8s-authentik-auth"
-  cilium_version     = "1.18.0"
+  branch             = "361-tf-module-create-external-ip-and-ccm"
+  cilium_version     = "1.18.4"
 }
