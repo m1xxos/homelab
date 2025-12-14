@@ -54,7 +54,6 @@ variable "talos_cps" {
     name           = string
     vm_id          = number
     ip             = string
-    talos_image_id = string
   }))
 }
 
@@ -63,7 +62,6 @@ variable "talos_workers" {
     name           = string
     vm_id          = number
     ip             = string
-    talos_image_id = string
   }))
 }
 
@@ -102,5 +100,9 @@ variable "node_name" {
 }
 
 variable "cp_vip_address" {
+  type = string
+}
+
+variable "talos_image_id" {
   type = string
 }
