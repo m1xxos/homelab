@@ -95,6 +95,11 @@ variable "metrics_server_version" {
   default = "3.12.2"
 }
 
+variable "talos_ccm_version" {
+  type    = string
+  default = "0.5.2"
+}
+
 variable "node_name" {
   type = string
 }

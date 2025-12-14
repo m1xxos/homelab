@@ -26,3 +26,15 @@ resource "helm_release" "metrics-server" {
     }
   ]
 }
+
+resource "helm_release" "talos_ccm" {
+  depends_on = [talos_cluster_kubeconfig.kubeconfig, helm_release.cilium_cni]
+  name       = "talos-ccm"
+  chart      = "oci://ghcr.io/siderolabs/charts/talos-cloud-controller-manager"
+  namespace  = "kube-system"
+  version    = var.talos_ccm_version
+  set_list = [{
+    name  = "enabledControllers"
+    value = ["cloud-node", "cloud-node-lifecycle", "node-csr-approval"]
+  }]
+}
