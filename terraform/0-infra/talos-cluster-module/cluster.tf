@@ -22,7 +22,11 @@ locals {
             options = [
               "bind", "rshared", "rw"
           ] }
-        ]
+        ],
+        extraArgs = {
+          cloud-provider             = "external"
+          rotate-server-certificates = true
+        }
       }
     }
   })
@@ -51,6 +55,17 @@ locals {
             }
           }
         ]
+      },
+      features = {
+        kubernetesTalosAPIAccess = {
+          enabled = true
+          allowedRoles = [
+            "os:reader"
+          ]
+          allowedKubernetesNamespaces = [
+            "kube-system"
+          ]
+        }
       }
     }
   })
