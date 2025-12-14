@@ -51,17 +51,17 @@ variable "worker_disk_size" {
 
 variable "talos_cps" {
   type = list(object({
-    name           = string
-    vm_id          = number
-    ip             = string
+    name  = string
+    vm_id = number
+    ip    = string
   }))
 }
 
 variable "talos_workers" {
   type = list(object({
-    name           = string
-    vm_id          = number
-    ip             = string
+    name  = string
+    vm_id = number
+    ip    = string
   }))
 }
 
