@@ -41,6 +41,9 @@ locals {
         extraArgs = {
           bind-address = "0.0.0.0",
         }
+      },
+      proxy = {
+        disabled = true
       }
     }
     machine = {
