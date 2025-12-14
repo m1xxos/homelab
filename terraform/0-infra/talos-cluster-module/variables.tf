@@ -101,6 +101,6 @@ variable "node_name" {
   type = string
 }
 
-variable "vip_address" {
+variable "cp_vip_address" {
   type = string
 }

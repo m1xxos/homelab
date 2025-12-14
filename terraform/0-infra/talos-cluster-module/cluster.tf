@@ -47,7 +47,7 @@ locals {
               physical = true
             }
             vip = {
-              ip = var.vip_address
+              ip = var.cp_vip_address
             }
           }
         ]
@@ -112,5 +112,5 @@ resource "talos_cluster_kubeconfig" "kubeconfig" {
   depends_on           = [talos_machine_bootstrap.bootstrap]
   client_configuration = talos_machine_secrets.machine_secrets.client_configuration
   node                 = local.talos_cp_ips[0]
-  endpoint             = var.vip_address
+  endpoint             = var.cp_vip_address
 }

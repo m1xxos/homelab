@@ -49,7 +49,7 @@ module "pulsar-cluster" {
   worker_cpu_cores   = 12
   worker_memory      = 12228
   external_ip        = "192.168.1.85"
-  vip_address        = "192.168.1.45"
+  cp_vip_address        = "192.168.1.45"
   node_name          = "plusha"
   worker_disk_size   = 70
   cloudflare_zone_id = var.cloudflare_zone_id
