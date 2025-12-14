@@ -92,7 +92,7 @@ variable "cilium_version" {
 
 variable "metrics_server_version" {
   type    = string
-  default = "3.12.2"
+  default = "3.13.0"
 }
 
 variable "talos_ccm_version" {
