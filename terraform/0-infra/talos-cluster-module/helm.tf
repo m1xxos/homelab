@@ -18,13 +18,6 @@ resource "helm_release" "metrics-server" {
   chart      = "metrics-server"
   namespace  = "kube-system"
   version    = var.metrics_server_version
-
-  set = [
-    {
-      name  = "args[0]"
-      value = "--kubelet-insecure-tls"
-    }
-  ]
 }
 
 resource "helm_release" "talos_ccm" {
