@@ -11,6 +11,25 @@ resource "helm_release" "cilium_cni" {
   ]
 }
 
+resource "kubernetes_manifest" "cilium_ipv4_pool" {
+  depends_on = [helm_release.cilium_cni]
+  manifest = {
+    apiVersion = "cilium.io/v2"
+    kind       = "CiliumLoadBalancerIPPool"
+    metadata = {
+      name = "default-ippool"
+    }
+    spec = {
+      blocks = [
+        {
+          start = var.external_ip
+          end   = var.external_ip
+        }
+      ]
+    }
+  }
+}
+
 resource "helm_release" "metrics-server" {
   depends_on = [talos_cluster_kubeconfig.kubeconfig, helm_release.cilium_cni]
   name       = "metrics-server"

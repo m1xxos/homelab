@@ -16,6 +16,10 @@ terraform {
       source  = "hashicorp/helm"
       version = "= 3.1.0"
     }
+    kubernetes = {
+      source  = "hashicorp/kubernetes"
+      version = "3.0.1"
+    }
     flux = {
       source  = "fluxcd/flux"
       version = "= 1.7.4"
@@ -35,6 +39,14 @@ provider "helm" {
     client_certificate     = base64decode(local.kube_config.users[0].user.client-certificate-data)
     client_key             = base64decode(local.kube_config.users[0].user.client-key-data)
   }
+}
+
+provider "kubernetes" {
+  host = local.kube_config.clusters[0].cluster.server
+
+  cluster_ca_certificate = base64decode(local.kube_config.clusters[0].cluster.certificate-authority-data)
+  client_certificate     = base64decode(local.kube_config.users[0].user.client-certificate-data)
+  client_key             = base64decode(local.kube_config.users[0].user.client-key-data)
 }
 
 provider "flux" {
