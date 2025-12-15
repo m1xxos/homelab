@@ -23,7 +23,7 @@ resource "kubernetes_manifest" "cilium_ipv4_pool" {
       blocks = [
         {
           start = var.external_ip
-          end   = var.external_ip
+          stop  = var.external_ip
         }
       ]
     }
