@@ -51,19 +51,17 @@ variable "worker_disk_size" {
 
 variable "talos_cps" {
   type = list(object({
-    name           = string
-    vm_id          = number
-    ip             = string
-    talos_image_id = string
+    name  = string
+    vm_id = number
+    ip    = string
   }))
 }
 
 variable "talos_workers" {
   type = list(object({
-    name           = string
-    vm_id          = number
-    ip             = string
-    talos_image_id = string
+    name  = string
+    vm_id = number
+    ip    = string
   }))
 }
 
@@ -94,13 +92,22 @@ variable "cilium_version" {
 
 variable "metrics_server_version" {
   type    = string
-  default = "3.12.2"
+  default = "3.13.0"
+}
+
+variable "talos_ccm_version" {
+  type    = string
+  default = "0.5.2"
 }
 
 variable "node_name" {
   type = string
 }
 
-variable "vip_address" {
+variable "cp_vip_address" {
+  type = string
+}
+
+variable "talos_image_id" {
   type = string
 }
