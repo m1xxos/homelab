@@ -16,7 +16,7 @@ webhooks:
       namespace: vault
       path: /mutate
       port: 443
-  failurePolicy: Ignore
+  failurePolicy: Fail
   matchPolicy: Exact
   name: vault.hashicorp.com
   namespaceSelector: {}
