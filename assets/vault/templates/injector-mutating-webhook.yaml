@@ -43,7 +43,7 @@ webhooks:
 {{ end }}
 {{- template "injector.objectSelector" . -}}
 {{ end }}
-  - name: vault.hashicorp.com
+  - name: vault-auth.hashicorp.com
     failurePolicy: "Fail"
     matchPolicy: {{ ((.Values.injector.webhook)).matchPolicy | default "Exact" }}
     sideEffects: None
