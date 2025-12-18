@@ -13,7 +13,18 @@ server:
     size: 2Gi
 
   injector:
-    priorityClassName: system-cluster-critical
+    webhook:
+      failurePolicy: Fail
+      objectSelector: |
+        matchExpressions:
+        - key: app.kubernetes.io/name
+          operator: NotIn
+          values:
+          - {{ template "vault.name" . }}-agent-injector
+        - key: vault.hashicorp.com/agent-inject
+          operator: In
+          values:
+          - true
 
   standalone:
     enabled: false
