@@ -7,7 +7,7 @@ server:
   livenessProbe:
     enabled: true
     path: "/v1/sys/health?standbyok=true"
-    initialDelaySeconds: 61
+    initialDelaySeconds: 60
   dataStorage:
     enabled: true
     size: 2Gi

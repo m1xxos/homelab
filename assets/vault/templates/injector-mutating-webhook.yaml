@@ -43,27 +43,3 @@ webhooks:
 {{ end }}
 {{- template "injector.objectSelector" . -}}
 {{ end }}
-  - name: vault-auth.hashicorp.com
-    failurePolicy: "Fail"
-    matchPolicy: {{ ((.Values.injector.webhook)).matchPolicy | default "Exact" }}
-    sideEffects: None
-    timeoutSeconds: {{ ((.Values.injector.webhook)).timeoutSeconds | default "30" }}
-    admissionReviewVersions: ["v1", "v1beta1"]
-    clientConfig:
-      service:
-        name: {{ template "vault.fullname" . }}-agent-injector-svc
-        namespace: {{ include "vault.namespace" . }}
-        path: "/mutate"
-      caBundle: {{ .Values.injector.certs.caBundle | quote }}
-    rules:
-      - operations: ["CREATE"]
-        apiGroups: [""]
-        apiVersions: ["v1"]
-        resources: ["pods"]
-        scope: "Namespaced"
-    objectSelector:
-      matchExpressions:
-      - key: app.kubernetes.io/name
-        operator: In
-        values:
-        - authentik
