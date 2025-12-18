@@ -16,15 +16,15 @@ injector:
   webhook:
     failurePolicy: Fail
     objectSelector: |
-      matchExpressions:
-      - key: app.kubernetes.io/name
-        operator: NotIn
-        values:
-        - {{ template "vault.name" . }}-agent-injector
-      - key: vault.hashicorp.com/agent-inject
-        operator: In
-        values:
-        - true
+        matchExpressions:
+        - key: app.kubernetes.io/name
+          operator: NotIn
+          values:
+          - {{ template "vault.name" . }}-agent-injector
+        - key: vault.hashicorp.com/agent-inject
+          operator: In
+          values:
+          - "true"
 
   standalone:
     enabled: false
