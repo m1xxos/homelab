@@ -12,20 +12,6 @@ server:
     enabled: true
     size: 2Gi
 
-injector:
-  webhook:
-    failurePolicy: Fail
-    objectSelector: |
-        matchExpressions:
-        - key: app.kubernetes.io/name
-          operator: NotIn
-          values:
-          - {{ template "vault.name" . }}-agent-injector
-        - key: vapp.kubernetes.io/name
-          operator: In
-          values:
-          - "authentik"
-
   standalone:
     enabled: false
 
