@@ -42,4 +42,4 @@ spec:
   values:
     nameOverride: "vm-collector"
     remoteWrite:
-    - url: "http://vlc-victoria-logs-cluster-vmauth:8427"
+    - url: "http://vm-logs-vmauth:8427"
