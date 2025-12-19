@@ -3,7 +3,7 @@
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: vm-logs
+  name: vlc
   namespace: logging
 spec:
   interval: 5m
@@ -18,14 +18,14 @@ spec:
   install:
     createNamespace: true
   values:
-    nameOverride: "vm-logs"
+    nameOverride: "vlc"
     vmauth:
       enabled: true
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: vm-logs-collector
+  name: vlc-collector
   namespace: logging
 spec:
   interval: 5m
@@ -40,6 +40,6 @@ spec:
   install:
     createNamespace: true
   values:
-    nameOverride: "vm-collector"
+    nameOverride: "vlc-collector"
     remoteWrite:
-    - url: "http://vm-logs-vmauth:8427"
+    - url: "http://vlc-vmauth:8427"
