@@ -21,6 +21,14 @@ spec:
     nameOverride: "vlc"
     vmauth:
       enabled: true
+    vlselect:
+      ingress:
+        enabled: true
+        hosts:
+        - name: logs.local.m1xxos.tech
+          path:
+          - /select
+          port: http
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
