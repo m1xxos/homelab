@@ -26,6 +26,15 @@ data:
             requests:
               storage: 5Gi
     grafana:
+      datasources:
+        vm-logs.yaml:
+          apiVersion: 1
+          datasources:
+            - name: VictoriaLogs
+              type: victoriametrics-logs-datasource
+              access: proxy
+              url: http://vm-logs-vmauth.logging.svc.cluster.local:8427
+              isDefault: true
       serviceAccount:
         name: grafana-reader
       podAnnotations:
