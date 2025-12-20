@@ -37,6 +37,8 @@ metadata:
   namespace: logging
 spec:
   interval: 5m
+  dependsOn:
+  - name: vlc
   chart:
     spec:
       chart: victoria-logs-collector
