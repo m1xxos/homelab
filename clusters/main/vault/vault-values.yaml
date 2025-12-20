@@ -12,9 +12,6 @@ server:
     enabled: true
     size: 2Gi
 
-  injector:
-    priorityClassName: system-cluster-critical
-
   standalone:
     enabled: false
 

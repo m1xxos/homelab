@@ -6,6 +6,9 @@ locals {
 }
 
 resource "proxmox_virtual_environment_vm" "talos_template" {
+  lifecycle {
+    ignore_changes = [ ipv4_addresses, ipv6_addresses, network_interface_names ]
+  }
   name        = "talos-template"
   description = "Managed by Terraform, talos"
   tags        = ["talos"]
@@ -13,7 +16,6 @@ resource "proxmox_virtual_environment_vm" "talos_template" {
   vm_id       = 110
   on_boot     = true
   template    = true
-
 
   cpu {
     cores = 1

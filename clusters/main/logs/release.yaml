@@ -1,0 +1,55 @@
+# yaml-language-server: $schema=https://datreeio.github.io/CRDs-catalog/helm.toolkit.fluxcd.io/helmrelease_v2.json
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: vlc
+  namespace: logging
+spec:
+  interval: 5m
+  chart:
+    spec:
+      chart: victoria-logs-cluster
+      version: "0.0.20"
+      sourceRef:
+        kind: HelmRepository
+        name: vm
+        namespace: flux-system
+  install:
+    createNamespace: true
+  values:
+    nameOverride: "vlc"
+    vmauth:
+      enabled: true
+    vlselect:
+      ingress:
+        enabled: true
+        hosts:
+        - name: logs.local.m1xxos.tech
+          path:
+          - /select
+          port: http
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: vlc-collector
+  namespace: logging
+spec:
+  interval: 5m
+  dependsOn:
+  - name: vlc
+  chart:
+    spec:
+      chart: victoria-logs-collector
+      version: "0.1.2"
+      sourceRef:
+        kind: HelmRepository
+        name: vm
+        namespace: flux-system
+  install:
+    createNamespace: true
+  values:
+    nameOverride: "vlc-collector"
+    remoteWrite:
+    - url: "http://vlc-vmauth:8427"
