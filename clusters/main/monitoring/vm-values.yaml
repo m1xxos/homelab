@@ -20,7 +20,7 @@ data:
     vmsingle:
       spec:
         extraArgs:
-          opentelemetry.usePrometheusNaming: true
+          opentelemetry.usePrometheusNaming: "true"
         storage:
           accessModes:
             - ReadWriteMany
