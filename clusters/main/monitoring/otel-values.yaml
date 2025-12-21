@@ -23,8 +23,9 @@ data:
       hostMetrics:
         enabled: true
     tolerations:
-      - key: node-role.kubernetes.io/control-plane:NoSchedule
+      - key: node-role.kubernetes.io/control-plane
         operator: "Exists"
+        effect: NoSchedule
     config:
       # deltatocumulative processor is needed to convert metrics with delta temporality to cumulative temporality.
       # VictoriaMetrics doesn't support delta temporality. Skip this processor if you don't use delta temporality.
@@ -55,4 +56,4 @@ data:
           metrics:
             receivers: [otlp]
             processors: [deltatocumulative]
-            exporters: [otlphttp/victoriametrics, debug]
+            exporters: [otlphttp/victoriametrics]
