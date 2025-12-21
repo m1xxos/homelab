@@ -8,9 +8,6 @@ data:
   values.yaml: |
     nameOverride: "vm"
     fullnameOverride: "vm"
-    server:
-      extraArgs:
-        opentelemetry.usePrometheusNaming: true
     vmagent:
       ingress:
         enabled: true
@@ -22,6 +19,8 @@ data:
           - vmagent.local.m1xxos.tech 
     vmsingle:
       spec:
+        extraArgs:
+          opentelemetry.usePrometheusNaming: true
         storage:
           accessModes:
             - ReadWriteMany
