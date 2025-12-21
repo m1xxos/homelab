@@ -46,7 +46,7 @@ data:
       service:
         pipelines:
           logs:
-            receivers: [otlp]
+            receivers: [otlp, debug]
             processors: []
             exporters: [otlphttp/victoriametrics]
           metrics:
