@@ -48,8 +48,8 @@ data:
           logs:
             receivers: [otlp]
             processors: []
-            exporters: [otlphttp/victoriametrics, debug]
+            exporters: [otlphttp/victoriametrics]
           metrics:
             receivers: [otlp]
             processors: [deltatocumulative]
-            exporters: [otlphttp/victoriametrics]
+            exporters: [otlphttp/victoriametrics, debug]
