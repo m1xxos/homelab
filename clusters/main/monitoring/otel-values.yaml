@@ -1,0 +1,55 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: otel-values
+  namespace: monitoring
+data:
+  values.yaml: |
+    mode: daemonset
+    image:
+      repository: "otel/opentelemetry-collector-contrib"
+    presets:
+      # clusterMetrics:
+      #   enabled: true
+      kubeletMetrics:
+        enabled: true
+      logsCollection:
+        enabled: true
+      kubernetesAttributes:
+        enabled: true
+      kubernetesEvents:
+        enabled: true
+      hostMetrics:
+        enabled: true
+    config:
+      # deltatocumulative processor is needed to convert metrics with delta temporality to cumulative temporality.
+      # VictoriaMetrics doesn't support delta temporality. Skip this processor if you don't use delta temporality.
+      processors:
+        deltatocumulative:
+          max_stale: 5m
+      receivers:
+        otlp:
+          protocols:
+            grpc:
+              endpoint: ${env:MY_POD_IP}:4317
+            http:
+              endpoint: ${env:MY_POD_IP}:4318
+      exporters:
+        otlphttp/victoriametrics:
+          compression: gzip
+          encoding: proto
+          metrics_endpoint: http://vmsingle-vm.monitoring.svc.cluster.local:8428/opentelemetry/v1/metrics
+          logs_endpoint: http://vlc-vmauth.logging.svc.cluster.local:9428/insert/opentelemetry/v1/logs
+          tls:
+            insecure: true
+      service:
+        pipelines:
+          logs:
+            receivers: [otlp]
+            processors: []
+            exporters: [otlphttp/victoriametrics]
+          metrics:
+            receivers: [otlp]
+            processors: [deltatocumulative]
+            exporters: [otlphttp/victoriametrics]
