@@ -10,8 +10,8 @@ data:
     image:
       repository: "otel/opentelemetry-collector-contrib"
     presets:
-      # clusterMetrics:
-      #   enabled: true
+      clusterMetrics:
+        enabled: true
       kubeletMetrics:
         enabled: true
       logsCollection:
