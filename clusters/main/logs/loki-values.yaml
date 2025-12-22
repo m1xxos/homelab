@@ -50,6 +50,9 @@ data:
       replicas: 2
       maxUnavailable: 1
 
+    chunksCache:
+      allocatedMemory: 2048
+
     bloomPlanner:
       replicas: 0
     bloomBuilder:
