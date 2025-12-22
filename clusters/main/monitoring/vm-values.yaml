@@ -28,9 +28,9 @@ data:
             requests:
               storage: 5Gi
     prometheus-node-exporter:
-      enabled: false
+      enabled: true
     kube-state-metrics:
-      enabled: false
+      enabled: true
     defaultDatasources:
       extra:
         - name: Loki
