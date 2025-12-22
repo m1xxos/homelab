@@ -3,29 +3,20 @@
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: vlc
+  name: loki
   namespace: logging
 spec:
   interval: 5m
   chart:
     spec:
-      chart: victoria-logs-cluster
-      version: "0.0.20"
+      chart: loki
+      version: "6.49.0"
       sourceRef:
         kind: HelmRepository
-        name: vm
+        name: grafana
         namespace: flux-system
   install:
     createNamespace: true
-  values:
-    nameOverride: "vlc"
-    vmauth:
-      enabled: true
-    vlselect:
-      ingress:
-        enabled: true
-        hosts:
-        - name: logs.local.m1xxos.tech
-          path:
-          - /select
-          port: http
+  valuesFrom:
+  - kind: ConfigMap
+    name: loki-values
