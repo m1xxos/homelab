@@ -33,11 +33,13 @@ data:
       enabled: false
     defaultDatasources:
       extra:
-        - name: VictoriaLogs
-          type: victoriametrics-logs-datasource
+        - name: Loki
+          type: loki
           access: proxy
-          url: http://vlc-vmauth.logging.svc.cluster.local:8427
-          isDefault: false
+          url: http://loki-gateway.logging.svc.cluster.local
+          jsonData:
+            timeout: 60
+            maxLines: 1000
     grafana:
       plugins:
         - victoriametrics-logs-datasource
