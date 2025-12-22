@@ -6,7 +6,7 @@ metadata:
   namespace: monitoring
 data:
   values.yaml: |
-    mode: deployment
+    mode: daemonset
     image:
       repository: "otel/opentelemetry-collector-contrib"
     presets:
