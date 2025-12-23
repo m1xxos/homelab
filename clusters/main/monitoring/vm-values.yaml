@@ -19,19 +19,54 @@ data:
           - vmagent.local.m1xxos.tech 
     vmsingle:
       spec:
+        extraArgs:
+          opentelemetry.usePrometheusNaming: "true"
         storage:
           accessModes:
             - ReadWriteMany
           resources:
             requests:
               storage: 5Gi
+    prometheus-node-exporter:
+      enabled: true
+    kube-state-metrics:
+      enabled: true
     defaultDatasources:
       extra:
-        - name: VictoriaLogs
-          type: victoriametrics-logs-datasource
+        - name: Loki
+          type: loki
           access: proxy
-          url: http://vlc-vmauth.logging.svc.cluster.local:8427
-          isDefault: false
+          url: http://loki-gateway.logging.svc.cluster.local
+          jsonData:
+            timeout: 60
+            maxLines: 1000
+        - name: Tempo
+          type: tempo
+          url: http://tempo.tracing.svc.cluster.local:3200
+          access: proxy
+          basicAuth: false
+          jsonData:
+            tracesToLogsV2:
+              # Field with an internal link pointing to a logs data source in Grafana.
+              # datasourceUid value must match the uid value of the logs data source.
+              datasourceUid: 'Loki'
+              spanStartTimeShift: '-1h'
+              spanEndTimeShift: '1h'
+              tags: ['k8s_job_name', 'service_instance_id', 'k8s_pod_name', 'k8s_namespace_name']
+              filterByTraceID: false
+              filterBySpanID: false
+              customQuery: true
+              query: 'method="$${__span.tags.method}"'
+            tracesToMetrics:
+              datasourceUid: 'VictoriaMetrics'
+              spanStartTimeShift: '-1h'
+              spanEndTimeShift: '1h'
+              tags: [{ key: 'service.name', value: 'service' }, { key: 'job' }]
+              queries:
+                - name: 'Sample query'
+                  query: 'sum(rate(traces_spanmetrics_latency_bucket{$$__tags}[5m]))'
+            nodeGraph:
+              enabled: true
     grafana:
       plugins:
         - victoriametrics-logs-datasource
