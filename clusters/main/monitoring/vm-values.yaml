@@ -45,31 +45,28 @@ data:
           url: http://tempo.tracing.svc.cluster.local:3200
           access: proxy
           basicAuth: false
-          # jsonData:
-          #   tracesToLogsV2:
-          #     # Field with an internal link pointing to a logs data source in Grafana.
-          #     # datasourceUid value must match the uid value of the logs data source.
-          #     datasourceUid: 'loki'
-          #     spanStartTimeShift: '-1h'
-          #     spanEndTimeShift: '1h'
-          #     tags: ['k8s_job_name', 'service_instance_id', 'k8s_pod_name', 'k8s_namespace_name']
-          #     filterByTraceID: false
-          #     filterBySpanID: false
-          #     customQuery: true
-          #     query: 'method="$${__span.tags.method}"'
-          #   nodeGraph:
-          #     enabled: true
-          #   search:
-          #     hide: false
-          #   traceQuery:
-          #     timeShiftEnabled: true
-          #     spanStartTimeShift: '-1h'
-          #     spanEndTimeShift: '1h'
-          #   spanBar:
-          #     type: 'Tag'
-          #     tag: 'http.path'
-          #   streamingEnabled:
-          #     search: true
+          jsonData:
+            tracesToLogsV2:
+              # Field with an internal link pointing to a logs data source in Grafana.
+              # datasourceUid value must match the uid value of the logs data source.
+              datasourceUid: 'loki'
+              spanStartTimeShift: '-1h'
+              spanEndTimeShift: '1h'
+              tags: ['k8s_job_name', 'service_instance_id', 'k8s_pod_name', 'k8s_namespace_name']
+              filterByTraceID: false
+              filterBySpanID: false
+              customQuery: true
+              query: 'method="$${__span.tags.method}"'
+            tracesToMetrics:
+              datasourceUid: 'VictoriaMetrics'
+              spanStartTimeShift: '-1h'
+              spanEndTimeShift: '1h'
+              tags: [{ key: 'service.name', value: 'service' }, { key: 'job' }]
+              queries:
+                - name: 'Sample query'
+                  query: 'sum(rate(traces_spanmetrics_latency_bucket{$$__tags}[5m]))'
+            nodeGraph:
+              enabled: true
     grafana:
       plugins:
         - victoriametrics-logs-datasource
