@@ -42,7 +42,7 @@ data:
             maxLines: 1000
         - name: Tempo
           type: tempo
-          url: http://tempo.tracing..svc.cluster.local:3200
+          url: http://tempo.tracing.svc.cluster.local:3200
           access: proxy
           basicAuth: false
           # jsonData:
