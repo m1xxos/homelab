@@ -30,3 +30,10 @@ metrics:
     addServicesLabels: true
     service:
       enabled: true
+
+tracing:
+  otlp:
+    enabled: true
+    grpc:
+      enabled: true
+      endpoint: "http://tempo.tracing..svc.cluster.local:4317"
