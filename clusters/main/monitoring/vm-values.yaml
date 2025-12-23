@@ -49,7 +49,7 @@ data:
             tracesToLogsV2:
               # Field with an internal link pointing to a logs data source in Grafana.
               # datasourceUid value must match the uid value of the logs data source.
-              datasourceUid: 'loki'
+              datasourceUid: 'Loki'
               spanStartTimeShift: '-1h'
               spanEndTimeShift: '1h'
               tags: ['k8s_job_name', 'service_instance_id', 'k8s_pod_name', 'k8s_namespace_name']
