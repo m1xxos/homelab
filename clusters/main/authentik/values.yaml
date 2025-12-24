@@ -24,7 +24,8 @@ data:
       route:
         main:
           enabled: true
-          hostnames: authentik.local.m1xxos.tech
+          hostnames: 
+          - authentik.local.m1xxos.tech
       volumes:
       - name: postgres-creds
         secret:
