@@ -45,6 +45,6 @@ module "main-cluster" {
   cluster_name       = "main"
   cluster_dns        = "main.k8s.m1xxos.tech"
   github_token       = var.github_token
-  branch             = "365-tracing-with-otel-collector"
+  branch             = "367-api-gateway"
   cilium_version     = "1.18.4"
 }
