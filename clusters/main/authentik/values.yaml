@@ -26,6 +26,8 @@ data:
           enabled: true
           hostnames: 
           - authentik.local.m1xxos.tech
+          parentRefs:
+          - name: traefik-gateway
       volumes:
       - name: postgres-creds
         secret:
