@@ -4,6 +4,8 @@ kind: ConfigMap
 metadata:
   name: authentik-values
   namespace: authentik
+  labels:
+    reconcile.fluxcd.io/watch: Enabled
 data:
   values.yaml: |
     global:

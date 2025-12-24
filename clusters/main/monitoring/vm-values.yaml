@@ -4,6 +4,8 @@ kind: ConfigMap
 metadata:
   name: vm-values
   namespace: monitoring
+  labels:
+    reconcile.fluxcd.io/watch: Enabled
 data:
   values.yaml: |
     nameOverride: "vm"

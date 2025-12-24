@@ -3,6 +3,8 @@ kind: ConfigMap
 metadata:
   name: loki-values
   namespace: logging
+  labels:
+    reconcile.fluxcd.io/watch: Enabled
 data:
   values.yaml: |
     loki:

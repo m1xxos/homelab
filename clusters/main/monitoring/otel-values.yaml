@@ -4,6 +4,8 @@ kind: ConfigMap
 metadata:
   name: otel-values
   namespace: monitoring
+  labels:
+    reconcile.fluxcd.io/watch: Enabled
 data:
   values.yaml: |
     mode: daemonset
