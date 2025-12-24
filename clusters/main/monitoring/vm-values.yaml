@@ -14,7 +14,7 @@ data:
       ingress:
         enabled: true
         hosts:
-        - vmagent.local.m1xxos.tech
+        - vmagentt.local.m1xxos.tech
         tls:
         - secretName: local-m1xxos-tech
           hosts:
