@@ -28,6 +28,7 @@ data:
           - authentik.local.m1xxos.tech
           parentRefs:
           - name: traefik-gateway
+            namespace: traefik
       volumes:
       - name: postgres-creds
         secret:
