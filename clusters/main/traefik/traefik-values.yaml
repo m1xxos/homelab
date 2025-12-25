@@ -2,7 +2,7 @@ providers:
   kubernetesCRD:
     allowExternalNameServices: true
   kubernetesIngress:
-    enabled: true
+    enabled: false
   kubernetesGateway:
     enabled: true
 
