@@ -11,14 +11,13 @@ data:
     nameOverride: "vm"
     fullnameOverride: "vm"
     vmagent:
-      ingress:
+      route:
         enabled: true
-        hosts:
-        - vmagent.local.m1xxos.tech
-        tls:
-        - secretName: local-m1xxos-tech
-          hosts:
-          - vmagent.local.m1xxos.tech 
+        hostnames:
+        - vmagent.local.m1xxos.tech 
+        parentRefs:
+        - name: traefik-gateway
+          namespace: traefik
     vmsingle:
       spec:
         extraArgs:
@@ -91,14 +90,14 @@ data:
         type: pvc
         enabled: true
         size: 5Gi
-      ingress:
-        enabled: true
-        hosts:
-        - grafana.local.m1xxos.tech
-        tls:
-        - secretName: local-m1xxos-tech
-          hosts:
-          - grafana.local.m1xxos.tech
+      route:
+        main:
+          enabled: true
+          hostnames:
+          - grafana.local.m1xxos.tech 
+          parentRefs:
+          - name: traefik-gateway
+            namespace: traefik
       grafana.ini:
         auth:
             signout_redirect_url: "https://authentik.local.m1xxos.tech/application/o/grafana/end-session/"
