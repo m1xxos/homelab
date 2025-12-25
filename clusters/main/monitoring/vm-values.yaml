@@ -4,19 +4,20 @@ kind: ConfigMap
 metadata:
   name: vm-values
   namespace: monitoring
+  labels:
+    reconcile.fluxcd.io/watch: Enabled
 data:
   values.yaml: |
     nameOverride: "vm"
     fullnameOverride: "vm"
     vmagent:
-      ingress:
+      route:
         enabled: true
-        hosts:
+        hostnames:
         - vmagent.local.m1xxos.tech
-        tls:
-        - secretName: local-m1xxos-tech
-          hosts:
-          - vmagent.local.m1xxos.tech 
+        parentRefs:
+        - name: traefik-gateway
+          namespace: traefik
     vmsingle:
       spec:
         extraArgs:
@@ -89,14 +90,14 @@ data:
         type: pvc
         enabled: true
         size: 5Gi
-      ingress:
-        enabled: true
-        hosts:
-        - grafana.local.m1xxos.tech
-        tls:
-        - secretName: local-m1xxos-tech
-          hosts:
+      route:
+        main:
+          enabled: true
+          hostnames:
           - grafana.local.m1xxos.tech
+          parentRefs:
+          - name: traefik-gateway
+            namespace: traefik
       grafana.ini:
         auth:
             signout_redirect_url: "https://authentik.local.m1xxos.tech/application/o/grafana/end-session/"

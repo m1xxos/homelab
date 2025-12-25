@@ -20,9 +20,3 @@ spec:
       defaultClassReplicaCount: 2
     defaultSettings:
       storageReservedPercentageForDefaultDisk: "10"
-    ingress:
-      enabled: true
-      hosts:
-      - host: longhorn.local.m1xxos.tech
-        paths:
-        - /

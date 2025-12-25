@@ -4,6 +4,8 @@ kind: ConfigMap
 metadata:
   name: authentik-values
   namespace: authentik
+  labels:
+    reconcile.fluxcd.io/watch: Enabled
 data:
   values.yaml: |
     global:
@@ -19,15 +21,14 @@ data:
         password: file:///postgres-creds/password
     server:
       serviceAccountName: authentik-reader
-      ingress:
-        ingressClassName: traefik
-        enabled: true
-        hosts:
-        - authentik.local.m1xxos.tech
-        tls:
-        - secretName: local-m1xxos-tech
-          hosts:
+      route:
+        main:
+          enabled: true
+          hostnames:
           - authentik.local.m1xxos.tech
+          parentRefs:
+          - name: traefik-gateway
+            namespace: traefik
       volumes:
       - name: postgres-creds
         secret:

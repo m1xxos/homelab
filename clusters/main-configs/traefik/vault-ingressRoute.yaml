@@ -1,18 +1,21 @@
-apiVersion: traefik.io/v1alpha1
-kind: IngressRoute
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
 metadata:
   name: vault-ui
   namespace: vault
 spec:
-  entryPoints:
-  - websecure
-  - web
-  routes:
-  - match: Host(`vault.local.m1xxos.tech`)
-    kind: Rule
-    services:
+  parentRefs:
+  - group: gateway.networking.k8s.io
+    kind: Gateway
+    name: traefik-gateway
+    namespace: traefik
+  hostnames:
+  - "vault.local.m1xxos.tech"
+  rules:
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /
+    backendRefs:
     - name: vault-ui
-      kind: Service
       port: 8200
-  tls:
-    secretName: local-m1xxos-tech
