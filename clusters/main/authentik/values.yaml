@@ -24,7 +24,7 @@ data:
       route:
         main:
           enabled: true
-          hostnames: 
+          hostnames:
           - authentik.local.m1xxos.tech
           parentRefs:
           - name: traefik-gateway

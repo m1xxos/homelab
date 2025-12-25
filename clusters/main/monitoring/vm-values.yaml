@@ -14,7 +14,7 @@ data:
       route:
         enabled: true
         hostnames:
-        - vmagent.local.m1xxos.tech 
+        - vmagent.local.m1xxos.tech
         parentRefs:
         - name: traefik-gateway
           namespace: traefik
@@ -94,7 +94,7 @@ data:
         main:
           enabled: true
           hostnames:
-          - grafana.local.m1xxos.tech 
+          - grafana.local.m1xxos.tech
           parentRefs:
           - name: traefik-gateway
             namespace: traefik
