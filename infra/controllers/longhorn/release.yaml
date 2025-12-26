@@ -20,3 +20,4 @@ spec:
       defaultClassReplicaCount: 2
     defaultSettings:
       storageReservedPercentageForDefaultDisk: "10"
+      defaultReplicaCount: '{"v1":"2","v2":"2"}'
