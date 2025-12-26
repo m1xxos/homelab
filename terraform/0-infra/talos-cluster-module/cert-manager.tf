@@ -10,6 +10,6 @@ resource "kubernetes_secret_v1" "name" {
     namespace = kubernetes_namespace_v1.cert-manager.metadata[0].name
   }
   data = {
-    api-token = var.cloudflare_zone_id
+    api-token = var.cloudflare_ip_token
   }
 }
