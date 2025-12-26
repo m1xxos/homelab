@@ -10,7 +10,7 @@ spec:
   - name: flux-system-configs
     namespace: flux-system
   interval: 10m0s
-  path: ./clusters/gitlab-tenant
+  path: ./infra/tenant
   prune: true
   sourceRef:
     kind: GitRepository
