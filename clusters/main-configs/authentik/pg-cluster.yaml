@@ -8,5 +8,12 @@ spec:
   storage:
     size: 1Gi
   bootstrap:
+    recovery:
+      source: origin
+      volumeSnapshots:
+        storage:
+          name: 4eed979f-1649-4e8d-925d-4182705ace4c
+          kind: snapshots
+          apiGroup: snapshots.longhorn.io
     initdb:
       database: authentik
