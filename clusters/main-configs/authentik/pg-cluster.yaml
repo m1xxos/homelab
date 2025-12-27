@@ -7,11 +7,3 @@ spec:
   instances: 2
   storage:
     size: 1Gi
-  bootstrap:
-    recovery:
-      source: origin
-      volumeSnapshots:
-        storage:
-          name: authentik-2
-          kind: PersistentVolumeClaim
-          apiGroup: v1
