@@ -31,16 +31,28 @@ metadata:
 spec:
   dependsOn:
   - name: gitlab-cluster-tenant
-  interval: 10m0s
+  interval: 1h
+  retryInterval: 3m
+  timeout: 5m
   path: ./infra/controllers
   prune: true
+  wait: true
   sourceRef:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
-  kubeConfig:
-    secretRef:
-      name: proxmox-gitlab-kubeconfig
+  patches:
+  - target:
+      kind: HelmRelease
+    patch: |
+      - op: add
+        path: /spec/kubeConfig
+        value:
+          secretRef:
+            name: proxmox-gitlab-kubeconfig
+      - op: add
+        path: /spec/serviceAccountName
+        value: flux-cluster-admin
 ---
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
