@@ -51,6 +51,9 @@ spec:
       - op: add
         path: /spec/serviceAccountName
         value: flux-cluster-admin
+      - op: replace
+        path: /meta/namespace
+        value: gitlab-cluster
 ---
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
