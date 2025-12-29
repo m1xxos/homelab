@@ -27,7 +27,7 @@ metadata:
 spec:
   dependsOn:
   - name: flux-system
-  - name: main-cluster-tenant
+  - name: main-tenant
   interval: 10m0s
   path: ./infra/controllers
   prune: false
