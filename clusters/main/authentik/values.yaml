@@ -32,7 +32,7 @@ data:
       volumes:
       - name: postgres-creds
         secret:
-          secretName: authentik-app
+          secretName: authentik-new-app
       volumeMounts:
       - name: postgres-creds
         mountPath: /postgres-creds
@@ -42,7 +42,7 @@ data:
       volumes:
       - name: postgres-creds
         secret:
-          secretName: authentik-app
+          secretName: authentik-new-app
       volumeMounts:
       - name: postgres-creds
         mountPath: /postgres-creds
