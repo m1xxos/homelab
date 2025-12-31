@@ -14,8 +14,16 @@ tasks:
     cmds:
     - flux reconcile source git flux-system
     - flux reconcile kustomization flux-system
+    - flux reconcile kustomization main-tenant
+    - flux reconcile kustomization main-infra
     - flux reconcile kustomization flux-system-configs
+  gitlab:
+    cmds:
+    - flux reconcile source git flux-system
+    - flux reconcile kustomization flux-system
     - flux reconcile kustomization gitlab-cluster-tenant -n gitlab-cluster
+    - flux reconcile kustomization gitlab-cluster-infra -n gitlab-cluster
+    - flux reconcile kustomization gitlab-cluster-configs -n gitlab-cluster
     - flux reconcile kustomization gitlab-cluster-system -n gitlab-cluster
   tfplan:
     cmds:

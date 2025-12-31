@@ -16,7 +16,7 @@ data:
     authentik:
       secret_key: file:///vault/secrets/secret-key.txt
       postgresql:
-        host: authentik-rw.authentik
+        host: authentik-new-rw
         user: file:///postgres-creds/username
         password: file:///postgres-creds/password
     server:
@@ -32,7 +32,7 @@ data:
       volumes:
       - name: postgres-creds
         secret:
-          secretName: authentik-app
+          secretName: authentik-new-app
       volumeMounts:
       - name: postgres-creds
         mountPath: /postgres-creds
@@ -42,7 +42,7 @@ data:
       volumes:
       - name: postgres-creds
         secret:
-          secretName: authentik-app
+          secretName: authentik-new-app
       volumeMounts:
       - name: postgres-creds
         mountPath: /postgres-creds

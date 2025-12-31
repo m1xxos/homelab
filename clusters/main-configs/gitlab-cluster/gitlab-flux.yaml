@@ -7,10 +7,64 @@ spec:
   dependsOn:
   - name: flux-system
     namespace: flux-system
-  - name: flux-system-configs
-    namespace: flux-system
   interval: 10m0s
-  path: ./clusters/gitlab-tenant
+  path: ./infra/tenant
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+    namespace: flux-system
+  kubeConfig:
+    secretRef:
+      name: proxmox-gitlab-kubeconfig
+  postBuild:
+    substitute:
+      CLUSTER_NAME: gitlab-cluster
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: gitlab-cluster-infra
+  namespace: gitlab-cluster
+spec:
+  dependsOn:
+  - name: gitlab-cluster-tenant
+  interval: 1h
+  retryInterval: 3m
+  timeout: 5m
+  path: ./infra/controllers
+  prune: true
+  wait: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+    namespace: flux-system
+  patches:
+  - target:
+      kind: HelmRelease
+    patch: |
+      - op: add
+        path: /spec/kubeConfig
+        value:
+          secretRef:
+            name: proxmox-gitlab-kubeconfig
+      - op: add
+        path: /spec/serviceAccountName
+        value: flux-cluster-admin
+      - op: replace
+        path: /metadata/namespace
+        value: gitlab-cluster
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: gitlab-cluster-configs
+  namespace: gitlab-cluster
+spec:
+  dependsOn:
+  - name: gitlab-cluster-tenant
+  interval: 10m0s
+  path: ./infra/configs
   prune: true
   sourceRef:
     kind: GitRepository

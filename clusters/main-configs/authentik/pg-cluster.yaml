@@ -1,12 +1,17 @@
 apiVersion: postgresql.cnpg.io/v1
 kind: Cluster
 metadata:
-  name: authentik
+  name: authentik-new
   namespace: authentik
 spec:
-  instances: 2
+  instances: 1
   storage:
     size: 1Gi
   bootstrap:
-    initdb:
+    recovery:
       database: authentik
+      volumeSnapshots:
+        storage:
+          name: authentik-db-backup
+          kind: VolumeSnapshot
+          apiGroup: snapshot.storage.k8s.io

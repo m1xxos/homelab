@@ -14,9 +14,11 @@ spec:
         namespace: flux-system
       version: 1.10.0
   interval: 10m
+  targetNamespace: longhorn-system
   values:
     persistence:
       defaultClass: true
       defaultClassReplicaCount: 2
     defaultSettings:
       storageReservedPercentageForDefaultDisk: "10"
+      defaultReplicaCount: '{"v1":"2","v2":"2"}'

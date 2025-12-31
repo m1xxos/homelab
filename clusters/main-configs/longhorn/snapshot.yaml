@@ -1,0 +1,19 @@
+apiVersion: snapshot.storage.k8s.io/v1
+kind: VolumeSnapshotClass
+metadata:
+  name: longhorn-backup-vsc
+driver: driver.longhorn.io
+deletionPolicy: Delete
+parameters:
+  type: bak
+  backupMode: full
+---
+apiVersion: snapshot.storage.k8s.io/v1
+kind: VolumeSnapshot
+metadata:
+  name: authentik-db-backup
+  namespace: authentik
+spec:
+  volumeSnapshotClassName: longhorn-backup-vsc
+  source:
+    persistentVolumeClaimName: authentik-2

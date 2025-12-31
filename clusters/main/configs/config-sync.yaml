@@ -1,0 +1,51 @@
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: main-tenant
+  namespace: flux-system
+spec:
+  dependsOn:
+  - name: flux-system
+    namespace: flux-system
+  interval: 10m0s
+  path: ./infra/tenant
+  prune: false
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+    namespace: flux-system
+  postBuild:
+    substitute:
+      CLUSTER_NAME: main-cluster
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: main-infra
+  namespace: flux-system
+spec:
+  dependsOn:
+  - name: flux-system
+  - name: main-tenant
+  interval: 10m0s
+  path: ./infra/controllers
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: flux-system-configs
+  namespace: flux-system
+spec:
+  dependsOn:
+  - name: main-infra
+  interval: 10m0s
+  path: ./clusters/main-configs
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
