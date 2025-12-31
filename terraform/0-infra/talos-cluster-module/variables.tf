@@ -70,7 +70,7 @@ variable "cloudflare_zone_id" {
   sensitive = true
 }
 
-variable "cloudflare_ip_token" {
+variable "cloudflare_api_token" {
   type      = string
   sensitive = true
 }
