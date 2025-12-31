@@ -1,7 +1,7 @@
 apiVersion: longhorn.io/v1beta2
 kind: RecurringJob
 metadata:
-  name: full-backup
+  name: system-backup
   namespace: longhorn-backup
 spec:
   task: system-backup

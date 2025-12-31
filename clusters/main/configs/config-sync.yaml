@@ -45,7 +45,7 @@ spec:
   - name: main-infra
   interval: 10m0s
   path: ./clusters/main-configs
-  prune: false
+  prune: true
   sourceRef:
     kind: GitRepository
     name: flux-system
