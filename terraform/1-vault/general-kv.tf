@@ -1,0 +1,15 @@
+resource "vault_mount" "general" {
+  path        = "general"
+  type        = "kv"
+  options     = { version = "2" }
+  description = "general clusters kv engine"
+}
+
+resource "vault_kv_secret_v2" "cloudflare-secret-key" {
+  mount = vault_mount.general.path
+  name  = "cloudflare-api-token"
+  data_json = jsonencode({
+    api-token = var.cloudflare_api_token
+    }
+  )
+}

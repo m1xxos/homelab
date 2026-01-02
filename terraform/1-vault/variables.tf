@@ -26,3 +26,8 @@ variable "vault_address" {
   type    = string
   default = "https://vault.local.m1xxos.tech"
 }
+
+variable "cloudflare_api_token" {
+  type      = string
+  sensitive = true
+}
