@@ -4,3 +4,5 @@ kind: Kustomization
 resources:
 - volume-snapshotter/crd.yaml
 - volume-snapshotter/controller.yaml
+- cert-manager/cert-issuer.yaml
+- cert-manager/certificate.yaml
