@@ -6,8 +6,8 @@ metadata:
 spec:
   secretName: local-m1xxos-tech
   dnsNames:
-  - "local.m1xxos.tech"
-  - "*.local.m1xxos.tech"
+  - "${DNS_NAME}"
+  - "*.${DNS_NAME}"
   issuerRef:
     name: acme-issuer
     kind: ClusterIssuer
