@@ -57,12 +57,12 @@ resource "vault_jwt_auth_backend_role" "admin" {
 
 resource "vault_identity_group" "admin" {
   name     = "admin"
-  policies = [ "admin" ]
+  policies = ["admin"]
   type     = "external"
 }
 
 resource "vault_identity_group_alias" "admin" {
-  name = "admin"
-  canonical_id = vault_identity_group.admin.id
+  name           = "admin"
+  canonical_id   = vault_identity_group.admin.id
   mount_accessor = vault_jwt_auth_backend.oidc.accessor
 }
