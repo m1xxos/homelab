@@ -41,6 +41,12 @@ spec:
     namespace: flux-system
   patches:
   - target:
+      kind: Kustomization
+    patch: |
+      - op: 
+        path: /namespace
+        value: gitlab-cluster
+  - target:
       kind: HelmRelease
     patch: |
       - op: add
