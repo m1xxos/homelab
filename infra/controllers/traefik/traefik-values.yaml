@@ -24,9 +24,10 @@ gateway:
       - kind: Secret
         name: local-m1xxos-tech
 
-accessLog:
-  enabled: true
-  format: json
+logs:
+  access:
+    enabled: true
+    format: common
 
 metrics:
   prometheus:
