@@ -17,4 +17,3 @@ spec:
   valuesFrom:
   - kind: ConfigMap
     name: traefik-values
-    namespace: traefik
