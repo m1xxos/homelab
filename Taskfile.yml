@@ -16,7 +16,7 @@ tasks:
     - flux reconcile kustomization flux-system
     - flux reconcile kustomization main-tenant
     - flux reconcile kustomization main-infra
-    - flux reconcile kustomization flux-system-configs
+    - flux reconcile kustomization main-configs
   gitlab:
     cmds:
     - flux reconcile source git flux-system
