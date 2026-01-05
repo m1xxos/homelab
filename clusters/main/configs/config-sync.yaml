@@ -30,7 +30,7 @@ spec:
   - name: main-tenant
   interval: 10m0s
   path: ./infra/controllers
-  prune: true
+  prune: false
   sourceRef:
     kind: GitRepository
     name: flux-system
@@ -45,7 +45,7 @@ spec:
   - name: main-infra
   interval: 10m0s
   path: ./clusters/main-configs
-  prune: true
+  prune: false
   sourceRef:
     kind: GitRepository
     name: flux-system
