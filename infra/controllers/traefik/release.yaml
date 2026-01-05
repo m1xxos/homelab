@@ -13,7 +13,7 @@ spec:
         kind: HelmRepository
         name: traefik
         namespace: traefik
-      interval: 10m
+  targetNamespace: traefik
   valuesFrom:
   - kind: ConfigMap
     name: traefik-values

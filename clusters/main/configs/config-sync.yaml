@@ -38,7 +38,7 @@ spec:
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: flux-system-configs
+  name: main-configs
   namespace: flux-system
 spec:
   dependsOn:
@@ -49,3 +49,6 @@ spec:
   sourceRef:
     kind: GitRepository
     name: flux-system
+  postBuild:
+    substitute:
+      DNS_NAME: local.m1xxos.tech

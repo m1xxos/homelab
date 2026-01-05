@@ -1,0 +1,11 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+- cert-manager/release.yaml
+- cert-manager/repository.yaml
+- external-secrets/release.yaml
+- external-secrets/repository.yaml
+- longhorn/release.yaml
+- longhorn/repository.yaml
+- traefik/

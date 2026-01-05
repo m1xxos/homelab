@@ -3,6 +3,8 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: cilium-values
+  labels:
+    reconcile.fluxcd.io/watch: Enabled
 data:
   values.yaml: |
     ipam:
@@ -43,3 +45,6 @@ data:
         enabled: true
       ui:
         enabled: true
+
+    l2announcements:
+      enabled: true
