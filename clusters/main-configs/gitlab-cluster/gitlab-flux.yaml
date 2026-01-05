@@ -34,8 +34,8 @@ spec:
   retryInterval: 3m
   timeout: 5m
   path: ./clusters/gitlab
-  prune: false
-  wait: false
+  prune: true
+  wait: true
   sourceRef:
     kind: GitRepository
     name: flux-system
