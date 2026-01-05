@@ -65,7 +65,7 @@ spec:
   dependsOn:
   - name: gitlab-cluster-tenant
   interval: 10m0s
-  path: ./infra/configs
+  path: ./clusters/gitlab-configs
   prune: true
   sourceRef:
     kind: GitRepository
