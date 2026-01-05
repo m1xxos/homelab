@@ -8,4 +8,4 @@ resources:
 - external-secrets/repository.yaml
 - longhorn/release.yaml
 - longhorn/repository.yaml
-- traefik/kustomization.yaml
+- traefik/
