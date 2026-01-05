@@ -43,3 +43,6 @@ data:
         enabled: true
       ui:
         enabled: true
+
+    l2announcements:
+      enabled: true
