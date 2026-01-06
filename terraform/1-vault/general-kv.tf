@@ -13,3 +13,15 @@ resource "vault_kv_secret_v2" "cloudflare-secret-key" {
     }
   )
 }
+
+resource "vault_policy" "general-reader" {
+  name   = "general-reader"
+  policy = <<EOT
+path "general/data/*" {
+  capabilities = ["read", "list"]
+}
+path "general/metadata/*" {
+  capabilities = [ "list" ]
+}
+EOT
+}
