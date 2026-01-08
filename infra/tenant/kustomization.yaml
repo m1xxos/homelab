@@ -8,3 +8,4 @@ resources:
 - lh-ns.yaml
 - role.yaml
 - traefik-ns.yaml
+- vault-token.yaml
