@@ -17,6 +17,10 @@ spec:
   kubeConfig:
     secretRef:
       name: proxmox-gitlab-kubeconfig
+  decryption:
+    provider: sops
+    secretRef:
+      name: sops-gpg
   postBuild:
     substitute:
       CLUSTER_NAME: gitlab-cluster
