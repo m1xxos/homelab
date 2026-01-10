@@ -8,4 +8,5 @@ spec:
     kind: OCIRepository
     name: node-exporter
   values:
-    imagePullSecrets[0].name: dhi-registry
+    imagePullSecrets:
+    - name: dhi-registry
