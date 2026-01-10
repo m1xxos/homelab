@@ -11,3 +11,6 @@ spec:
   values:
     imagePullSecrets:
     - name: dhi-registry
+    prometheus:
+      monitor:
+        enabled: true
