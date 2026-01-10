@@ -8,4 +8,4 @@ spec:
     kind: OCIRepository
     name: node-exporter
   values:
-    replicaCount: 2
+    imagePullSecrets[0].name: dhi-registry
