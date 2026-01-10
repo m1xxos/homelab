@@ -7,6 +7,7 @@ spec:
   chartRef:
     kind: OCIRepository
     name: node-exporter
+  targetNamespace: monitoring
   values:
     imagePullSecrets:
     - name: dhi-registry
