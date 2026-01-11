@@ -14,3 +14,4 @@ spec:
     prometheus:
       monitor:
         enabled: true
+        jobLabel: "gl-cluster-node-exporter"
