@@ -17,4 +17,4 @@ spec:
   targetNamespace: monitoring
   values:
     remoteWrite:
-    - url: http://metrics.local.m1xxos.tech/insert/0/prometheus
+    - url: http://metrics.local.m1xxos.tech/api/v1/write
