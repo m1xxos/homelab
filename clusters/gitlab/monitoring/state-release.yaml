@@ -15,3 +15,4 @@ spec:
     prometheus:
       monitor:
         enabled: true
+        jobLabel: "gl-cluster-state-metrics"
