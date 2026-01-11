@@ -7,7 +7,7 @@ spec:
   image:
     tag: v1.129.1
   remoteWrite:
-  - url: http://http://metrics.local.m1xxos.tech/api/v1/write
+  - url: http://metrics.local.m1xxos.tech/api/v1/write
   scrapeInterval: 30s
   selectAllByDefault: true
   port: "8429"
