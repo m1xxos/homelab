@@ -9,9 +9,9 @@ spec:
     name: node-exporter
   targetNamespace: monitoring
   values:
+    fullnameOverride: gl-node-exporter
     imagePullSecrets:
     - name: dhi-registry
     prometheus:
       monitor:
         enabled: true
-        jobLabel: "gl-cluster-node-exporter"
