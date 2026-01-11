@@ -1,0 +1,14 @@
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: OCIRepository
+metadata:
+  name: kube-state-metrics
+spec:
+  interval: 10m
+  layerSelector:
+    mediaType: "application/vnd.cncf.helm.chart.content.v1.tar+gzip"
+    operation: copy
+  url: oci://dhi.io/kube-state-metrics-chart
+  ref:
+    semver: ">= 7.0.0"
+  secretRef:
+    name: dhi-registry
