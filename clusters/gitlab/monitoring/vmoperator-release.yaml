@@ -14,8 +14,4 @@ spec:
         kind: HelmRepository
         name: vm
         namespace: flux-system
-  install:
-    crds: CreateReplace
-  upgrade:
-    crds: CreateReplace
   targetNamespace: monitoring
