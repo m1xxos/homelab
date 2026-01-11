@@ -1,0 +1,15 @@
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: cloudflare-api-token-secret
+  namespace: cert-manager
+spec:
+  refreshInterval: "1h0m0s"
+  secretStoreRef:
+    name: vault-general
+    kind: ClusterSecretStore
+  data:
+  - secretKey: api-token
+    remoteRef:
+      key: cloudflare-api-token
+      property: api-token

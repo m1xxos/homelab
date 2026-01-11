@@ -28,6 +28,13 @@ data:
           resources:
             requests:
               storage: 5Gi
+      route:
+        enabled: true
+        hostnames:
+        - metrics.local.m1xxos.tech
+        parentRefs:
+        - name: traefik-gateway
+          namespace: traefik
     prometheus-node-exporter:
       enabled: true
     kube-state-metrics:

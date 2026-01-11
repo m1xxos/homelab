@@ -6,3 +6,6 @@ resources:
 - volume-snapshotter/controller.yaml
 - cert-manager/cert-issuer.yaml
 - cert-manager/certificate.yaml
+- external-secrets/vault-store.yaml
+- external-secrets/cf-token.yaml
+- external-secrets/dhi-secret.yaml

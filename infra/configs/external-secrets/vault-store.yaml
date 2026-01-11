@@ -1,13 +1,12 @@
 apiVersion: external-secrets.io/v1
 kind: ClusterSecretStore
 metadata:
-  name: vault-backend
-  namespace: external-secrets
+  name: vault-general
 spec:
   provider:
     vault:
-      server: "http://vault.vault.svc:8200"
-      path: "secret"
+      server: "https://vault.local.m1xxos.tech"
+      path: "general"
       version: "v2"
       auth:
         tokenSecretRef:
