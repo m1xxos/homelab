@@ -8,7 +8,7 @@ metadata:
 spec:
   interval: 1m0s
   ref:
-    branch: 373-external-cluster-monitoring
+    branch: 376-fixauthentik-wait-for-vault
   secretRef:
     name: flux-system
   url: https://github.com/m1xxos/homelab.git
