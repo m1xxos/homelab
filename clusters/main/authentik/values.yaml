@@ -21,6 +21,17 @@ data:
         password: file:///postgres-creds/password
     server:
       serviceAccountName: authentik-reader
+      initContainers:
+      - name: wait-for-vault-secret
+        image: busybox:1.36
+        command:
+        - sh
+        - -c
+        - |
+          test -f /vault/secrets/secret-key.txt
+        volumeMounts:
+        - name: vault-secrets
+          mountPath: /vault/secrets
       route:
         main:
           enabled: true
@@ -39,6 +50,17 @@ data:
         readOnly: true
     worker:
       serviceAccountName: authentik-reader
+      initContainers:
+      - name: wait-for-vault-secret
+        image: busybox:1.36
+        command:
+        - sh
+        - -c
+        - |
+          test -f /vault/secrets/secret-key.txt
+        volumeMounts:
+        - name: vault-secrets
+          mountPath: /vault/secrets
       volumes:
       - name: postgres-creds
         secret:
