@@ -44,6 +44,8 @@ data:
       - name: postgres-creds
         secret:
           secretName: authentik-new-app
+      - name: vault-secrets
+        emptyDir: {}
       volumeMounts:
       - name: postgres-creds
         mountPath: /postgres-creds
@@ -65,6 +67,8 @@ data:
       - name: postgres-creds
         secret:
           secretName: authentik-new-app
+      - name: vault-secrets
+        emptyDir: {}
       volumeMounts:
       - name: postgres-creds
         mountPath: /postgres-creds
