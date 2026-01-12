@@ -5,7 +5,7 @@ metadata:
   namespace: longhorn-system
 spec:
   task: system-backup
-  cron: '* */3 * * *'
+  cron: '0 */3 * * *'
   retain: 1
   parameters:
     volume-backup-policy: if-not-present
