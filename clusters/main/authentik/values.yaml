@@ -33,9 +33,15 @@ data:
       - name: postgres-creds
         secret:
           secretName: authentik-new-app
+      - name: secret-key
+        secret:
+          secretName: authentik-secret-key
       volumeMounts:
       - name: postgres-creds
         mountPath: /postgres-creds
+        readOnly: true
+      - name: secret-key
+        mountPath: /secret-key
         readOnly: true
     worker:
       serviceAccountName: authentik-reader
@@ -43,9 +49,15 @@ data:
       - name: postgres-creds
         secret:
           secretName: authentik-new-app
+      - name: secret-key
+        secret:
+          secretName: authentik-secret-key
       volumeMounts:
       - name: postgres-creds
         mountPath: /postgres-creds
+        readOnly: true
+      - name: secret-key
+        mountPath: /secret-key
         readOnly: true
     redis:
       enabled: true
