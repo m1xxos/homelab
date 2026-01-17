@@ -9,3 +9,5 @@ resources:
 - role.yaml
 - traefik-ns.yaml
 - vault-token.yaml
+- vault-rid.yaml
+- vault-sid.yaml
