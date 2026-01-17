@@ -5,7 +5,7 @@ metadata:
   name: tempo
   namespace: tracing
 spec:
-  interval: 5m
+  interval: 20m
   chart:
     spec:
       chart: tempo

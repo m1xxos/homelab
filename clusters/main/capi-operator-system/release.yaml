@@ -5,7 +5,7 @@ metadata:
   name: capi-operator
   namespace: capi-operator-system
 spec:
-  interval: 5m
+  interval: 20m
   chart:
     spec:
       chart: cluster-api-operator

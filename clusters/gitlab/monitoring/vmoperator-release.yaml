@@ -5,7 +5,7 @@ metadata:
   name: vm-operator
 spec:
   releaseName: vm-operator
-  interval: 5m
+  interval: 20m
   chart:
     spec:
       chart: victoria-metrics-operator
