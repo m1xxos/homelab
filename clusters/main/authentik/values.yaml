@@ -8,13 +8,8 @@ metadata:
     reconcile.fluxcd.io/watch: Enabled
 data:
   values.yaml: |
-    global:
-      podAnnotations:
-        vault.hashicorp.com/agent-inject: 'true'
-        vault.hashicorp.com/role: 'authentik-reader'
-        vault.hashicorp.com/agent-inject-secret-secret-key.txt: 'main/authentik/secret-key'
     authentik:
-      secret_key: file:///vault/secrets/secret-key.txt
+      secret_key: file:////secret-key/secret-key
       postgresql:
         host: authentik-new-rw
         user: file:///postgres-creds/username
