@@ -1,24 +1,24 @@
 apiVersion: v1
-data:
-    rid: ENC[AES256_GCM,data:H0Y5WKWqlZFtksi3ktWoJw0xzHaowY/RQJCGoLN/YSeXyZNK,iv:egv8cwvhe88VwuTc2Vo7Hgbe+W4Yo0gVOLbRwc/YnRE=,tag:EOQkWaEQrZCnHN9UvEvrvA==,type:str]
 kind: Secret
 metadata:
     name: vault-rid
     namespace: external-secrets
+data:
+    rid: ENC[AES256_GCM,data:Mw9Uk54nAcsvvFcpVlUq0NugI7xpFgizpTT7u18rOhP+DyWz,iv:rxqc72t4biUSXzlvq9efB+lN4DbRWbjfwwyn0yOrkTc=,tag:FKkL3O3JCuItM3xVshRRbQ==,type:str]
 sops:
-    lastmodified: "2026-01-17T16:43:24Z"
-    mac: ENC[AES256_GCM,data:bbQomdADhN+s5ieISoveAXtCLrplK0AUIltLX0hbioUeB2tkLUjChdg2bSH79N8mYolGbkdg7TUxGBHfxsCwON7g5nlh09Ie1fdUmdduE8kfjZWxNb2L0yluFbeaxnErw83HRmmPpZArgGLlFov9SK9ROBX4mbBv0yGBtuQ41IM=,iv:xeF5EF0QsN4s6Q/dTcBYmgeyeZ5Mtku3w7CVuyHC9pU=,tag:NrxsUrQH0fUuBmJ87Pxz8A==,type:str]
+    lastmodified: "2026-01-17T16:47:31Z"
+    mac: ENC[AES256_GCM,data:0Lm6sDLJO/Dl++Oe1qBly9/FLowIfIaacCtrw0ByfRCMGa8YXHs6Ctk9QJLveNjbrbXXJe07G1K3iTocKSZYr8hw8BWB7WCP6Xfw7Y5LHapHxC8z//nQQUNtqI0sxuOQdhYNk6b6UfKMTCaeCss1ETSYhpHP5th9wHqUipXIRvM=,iv:WFuoyEgmmLMC4X4B91LJfR1/JsW8cOP8KPJMaW9VAfA=,tag:KkBKPFtdViF1JwoBE06b0g==,type:str]
     pgp:
-        - created_at: "2026-01-17T16:43:24Z"
+        - created_at: "2026-01-17T16:47:31Z"
           enc: |-
             -----BEGIN PGP MESSAGE-----
 
-            hF4DIzq6oCDSxr0SAQdA7khYmwy2tNK0QGoUPsRkVJMcZS9dhyDNY6Yf8X8hVjIw
-            Tv6k0XAK/l4E8AOmNdy4nztzbrsss73M9YRUCopWc2L0RbdSYk6bwHYzlv4dAsQO
-            1GgBCQIQgzpucmbvA3fy1x7BujFVvyQTAqiIyM2SBoNfaOQtCsM+XaeCuk/NTvzg
-            BKDGq+rawP7XzQZtBMMSTLXF/i80iHDlfs9BMUJZDvdUKO815Md/LM3oNtFRbQc/
-            KDIxykYMqt/n4A==
-            =3weu
+            hF4DIzq6oCDSxr0SAQdA7EoPAefJ5sanzq0BFg9Lz96v9yvKYcEFo0FiW0FU4Gkw
+            zXUJ3DK6j96MfTc/D8O4SaiGkiIZhvHqO77kQ9DkxFseg5Rv2wsJ8J297LSILi8V
+            1GYBCQIQQhUFHiJXCiTFw3aphD09qo0PRD78C/CHp1rE0LwoFW0H58zfuID+R1LG
+            u+xiSiFCqANSOa9jbtF3eapcX6iKzlRxH4qjTgx2ZGsz1P3DQFwKudxtSIJq3BoZ
+            MTNzUthSmRM=
+            =ztNz
             -----END PGP MESSAGE-----
           fp: 819DC03DDA641F4472C8B161D1D385622126DA03
     encrypted_regex: ^(data|stringData)$
