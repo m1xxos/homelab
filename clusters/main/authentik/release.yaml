@@ -5,7 +5,7 @@ metadata:
   name: authentik
   namespace: authentik
 spec:
-  interval: 5m
+  interval: 20m
   chart:
     spec:
       chart: authentik
@@ -18,6 +18,6 @@ spec:
     createNamespace: true
   targetNamespace: authentik
   valuesFrom:
-    - kind: ConfigMap
-      name: authentik-values
-      valuesKey: values.yaml
+  - kind: ConfigMap
+    name: authentik-values
+    valuesKey: values.yaml

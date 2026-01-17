@@ -6,7 +6,7 @@ metadata:
   name: loki
   namespace: logging
 spec:
-  interval: 5m
+  interval: 20m
   chart:
     spec:
       chart: loki

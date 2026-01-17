@@ -1,0 +1,25 @@
+apiVersion: v1
+data:
+    sid: ENC[AES256_GCM,data:5jxuMbJ2d/VQCQ0tK+JGacc9pz5t2Jh0HeYJ4+ALCYJ9dx5vSRwbC/sWcY5ecItJOT5lAw==,iv:iEV/v3f3kNWXO+h+yvj+pOeyIOFfY+fxxZ2jbOwZFbU=,tag:O8NDTpCXh2hF3Z1Q1s7Fpw==,type:str]
+kind: Secret
+metadata:
+    name: vault-sid
+    namespace: external-secrets
+sops:
+    lastmodified: "2026-01-17T16:52:35Z"
+    mac: ENC[AES256_GCM,data:xG6zZ8Qm+l2fF6E/IkTuvSuPVWeLRbbjHWclZw9uS5AcGKIpVoFT5EBHVEhsNjTEU/UxDkIEjD6DU1zEGgHQBwz/KB4F1pIVA3ML1WLfqOlqpp9OQ5vEOGpITyoFc0T6l9DNOYVdM9IVwf4XK3WPFiCNmZjM06ol0FM7K94gC74=,iv:+eGq7Jl01X1d333IzT5kB5Vx8LkVzP114w1zwVMPVX4=,tag:juTXeA4LPYVzWP8B7HCYNg==,type:str]
+    pgp:
+      - created_at: "2026-01-17T16:52:35Z"
+        enc: |-
+            -----BEGIN PGP MESSAGE-----
+
+            hF4DIzq6oCDSxr0SAQdAySms9znSv0dEYOr6CTvi2HSoMjF/hsZj+LBgmZDBdAww
+            HT4EarbZzVogSmNApA2iEnRnZKxNBILciodON88phFBIZ//avw6CNKJVeLgAgRE9
+            1GgBCQIQjPxZyzspU3TpekbeYCIKMttsi1rEZOZERTu7zGsekpRGjbXNvHgzNQWv
+            OkXdIURuYfQVYS9bojSSGRuFX2ZQWifn4TaS4xdn4uytfnZ6EpfFCwTj4TUe58Jd
+            xxdih48HajYIxQ==
+            =gYVM
+            -----END PGP MESSAGE-----
+        fp: 819DC03DDA641F4472C8B161D1D385622126DA03
+    encrypted_regex: ^(data|stringData)$
+    version: 3.11.0

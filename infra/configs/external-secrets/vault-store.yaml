@@ -9,7 +9,13 @@ spec:
       path: "general"
       version: "v2"
       auth:
-        tokenSecretRef:
-          name: "vault-token"
-          namespace: "external-secrets"
-          key: "token"
+        appRole:
+          path: "cluster-general"
+          roleRef:
+            name: "vault-rid"
+            namespace: "external-secrets"
+            key: "rid"
+          secretRef:
+            name: "vault-sid"
+            namespace: "external-secrets"
+            key: "sid"

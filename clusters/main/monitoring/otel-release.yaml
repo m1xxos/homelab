@@ -5,7 +5,7 @@ metadata:
   name: otel-collector
   namespace: monitoring
 spec:
-  interval: 5m
+  interval: 20m
   chart:
     spec:
       chart: opentelemetry-collector
