@@ -47,14 +47,6 @@ variable "cloudflare_zone_id" {
   sensitive = true
 }
 
-variable "nginx_username" {
-  type = string
-}
-
-variable "nginx_password" {
-  type = string
-}
-
 variable "authentik_token" {
   type      = string
   sensitive = true
