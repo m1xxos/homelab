@@ -12,6 +12,10 @@ terraform {
       source  = "siderolabs/talos"
       version = "0.9.0"
     }
+    infisical = {
+      source  = "Infisical/infisical"
+      version = "0.15.60"
+    }
   }
   backend "s3" {
     endpoint                    = "https://storage.yandexcloud.net"
@@ -42,4 +46,14 @@ provider "proxmox" {
 
 provider "cloudflare" {
   api_token = var.cloudflare_api_token
+}
+
+provider "infisical" {
+  host = "https://infisical.home.m1xxos.tech"
+  auth = {
+    universal = {
+      client_id     = var.infisical_id
+      client_secret = var.infisical_secret
+    }
+  }
 }

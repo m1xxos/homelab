@@ -55,3 +55,13 @@ variable "github_token" {
   type      = string
   sensitive = true
 }
+
+variable "infisical_id" {
+  type      = string
+  sensitive = true
+}
+
+variable "infisical_secret" {
+  type      = string
+  sensitive = true
+}
