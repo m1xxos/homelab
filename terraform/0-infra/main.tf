@@ -41,7 +41,7 @@ module "main-cluster" {
   talos_image_id     = proxmox_virtual_environment_download_file.talos_nocloud_image_1_11_3.id
   node_name          = "plusha"
   worker_disk_size   = 70
-  cloudflare_zone_id = infisical_secret.cloudflare_api_token.value
+  cloudflare_zone_id = var.cloudflare_zone_id
   cluster_name       = "main"
   cluster_dns        = "main.k8s.m1xxos.tech"
   github_token       = var.github_token
