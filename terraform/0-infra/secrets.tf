@@ -24,3 +24,10 @@ ephemeral "infisical_secret" "proxmox_api_token" {
     folder_path = "/"
     workspace_id = var.infisical_workspace_id
 }
+
+ephemeral "infisical_secret" "proxmox_ssh_password" {
+    name = "proxmox_ssh_password"
+    env_slug = "prod"
+    folder_path = "/"
+    workspace_id = var.infisical_workspace_id
+}

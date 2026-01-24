@@ -1,8 +1,3 @@
-variable "ssh_password" {
-  type      = string
-  sensitive = true
-}
-
 variable "bucket" {
   type = string
 }
@@ -27,10 +22,6 @@ variable "cloudflare_zone_id" {
   sensitive = true
 }
 
-variable "authentik_token" {
-  type      = string
-  sensitive = true
-}
 variable "github_token" {
   type      = string
   sensitive = true

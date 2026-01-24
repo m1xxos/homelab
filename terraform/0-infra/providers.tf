@@ -50,7 +50,7 @@ provider "proxmox" {
   ssh {
     agent    = true
     username = "root"
-    password = var.ssh_password
+    password = ephemeral.infisical_secret.proxmox_ssh_password.value
   }
 }
 
