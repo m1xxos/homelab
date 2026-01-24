@@ -31,3 +31,10 @@ ephemeral "infisical_secret" "proxmox_ssh_password" {
     folder_path = "/"
     workspace_id = var.infisical_workspace_id
 }
+
+ephemeral "infisical_secret" "cloudflare_api_token" {
+    name = "cloudflare_api_token"
+    env_slug = "prod"
+    folder_path = "/"
+    workspace_id = var.infisical_workspace_id
+}
