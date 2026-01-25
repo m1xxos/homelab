@@ -12,6 +12,10 @@ terraform {
       source  = "siderolabs/talos"
       version = "0.9.0"
     }
+    infisical = {
+      source  = "Infisical/infisical"
+      version = "0.15.60"
+    }
   }
   backend "s3" {
     endpoint                    = "https://storage.yandexcloud.net"
@@ -27,19 +31,29 @@ terraform {
   }
 }
 
+provider "infisical" {
+  host = "https://infisical.home.m1xxos.tech"
+  auth = {
+    universal = {
+      client_id     = var.infisical_id
+      client_secret = var.infisical_secret
+    }
+  }
+}
+
 provider "proxmox" {
-  endpoint  = var.proxmox_api_url
-  username  = var.proxmox_api_token_id
-  api_token = var.proxmox_talos_api_token
+  endpoint  = ephemeral.infisical_secret.proxmox_api_url.value
+  username  = ephemeral.infisical_secret.proxmox_api_token_id.value
+  api_token = ephemeral.infisical_secret.proxmox_api_token.value
   insecure  = true
 
   ssh {
     agent    = true
     username = "root"
-    password = var.ssh_password
+    password = ephemeral.infisical_secret.proxmox_ssh_password.value
   }
 }
 
 provider "cloudflare" {
-  api_token = var.cloudflare_api_token
+  api_token = ephemeral.infisical_secret.cloudflare_api_token.value
 }

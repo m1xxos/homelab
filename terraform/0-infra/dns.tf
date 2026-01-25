@@ -3,7 +3,7 @@ locals {
 }
 
 resource "cloudflare_dns_record" "main" {
-  zone_id = var.cloudflare_zone_id
+  zone_id = local.cloudflare_zone_id
   name    = local.local_name
   content = "192.168.1.80"
   type    = "A"
@@ -11,7 +11,7 @@ resource "cloudflare_dns_record" "main" {
 }
 
 resource "cloudflare_dns_record" "main-extra" {
-  zone_id = var.cloudflare_zone_id
+  zone_id = local.cloudflare_zone_id
   name    = "*.${local.local_name}"
   content = local.local_name
   type    = "CNAME"
@@ -19,7 +19,7 @@ resource "cloudflare_dns_record" "main-extra" {
 }
 
 resource "cloudflare_dns_record" "pi" {
-  zone_id = var.cloudflare_zone_id
+  zone_id = local.cloudflare_zone_id
   name    = "pi.m1xxos.tech"
   content = "192.168.1.77"
   type    = "A"
@@ -27,7 +27,7 @@ resource "cloudflare_dns_record" "pi" {
 }
 
 resource "cloudflare_dns_record" "pi-extra" {
-  zone_id = var.cloudflare_zone_id
+  zone_id = local.cloudflare_zone_id
   name    = "*.pi.m1xxos.tech"
   content = "pi.m1xxos.tech"
   type    = "CNAME"
@@ -35,7 +35,7 @@ resource "cloudflare_dns_record" "pi-extra" {
 }
 
 resource "cloudflare_dns_record" "home" {
-  zone_id = var.cloudflare_zone_id
+  zone_id = local.cloudflare_zone_id
   name    = "home.m1xxos.tech"
   content = "192.168.1.128"
   type    = "A"
@@ -43,7 +43,7 @@ resource "cloudflare_dns_record" "home" {
 }
 
 resource "cloudflare_dns_record" "home-extra" {
-  zone_id = var.cloudflare_zone_id
+  zone_id = local.cloudflare_zone_id
   name    = "*.home.m1xxos.tech"
   content = "home.m1xxos.tech"
   type    = "CNAME"
