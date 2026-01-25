@@ -12,21 +12,6 @@ variable "secret_key" {
   sensitive = true
 }
 
-variable "cloudflare_api_token" {
-  type      = string
-  sensitive = true
-}
-
-variable "cloudflare_zone_id" {
-  type      = string
-  sensitive = true
-}
-
-variable "github_token" {
-  type      = string
-  sensitive = true
-}
-
 variable "infisical_id" {
   type      = string
   sensitive = true

@@ -55,6 +55,5 @@ provider "proxmox" {
 }
 
 provider "cloudflare" {
-  api_token = var.cloudflare_api_token
+  api_token = ephemeral.infisical_secret.cloudflare_api_token.value
 }
-

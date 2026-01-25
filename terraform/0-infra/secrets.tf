@@ -38,3 +38,7 @@ ephemeral "infisical_secret" "cloudflare_api_token" {
     folder_path = "/"
     workspace_id = var.infisical_workspace_id
 }
+
+locals {
+  cloudflare_zone_id = data.infisical_secrets.main.secrets["cloudflare_zone_id"].value
+}
