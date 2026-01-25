@@ -23,6 +23,6 @@ variable "infisical_secret" {
 }
 
 variable "infisical_workspace_id" {
-  type = string
+  type    = string
   default = "cc160c9f-8470-482f-a8da-350d68337f48"
 }

@@ -41,10 +41,10 @@ module "main-cluster" {
   talos_image_id     = proxmox_virtual_environment_download_file.talos_nocloud_image_1_11_3.id
   node_name          = "plusha"
   worker_disk_size   = 70
-  cloudflare_zone_id = data.infisical_secrets.main.secrets["cloudflare_zone_id"].value
+  cloudflare_zone_id = local.cloudflare_zone_id
   cluster_name       = "main"
   cluster_dns        = "main.k8s.m1xxos.tech"
-  github_token       = data.infisical_secrets.main.secrets["github_token"].value
+  github_token       = local.github_token
   branch             = "376-fixauthentik-wait-for-vault"
   cilium_version     = "1.18.4"
 }
