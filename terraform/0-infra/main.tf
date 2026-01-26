@@ -45,6 +45,6 @@ module "main-cluster" {
   cluster_name       = "main"
   cluster_dns        = "main.k8s.m1xxos.tech"
   github_token       = local.github_token
-  branch             = "376-fixauthentik-wait-for-vault"
+  branch             = "380-authentik-gitlab-sso"
   cilium_version     = "1.18.4"
 }
