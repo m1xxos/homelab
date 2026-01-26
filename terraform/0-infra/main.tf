@@ -35,7 +35,7 @@ module "main-cluster" {
     }
   ]
   worker_cpu_cores   = 6
-  worker_memory      = 4096
+  worker_memory      = 5120
   external_ip        = "192.168.1.80"
   cp_vip_address     = "192.168.1.75"
   talos_image_id     = proxmox_virtual_environment_download_file.talos_nocloud_image_1_11_3.id
