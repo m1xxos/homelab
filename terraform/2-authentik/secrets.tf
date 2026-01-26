@@ -3,7 +3,7 @@ ephemeral "vault_kv_secret_v2" "authentik_token" {
   mount = "user-secrets"
 }
 
-ephemeral "vault_kv_secret_v2" "github-oauth" {
-  name  = "authentik-m1xxos"
-  mount = "github-oauth"
+data "vault_kv_secret_v2" "github-oauth" {
+  name  = "github-oauth"
+  mount = "user-secrets"
 }
