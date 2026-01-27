@@ -10,7 +10,7 @@ locals {
   consumer_secret = data.vault_kv_secret_v2.github-oauth.data.consumer_secret
 }
 
-resource "authentik_source_oauth" "name" {
+resource "authentik_source_oauth" "github" {
   name                = "github"
   slug                = "github"
   authentication_flow = data.authentik_flow.default-source-authentication.id
