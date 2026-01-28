@@ -38,7 +38,9 @@ spec:
             # ENABLE_COMPRESSION is optional; set this to true if you want to add compression to your etcd snapshot
             # If enabled, snapshot will be compressed with zstd algorithm
             - name: ENABLE_COMPRESSION
-              value: 'true'
+              value: 'false'
+            - name: CLUSTER_NAME
+              value: 'main'
             securityContext:
               runAsUser: 1000
               runAsGroup: 1000
