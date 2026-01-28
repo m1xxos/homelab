@@ -8,7 +8,7 @@ metadata:
 spec:
   interval: 1m0s
   ref:
-    branch: 380-authentik-gitlab-sso
+    branch: 382-etcd-backup
   secretRef:
     name: flux-system
   url: https://github.com/m1xxos/homelab.git
