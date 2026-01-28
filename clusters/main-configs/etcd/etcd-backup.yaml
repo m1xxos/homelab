@@ -1,0 +1,83 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: talos-backup
+  namespace: default
+spec:
+  schedule: '0/10 * * * *'
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: talos-backup
+            image: docker pull ghcr.io/siderolabs/talos-backup:v0.1.0-beta.3-5-g07d09ec
+            workingDir: /tmp
+            imagePullPolicy: IfNotPresent
+            env:
+            - name: AWS_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: minio-access-token
+                  key: AWS_ACCESS_KEY_ID
+            - name: AWS_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: minio-access-token
+                  key: AWS_SECRET_ACCESS_KEY
+            - name: AWS_REGION
+              value: us-east-1
+            # CUSTOM_S3_ENDPOINT is optional; if omitted the service will fallback to default AWS endpoints.
+            - name: CUSTOM_S3_ENDPOINT
+              value: http://192.168.1.77:9000
+            - name: BUCKET
+              value: talos-backups
+            # AGE_X25519_PUBLIC_KEY supports multiple recipients as comma-separated keys
+            - name: AGE_X25519_PUBLIC_KEY
+              value: 'age15y6qvf7hs3cpfeln4n6jdhx6nkwvxaunawfhgjzsv8ldvh9nv3vsw4cder'
+            # ENABLE_COMPRESSION is optional; set this to true if you want to add compression to your etcd snapshot
+            # If enabled, snapshot will be compressed with zstd algorithm
+            - name: ENABLE_COMPRESSION
+              value: 'true'
+            securityContext:
+              runAsUser: 1000
+              runAsGroup: 1000
+              allowPrivilegeEscalation: false
+              runAsNonRoot: true
+              capabilities:
+                drop:
+                - ALL
+              seccompProfile:
+                type: RuntimeDefault
+            command:
+            - /talos-backup
+            volumeMounts:
+            - mountPath: /tmp
+              name: tmp
+            - mountPath: /var/run/secrets/talos.dev
+              name: talos-secrets
+          restartPolicy: OnFailure
+          volumes:
+          - emptyDir: {}
+            name: tmp
+          - name: talos-secrets
+            secret:
+              secretName: talos-backup-secrets
+---
+apiVersion: talos.dev/v1alpha1
+kind: ServiceAccount
+metadata:
+  name: talos-backup-secrets
+spec:
+  roles:
+  - os:etcd:backup
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: talos-backup-secrets
+  annotations:
+    kubernetes.io/service-account.name: talos-backup-secrets
+---
+
+

@@ -1,0 +1,36 @@
+apiVersion: external-secrets.io/v1
+kind: SecretStore
+metadata:
+  name: minio-store
+  namespace: default
+spec:
+  provider:
+    vault:
+      server: "https://vault.local.m1xxos.tech"
+      path: "main"
+      version: "v2"
+      auth:
+        kubernetes:
+          mountPath: "kubernetes"
+          role: "minio-reader"
+          serviceAccountRef:
+            name: "minio-reader"
+---
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: minio-access-token
+  namespace: default
+spec:
+  refreshInterval: "1h0m0s"
+  secretStoreRef:
+    name: minio-store
+  data:
+  - secretKey: AWS_ACCESS_KEY_ID
+    remoteRef:
+      key: minio/access-token
+      property: AWS_ACCESS_KEY_ID
+  - secretKey: AWS_SECRET_ACCESS_KEY
+    remoteRef:
+      key: minio/access-token
+      property: AWS_SECRET_ACCESS_KEY
