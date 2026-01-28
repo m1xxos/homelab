@@ -6,11 +6,11 @@ terraform {
     }
     vault = {
       source  = "hashicorp/vault"
-      version = "5.4.0"
+      version = "5.6.0"
     }
     random = {
       source  = "hashicorp/random"
-      version = "3.7.2"
+      version = "3.8.1"
     }
   }
   backend "s3" {
