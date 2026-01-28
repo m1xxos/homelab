@@ -31,7 +31,7 @@ spec:
             - name: CUSTOM_S3_ENDPOINT
               value: http://192.168.1.77:9000
             - name: BUCKET
-              value: talos-backups
+              value: talos-etcd
             # AGE_X25519_PUBLIC_KEY supports multiple recipients as comma-separated keys
             - name: AGE_X25519_PUBLIC_KEY
               value: 'age15y6qvf7hs3cpfeln4n6jdhx6nkwvxaunawfhgjzsv8ldvh9nv3vsw4cder'
