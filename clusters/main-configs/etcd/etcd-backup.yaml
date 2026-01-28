@@ -68,6 +68,7 @@ apiVersion: talos.dev/v1alpha1
 kind: ServiceAccount
 metadata:
   name: talos-backup-secrets
+  namespace: default
 spec:
   roles:
   - os:etcd:backup
@@ -76,6 +77,7 @@ apiVersion: v1
 kind: Secret
 metadata:
   name: talos-backup-secrets
+  namespace: default
   annotations:
     kubernetes.io/service-account.name: talos-backup-secrets
 ---
