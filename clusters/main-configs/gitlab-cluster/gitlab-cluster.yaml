@@ -46,7 +46,7 @@ metadata:
   name: proxmox-gitlab-control-plane
   namespace: gitlab-cluster
 spec:
-  version: v1.34.0
+  version: v1.35.0
   replicas: 1
   infrastructureTemplate:
     kind: ProxmoxMachineTemplate
@@ -56,7 +56,7 @@ spec:
   controlPlaneConfig:
     controlplane:
       generateType: controlplane
-      talosVersion: v1.11.5
+      talosVersion: v1.12.2
       configPatches:
       - op: replace
         path: /machine/install
@@ -140,7 +140,7 @@ spec:
   template:
     spec:
       generateType: worker
-      talosVersion: v1.11.5
+      talosVersion: v1.12.2
       configPatches:
       - op: replace
         path: /machine/install
@@ -181,7 +181,7 @@ spec:
         apiVersion: infrastructure.cluster.x-k8s.io/v1alpha1
         kind: ProxmoxMachineTemplate
         name: proxmox-gitlab-worker
-      version: v1.34.0
+      version: v1.35.0
 ---
 apiVersion: infrastructure.cluster.x-k8s.io/v1alpha1
 kind: ProxmoxMachineTemplate
