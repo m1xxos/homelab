@@ -2,7 +2,7 @@ locals {
   node_name             = "plusha"
   cpu_type              = "host"
   operating_system_type = "l26"
-  datastore_id          = "pve-nvme"
+  datastore_id          = "local-lvm"
 }
 
 resource "proxmox_virtual_environment_vm" "talos_template" {

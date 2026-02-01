@@ -22,6 +22,11 @@ variable "grafana-sa-name" {
   default = "grafana-reader"
 }
 
+variable "minio-sa-name" {
+  type    = string
+  default = "minio-reader"
+}
+
 variable "vault_address" {
   type    = string
   default = "https://vault.local.m1xxos.tech"

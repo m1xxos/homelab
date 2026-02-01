@@ -2,19 +2,19 @@ terraform {
   required_providers {
     proxmox = {
       source  = "bpg/proxmox"
-      version = "0.86.0"
+      version = "0.93.0"
     }
     cloudflare = {
       source  = "cloudflare/cloudflare"
-      version = "5.12.0"
+      version = "5.16.0"
     }
     talos = {
       source  = "siderolabs/talos"
-      version = "0.9.0"
+      version = "0.10.1"
     }
     helm = {
       source  = "hashicorp/helm"
-      version = "= 3.1.0"
+      version = "= 3.1.1"
     }
     kubernetes = {
       source  = "hashicorp/kubernetes"
@@ -22,18 +22,19 @@ terraform {
     }
     flux = {
       source  = "fluxcd/flux"
-      version = "= 1.7.4"
+      version = "= 1.7.6"
     }
   }
 }
 
 locals {
   kube_config = yamldecode(talos_cluster_kubeconfig.kubeconfig.kubeconfig_raw)
+  kube_host = "https://${var.cp_vip_address}:6443"
 }
 
 provider "helm" {
   kubernetes = {
-    host = local.kube_config.clusters[0].cluster.server
+    host = local.kube_host
 
     cluster_ca_certificate = base64decode(local.kube_config.clusters[0].cluster.certificate-authority-data)
     client_certificate     = base64decode(local.kube_config.users[0].user.client-certificate-data)
@@ -42,7 +43,7 @@ provider "helm" {
 }
 
 provider "kubernetes" {
-  host = local.kube_config.clusters[0].cluster.server
+  host = local.kube_host
 
   cluster_ca_certificate = base64decode(local.kube_config.clusters[0].cluster.certificate-authority-data)
   client_certificate     = base64decode(local.kube_config.users[0].user.client-certificate-data)
@@ -51,7 +52,7 @@ provider "kubernetes" {
 
 provider "flux" {
   kubernetes = {
-    host = local.kube_config.clusters[0].cluster.server
+    host = local.kube_host
 
     cluster_ca_certificate = base64decode(local.kube_config.clusters[0].cluster.certificate-authority-data)
     client_certificate     = base64decode(local.kube_config.users[0].user.client-certificate-data)
@@ -60,7 +61,6 @@ provider "flux" {
   git = {
     url = var.git_url
     http = {
-      username = "flux"
       password = var.github_token
     }
     branch = var.branch

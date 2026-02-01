@@ -5,16 +5,6 @@ module "main-cluster" {
       name  = "main-cp-0"
       vm_id = 900
       ip    = "192.168.1.70"
-    },
-    {
-      name  = "main-cp-1"
-      vm_id = 901
-      ip    = "192.168.1.71"
-    },
-    {
-      name  = "main-cp-2"
-      vm_id = 902
-      ip    = "192.168.1.72"
     }
   ]
   talos_workers = [
@@ -35,7 +25,7 @@ module "main-cluster" {
     }
   ]
   worker_cpu_cores   = 6
-  worker_memory      = 5120
+  worker_memory      = 6144
   external_ip        = "192.168.1.80"
   cp_vip_address     = "192.168.1.75"
   talos_image_id     = proxmox_virtual_environment_download_file.talos_nocloud_image_1_11_3.id
@@ -45,6 +35,6 @@ module "main-cluster" {
   cluster_name       = "main"
   cluster_dns        = "main.k8s.m1xxos.tech"
   github_token       = local.github_token
-  branch             = "380-authentik-gitlab-sso"
+  branch             = "382-etcd-backup"
   cilium_version     = "1.18.4"
 }

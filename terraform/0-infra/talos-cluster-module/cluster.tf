@@ -63,10 +63,12 @@ locals {
         kubernetesTalosAPIAccess = {
           enabled = true
           allowedRoles = [
-            "os:reader"
+            "os:reader",
+            "os:etcd:backup"
           ]
           allowedKubernetesNamespaces = [
-            "kube-system"
+            "kube-system",
+            "default"
           ]
         }
       }
