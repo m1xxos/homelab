@@ -29,11 +29,12 @@ terraform {
 
 locals {
   kube_config = yamldecode(talos_cluster_kubeconfig.kubeconfig.kubeconfig_raw)
+  kube_host = "https://${var.cp_vip_address}:6443"
 }
 
 provider "helm" {
   kubernetes = {
-    host = local.kube_config.clusters[0].cluster.server
+    host = local.kube_host
 
     cluster_ca_certificate = base64decode(local.kube_config.clusters[0].cluster.certificate-authority-data)
     client_certificate     = base64decode(local.kube_config.users[0].user.client-certificate-data)
@@ -42,7 +43,7 @@ provider "helm" {
 }
 
 provider "kubernetes" {
-  host = local.kube_config.clusters[0].cluster.server
+  host = local.kube_host
 
   cluster_ca_certificate = base64decode(local.kube_config.clusters[0].cluster.certificate-authority-data)
   client_certificate     = base64decode(local.kube_config.users[0].user.client-certificate-data)
@@ -51,7 +52,7 @@ provider "kubernetes" {
 
 provider "flux" {
   kubernetes = {
-    host = local.kube_config.clusters[0].cluster.server
+    host = local.kube_host
 
     cluster_ca_certificate = base64decode(local.kube_config.clusters[0].cluster.certificate-authority-data)
     client_certificate     = base64decode(local.kube_config.users[0].user.client-certificate-data)
