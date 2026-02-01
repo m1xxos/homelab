@@ -5,16 +5,6 @@ module "main-cluster" {
       name  = "main-cp-0"
       vm_id = 900
       ip    = "192.168.1.70"
-    },
-    {
-      name  = "main-cp-1"
-      vm_id = 901
-      ip    = "192.168.1.71"
-    },
-    {
-      name  = "main-cp-2"
-      vm_id = 902
-      ip    = "192.168.1.72"
     }
   ]
   talos_workers = [
