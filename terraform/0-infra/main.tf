@@ -35,6 +35,6 @@ module "main-cluster" {
   cluster_name       = "main"
   cluster_dns        = "main.k8s.m1xxos.tech"
   github_token       = local.github_token
-  branch             = "382-etcd-backup"
+  branch             = "384-service-mesh"
   cilium_version     = "1.18.4"
 }
