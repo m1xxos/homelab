@@ -39,3 +39,7 @@ hubble:
 
 l2announcements:
   enabled: true
+
+cluster:
+  name: main
+  id: 1
