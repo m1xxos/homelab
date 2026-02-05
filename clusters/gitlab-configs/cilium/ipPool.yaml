@@ -6,3 +6,15 @@ spec:
   blocks:
   - start: 192.168.1.30
     stop: 192.168.1.30
+---
+apiVersion: "cilium.io/v2"
+kind: CiliumLoadBalancerIPPool
+metadata:
+  name: "clustermesh-pool"
+spec:
+  blocks:
+  - start: 192.168.1.31
+    stop: 192.168.1.31
+  serviceSelector:
+    matchLabels:
+      app.kubernetes.io/name: "clustermesh-apiserver"

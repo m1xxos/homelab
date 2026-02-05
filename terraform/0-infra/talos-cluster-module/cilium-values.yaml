@@ -43,3 +43,14 @@ l2announcements:
 cluster:
   name: main
   id: 1
+
+clustermesh:
+  useAPIServer: true
+  apiserver:
+    service:
+      type: LoadBalancer
+    tls:
+      auto:
+        enabled: true
+        method: cronJob
+        schedule: 0 0 1 */4 *
