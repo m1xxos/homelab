@@ -37,4 +37,5 @@ module "main-cluster" {
   github_token       = local.github_token
   branch             = "384-service-mesh"
   cilium_version     = "1.18.6"
+  clustermesh_endpoint = "192.168.1.81"
 }

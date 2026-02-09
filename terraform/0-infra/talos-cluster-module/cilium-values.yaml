@@ -41,16 +41,20 @@ l2announcements:
   enabled: true
 
 cluster:
-  name: main
-  id: 1
+  name: ${cluster_name}
+  id: ${cluster_id}
 
 clustermesh:
   useAPIServer: true
   apiserver:
+    kvstoremesh:
+      enabled: true
     service:
       type: LoadBalancer
     tls:
       auto:
         enabled: true
-        method: cronJob
-        schedule: 0 0 1 */4 *
+        method: helm
+      server:
+        extraIpAddresses:
+        - ${clustermesh_endpoint}

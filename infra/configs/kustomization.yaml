@@ -9,3 +9,6 @@ resources:
 - external-secrets/vault-store.yaml
 - external-secrets/cf-token.yaml
 - external-secrets/dhi-secret.yaml
+- cilium/push-secret.yaml
+- cilium/external-secret-kvstoremesh.yaml
+- cilium/external-secret-clustermesh.yaml
