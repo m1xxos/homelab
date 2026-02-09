@@ -56,3 +56,5 @@ spec:
   postBuild:
     substitute:
       DNS_NAME: local.m1xxos.tech
+      CILIUM_CLUSTER_NAME: main
+      CILIUM_CLUSTERMESH_ENDPOINT: "192.168.1.81"
