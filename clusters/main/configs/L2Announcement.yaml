@@ -4,9 +4,6 @@ kind: CiliumL2AnnouncementPolicy
 metadata:
   name: default
 spec:
-  serviceSelector:
-    matchLabels:
-      app.kubernetes.io/name: traefik
   nodeSelector:
     matchExpressions:
     - key: node-role.kubernetes.io/control-plane
