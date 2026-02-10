@@ -32,6 +32,8 @@ data:
           metadata:
             annotations:
               service.cilium.io/global: "true"
+          spec:
+            type: ClusterIP
       route:
         enabled: false
     prometheus-node-exporter:
