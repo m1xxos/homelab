@@ -29,10 +29,10 @@ data:
             requests:
               storage: 5Gi
         serviceSpec:
-          metadata:
-            annotations:
-              service.cilium.io/global: "true"
           spec:
+            metadata:
+              annotations:
+                service.cilium.io/global: "true"
             type: ClusterIP
       route:
         enabled: false
