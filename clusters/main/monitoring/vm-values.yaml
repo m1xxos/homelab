@@ -29,11 +29,12 @@ data:
             requests:
               storage: 5Gi
         serviceSpec:
+          metadata:
+            annotations:
+              service.cilium.io/global: "true"
           spec:
-            metadata:
-              annotations:
-                service.cilium.io/global: "true"
             type: ClusterIP
+          useAsDefault: true
       route:
         enabled: false
     prometheus-node-exporter:
