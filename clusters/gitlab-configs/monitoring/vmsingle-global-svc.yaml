@@ -1,0 +1,15 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: vmsingle-vm
+  namespace: monitoring
+  annotations:
+    service.cilium.io/global: "true"
+spec:
+  type: ClusterIP
+  ports:
+  - name: http
+    port: 8428
+    targetPort: 8428
+    protocol: TCP
