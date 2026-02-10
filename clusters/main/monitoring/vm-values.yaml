@@ -28,13 +28,15 @@ data:
           resources:
             requests:
               storage: 5Gi
+        serviceSpec:
+          metadata:
+            annotations:
+              service.cilium.io/global: "true"
+          spec:
+            type: ClusterIP
+          useAsDefault: true
       route:
-        enabled: true
-        hostnames:
-        - metrics.local.m1xxos.tech
-        parentRefs:
-        - name: traefik-gateway
-          namespace: traefik
+        enabled: false
     prometheus-node-exporter:
       enabled: true
     kube-state-metrics:

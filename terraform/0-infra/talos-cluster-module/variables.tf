@@ -90,6 +90,17 @@ variable "cilium_version" {
   default = "1.17.3"
 }
 
+variable "cluster_id" {
+  type        = number
+  description = "Unique Cilium cluster ID for clustermesh"
+  default     = 1
+}
+
+variable "clustermesh_endpoint" {
+  type        = string
+  description = "LoadBalancer IP for clustermesh-apiserver"
+}
+
 variable "metrics_server_version" {
   type    = string
   default = "3.13.0"

@@ -44,6 +44,11 @@ spec:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
+  postBuild:
+    substitute:
+      CILIUM_CLUSTER_NAME: gitlab
+      CILIUM_CLUSTER_ID: "2"
+      CILIUM_CLUSTERMESH_ENDPOINT: "192.168.1.31"
   patches:
   - target:
       kind: HelmRelease
@@ -115,3 +120,5 @@ spec:
   postBuild:
     substitute:
       DNS_NAME: gl.m1xxos.tech
+      CILIUM_CLUSTER_NAME: gitlab
+      CILIUM_CLUSTERMESH_ENDPOINT: "192.168.1.31"

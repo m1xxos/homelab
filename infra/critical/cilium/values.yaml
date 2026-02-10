@@ -48,3 +48,22 @@ data:
 
     l2announcements:
       enabled: true
+
+    cluster:
+      name: ${CILIUM_CLUSTER_NAME}
+      id: ${CILIUM_CLUSTER_ID}
+
+    clustermesh:
+      useAPIServer: true
+      apiserver:
+        kvstoremesh:
+          enabled: true
+        service:
+          type: LoadBalancer
+        tls:
+          auto:
+            enabled: true
+            method: helm
+          server:
+            extraIpAddresses:
+            - ${CILIUM_CLUSTERMESH_ENDPOINT}
