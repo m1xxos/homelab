@@ -24,18 +24,19 @@ module "main-cluster" {
       ip    = "192.168.1.12"
     }
   ]
-  worker_cpu_cores   = 6
-  worker_memory      = 6144
-  external_ip        = "192.168.1.80"
-  cp_vip_address     = "192.168.1.75"
-  talos_image_id     = proxmox_virtual_environment_download_file.talos_nocloud_image_1_11_3.id
-  node_name          = "plusha"
-  worker_disk_size   = 70
-  cloudflare_zone_id = local.cloudflare_zone_id
-  cluster_name       = "main"
-  cluster_dns        = "main.k8s.m1xxos.tech"
-  github_token       = local.github_token
-  branch             = "386-redis-operator"
-  cilium_version     = "1.18.6"
+  worker_cpu_cores     = 6
+  worker_memory        = 6144
+  cp_memory            = 6144
+  external_ip          = "192.168.1.80"
+  cp_vip_address       = "192.168.1.75"
+  talos_image_id       = proxmox_virtual_environment_download_file.talos_nocloud_image_1_11_3.id
+  node_name            = "plusha"
+  worker_disk_size     = 70
+  cloudflare_zone_id   = local.cloudflare_zone_id
+  cluster_name         = "main"
+  cluster_dns          = "main.k8s.m1xxos.tech"
+  github_token         = local.github_token
+  branch               = "386-redis-operator"
+  cilium_version       = "1.18.6"
   clustermesh_endpoint = "192.168.1.81"
 }
