@@ -1,0 +1,13 @@
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: OCIRepository
+metadata:
+  name: dragonfly-operator
+  namespace: dragonfly-operator-system
+spec:
+  interval: 30m
+  layerSelector:
+    mediaType: "application/vnd.cncf.helm.chart.content.v1.tar+gzip"
+    operation: copy
+  url: oci://ghcr.io/dragonflydb/dragonfly-operator/helm/dragonfly-operator
+  ref:
+    semver: ">= v1.4.0"
