@@ -14,6 +14,22 @@ resource "vault_kv_secret_v2" "cloudflare-secret-key" {
   )
 }
 
+resource "random_password" "dragonfly-gl-password" {
+  length      = 60
+  min_numeric = 10
+  min_special = 10
+  min_upper   = 10
+}
+
+resource "vault_kv_secret_v2" "dragonfly-gl-password" {
+  mount = vault_mount.general.path
+  name  = "dragonfly-gl-password"
+  data_json = jsonencode({
+    password = random_password.dragonfly-gl-password.result
+    }
+  )
+}
+
 resource "vault_policy" "general-reader" {
   name   = "general-reader"
   policy = <<EOT
