@@ -1,0 +1,25 @@
+apiVersion: dragonflydb.io/v1alpha1
+kind: Dragonfly
+metadata:
+  labels:
+    app.kubernetes.io/name: dragonfly
+    app.kubernetes.io/instance: dragonfly-gl
+    app.kubernetes.io/part-of: dragonfly-operator
+    app.kubernetes.io/created-by: dragonfly-operator
+  name: dragonfly-gl
+spec:
+  authentication:
+    passwordFromSecret:
+      name: dragonfly-gl
+      key: password
+  replicas: 2
+  resources:
+    requests:
+      cpu: 500m
+      memory: 300Mi
+    limits:
+      cpu: 600m
+      memory: 550Mi
+  serviceSpec:
+    annotations:
+      service.cilium.io/global: "true"
