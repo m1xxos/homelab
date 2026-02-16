@@ -31,7 +31,6 @@ spec:
         size: "1Gi"
       logs:
         type: "emptyDir"
-      defaultReplication: "001"
     filer:
       s3:
         enabled: true
