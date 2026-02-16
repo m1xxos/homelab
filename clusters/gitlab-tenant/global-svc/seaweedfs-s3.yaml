@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: seaweedfs-s3
+  namespace: seaweedfs
+spec:
+  ports:
+  - name: swfs-s3
+    port: 8333
+    protocol: TCP
+    targetPort: 8333
+  type: ClusterIP
