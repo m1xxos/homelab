@@ -50,3 +50,5 @@ spec:
         maxVolumes: 0 # If set to zero on non-windows OS, the limit will be auto configured. (default "7")
     admin:
       enabled: true
+    cosi:
+      enabled: true
