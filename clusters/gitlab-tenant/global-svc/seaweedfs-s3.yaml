@@ -3,6 +3,8 @@ kind: Service
 metadata:
   name: seaweedfs-s3
   namespace: seaweedfs
+  annotations:
+    service.cilium.io/global: "true"
 spec:
   ports:
   - name: swfs-s3
