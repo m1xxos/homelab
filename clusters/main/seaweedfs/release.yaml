@@ -17,7 +17,7 @@ spec:
   values:
     master:
       data:
-      - type: "persistentVolumeClaim"
+        type: "persistentVolumeClaim"
         size: "1Gi"
     filer:
       s3:
@@ -26,7 +26,7 @@ spec:
       enablePVC: true
       storage: 1Gi
       data:
-      - type: "persistentVolumeClaim"
+        type: "persistentVolumeClaim"
         size: "1Gi"
     volume:
       dataDirs:
