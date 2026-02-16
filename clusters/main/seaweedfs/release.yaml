@@ -43,6 +43,7 @@ spec:
       logs:
         type: "emptyDir"
     volume:
+      replicas: 2
       dataDirs:
       - name: data
         type: "persistentVolumeClaim"
