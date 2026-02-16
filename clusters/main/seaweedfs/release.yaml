@@ -1,0 +1,31 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: seaweedfs
+  namespace: seaweedfs
+spec:
+  interval: 30m
+  chart:
+    spec:
+      chart: seaweedfs
+      version: 4.0.412
+      sourceRef:
+        kind: HelmRepository
+        name: seaweedfs
+        namespace: seaweedfs
+  values:
+    filer:
+      s3:
+        enabled: true
+        enableAuth: true
+      enablePVC: true
+      storage: 1Gi
+    volume:
+      dataDirs:
+      - name: data
+        type: "persistentVolumeClaim"
+        size: "3Gi"
+        maxVolumes: 0 # If set to zero on non-windows OS, the limit will be auto configured. (default "7")
+    admin:
+      enabled: true
