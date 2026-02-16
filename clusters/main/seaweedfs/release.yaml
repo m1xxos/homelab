@@ -19,6 +19,8 @@ spec:
       data:
         type: "persistentVolumeClaim"
         size: "1Gi"
+      logs:
+        type: "emptyDir"
     filer:
       s3:
         enabled: true
@@ -28,6 +30,8 @@ spec:
       data:
         type: "persistentVolumeClaim"
         size: "1Gi"
+      logs:
+        type: "emptyDir"
     volume:
       dataDirs:
       - name: data
