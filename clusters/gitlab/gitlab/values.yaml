@@ -31,7 +31,7 @@ data:
         gatewayRef:
           name: "traefik-gateway"
           namespace: "traefik"
-      time_zone="Europe/Moscow"
+      time_zone: "Europe/Moscow"
       redis:
         serviceName: dragonfly-gl
         port: 6379
