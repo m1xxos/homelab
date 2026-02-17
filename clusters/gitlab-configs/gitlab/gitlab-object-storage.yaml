@@ -15,11 +15,20 @@ spec:
       data:
         config: |
           provider: AWS
-          aws_access_key_id: {{ .aws_access_key_id | quote }}
-          aws_secret_access_key: {{ .aws_secret_access_key | quote }}
+          region: {{ default "us-east-1" .bucket_region }}
+          aws_access_key_id: {{ .aws_access_key_id }}
+          aws_secret_access_key: {{ .aws_secret_access_key }}
           endpoint: "http://seaweedfs-s3.seaweedfs.svc:8333"
           path_style: true
-          region: {{ default "us-east-1" .bucket_region | quote }}
+        s3cmd: |
+          [default]
+          access_key = {{ .aws_access_key_id }}
+          secret_key = {{ .aws_secret_access_key }}
+          host_base = seaweedfs-s3.seaweedfs.svc:8333
+          host_bucket = seaweedfs-s3.seaweedfs.svc:8333/%(bucket)
+          bucket_location = {{ default "us-east-1" .bucket_region }}
+          use_https = False
+          signature_v2 = False
   data:
   - secretKey: aws_access_key_id
     remoteRef:

@@ -75,8 +75,8 @@ data:
         backups:
           objectStorage:
             config:
-              secret: gitlab-object-storage-s3cmd
-              key: config
+              secret: gitlab-object-storage
+              key: s3cmd
     installCertmanager: false
     nginx-ingress: &nginx-ingress
       enabled: false
