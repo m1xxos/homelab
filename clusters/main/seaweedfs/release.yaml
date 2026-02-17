@@ -35,8 +35,6 @@ spec:
       s3:
         enabled: true
         enableAuth: true
-      enablePVC: true
-      storage: 1Gi
       data:
         type: "persistentVolumeClaim"
         size: "1Gi"
