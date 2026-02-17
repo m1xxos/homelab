@@ -49,3 +49,19 @@ resource "cloudflare_dns_record" "home-extra" {
   type    = "CNAME"
   ttl     = 300
 }
+
+resource "cloudflare_dns_record" "gl" {
+  zone_id = local.cloudflare_zone_id
+  name    = "gl.m1xxos.tech"
+  content = "192.168.1.31"
+  type    = "A"
+  ttl     = 300
+}
+
+resource "cloudflare_dns_record" "gl-extra" {
+  zone_id = local.cloudflare_zone_id
+  name    = "*.gl.m1xxos.tech"
+  content = "gl.m1xxos.tech"
+  type    = "CNAME"
+  ttl     = 300
+}
