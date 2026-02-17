@@ -34,10 +34,10 @@ resource "vault_policy" "general-reader" {
   name   = "general-reader"
   policy = <<EOT
 path "general/data/*" {
-  capabilities = ["read", "list"]
+  capabilities = ["create", "update", "read", "list", "delete"]
 }
 path "general/metadata/*" {
-  capabilities = [ "list" ]
+  capabilities = ["create", "update", "read", "list", "delete"]
 }
 path "general/data/clustermesh/*" {
   capabilities = ["create", "update", "read", "list", "delete"]
