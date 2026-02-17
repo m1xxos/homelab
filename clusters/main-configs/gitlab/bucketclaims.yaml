@@ -1,0 +1,129 @@
+apiVersion: objectstorage.k8s.io/v1alpha1
+kind: BucketClaim
+metadata:
+  namespace: gitlab
+  name: git-lfs
+spec:
+  bucketClassName: seaweedfs
+  protocols:
+  - s3
+---
+apiVersion: objectstorage.k8s.io/v1alpha1
+kind: BucketClaim
+metadata:
+  namespace: gitlab
+  name: gitlab-artifacts
+spec:
+  bucketClassName: seaweedfs
+  protocols:
+  - s3
+---
+apiVersion: objectstorage.k8s.io/v1alpha1
+kind: BucketClaim
+metadata:
+  namespace: gitlab
+  name: gitlab-backups
+spec:
+  bucketClassName: seaweedfs
+  protocols:
+  - s3
+---
+apiVersion: objectstorage.k8s.io/v1alpha1
+kind: BucketClaim
+metadata:
+  namespace: gitlab
+  name: gitlab-ci-secure-files
+spec:
+  bucketClassName: seaweedfs
+  protocols:
+  - s3
+---
+apiVersion: objectstorage.k8s.io/v1alpha1
+kind: BucketClaim
+metadata:
+  namespace: gitlab
+  name: gitlab-dependency-proxy
+spec:
+  bucketClassName: seaweedfs
+  protocols:
+  - s3
+---
+apiVersion: objectstorage.k8s.io/v1alpha1
+kind: BucketClaim
+metadata:
+  namespace: gitlab
+  name: gitlab-mr-diffs
+spec:
+  bucketClassName: seaweedfs
+  protocols:
+  - s3
+---
+apiVersion: objectstorage.k8s.io/v1alpha1
+kind: BucketClaim
+metadata:
+  namespace: gitlab
+  name: gitlab-packages
+spec:
+  bucketClassName: seaweedfs
+  protocols:
+  - s3
+---
+apiVersion: objectstorage.k8s.io/v1alpha1
+kind: BucketClaim
+metadata:
+  namespace: gitlab
+  name: gitlab-pages
+spec:
+  bucketClassName: seaweedfs
+  protocols:
+  - s3
+---
+apiVersion: objectstorage.k8s.io/v1alpha1
+kind: BucketClaim
+metadata:
+  namespace: gitlab
+  name: gitlab-terraform-state
+spec:
+  bucketClassName: seaweedfs
+  protocols:
+  - s3
+---
+apiVersion: objectstorage.k8s.io/v1alpha1
+kind: BucketClaim
+metadata:
+  namespace: gitlab
+  name: gitlab-uploads
+spec:
+  bucketClassName: seaweedfs
+  protocols:
+  - s3
+---
+apiVersion: objectstorage.k8s.io/v1alpha1
+kind: BucketClaim
+metadata:
+  namespace: gitlab
+  name: registry
+spec:
+  bucketClassName: seaweedfs
+  protocols:
+  - s3
+---
+apiVersion: objectstorage.k8s.io/v1alpha1
+kind: BucketClaim
+metadata:
+  namespace: gitlab
+  name: runner-cache
+spec:
+  bucketClassName: seaweedfs
+  protocols:
+  - s3
+---
+apiVersion: objectstorage.k8s.io/v1alpha1
+kind: BucketClaim
+metadata:
+  namespace: gitlab
+  name: tmp
+spec:
+  bucketClassName: seaweedfs
+  protocols:
+  - s3
