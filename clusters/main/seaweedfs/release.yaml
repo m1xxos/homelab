@@ -6,16 +6,6 @@ metadata:
   namespace: seaweedfs
 spec:
   interval: 30m
-  postRenderers:
-  - kustomize:
-      patches:
-      - target:
-          kind: Service
-          name: seaweedfs-s3
-        patch: |
-          - op: add
-            path: /metadata/annotations/service.cilium.io~1global
-            value: "true"
   chart:
     spec:
       chart: seaweedfs
@@ -25,6 +15,9 @@ spec:
         name: seaweedfs
         namespace: seaweedfs
   values:
+    s3:
+      annotations:
+        service.cilium.io/global: "true"
     master:
       data:
         type: "persistentVolumeClaim"
