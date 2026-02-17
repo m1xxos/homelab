@@ -1,0 +1,57 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: gitlab-values
+  namespace: gitlab-cluster
+  labels:
+    reconcile.fluxcd.io/watch: Enabled
+data:
+  values.yaml: |
+    global:
+      edition: ce
+      hosts:
+        domain: gl.m1xxos.tech
+        gitlab:
+          name: gl.m1xxos.tech
+          https: true
+        registry:
+          name: registry.gl.m1xxos.tech
+          https: true
+        kas:
+          name: kas.gl.m1xxos.tech
+        pages:
+          name: pages.gl.m1xxos.tech
+          https: true
+        ssh: gl.m1xxos.tech
+      ingress:
+        enabled: false
+      gatewayApi:
+        enabled: true
+        installEnvoy: false
+        gatewayRef:
+          name: "traefik-gateway"
+          namespace: "traefik"
+      time_zone="Europe/Moscow"
+      redis:
+        serviceName: dragonfly-gl
+        port: 6379
+        auth:
+          enabled: true
+          secret: dragonfly-gl
+          key: password
+      psql:
+        host: gitlab-rails-db-global-rw
+        password:
+          secret: gitlab-rails-db-app
+          key: password
+      minio:
+        enabled: false
+      gitaly:
+        persistence:
+          size: 15Gi
+      pages:
+        enabled: true
+    redis:
+      install: false
+    postgresql:
+      install: false
