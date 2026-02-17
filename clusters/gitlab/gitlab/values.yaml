@@ -25,6 +25,7 @@ data:
         ssh: gl.m1xxos.tech
       ingress:
         enabled: false
+        configureCertmanager: false
       gatewayApi:
         enabled: true
         installEnvoy: false
@@ -55,3 +56,6 @@ data:
       install: false
     postgresql:
       install: false
+    installCertmanager: false
+    nginx-ingress: &nginx-ingress
+      enabled: true
