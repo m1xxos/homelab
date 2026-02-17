@@ -1,0 +1,15 @@
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: gitlab-rails-db-app
+  namespace: gitlab
+spec:
+  refreshInterval: "1h0m0s"
+  secretStoreRef:
+    name: vault-general
+    kind: ClusterSecretStore
+  data:
+  - secretKey: password
+    remoteRef:
+      key: gitlab-rails-db-password
+      property: password
