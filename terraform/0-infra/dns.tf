@@ -53,7 +53,7 @@ resource "cloudflare_dns_record" "home-extra" {
 resource "cloudflare_dns_record" "gl" {
   zone_id = local.cloudflare_zone_id
   name    = "gl.m1xxos.tech"
-  content = "192.168.1.31"
+  content = "192.168.1.30"
   type    = "A"
   ttl     = 300
 }
