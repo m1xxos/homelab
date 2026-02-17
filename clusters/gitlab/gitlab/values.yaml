@@ -63,33 +63,6 @@ data:
           connection:
             secret: gitlab-object-storage
             key: config
-        artifacts:
-          enabled: true
-          bucket: gitlab-artifacts
-        lfs:
-          enabled: true
-          bucket: git-lfs
-        uploads:
-          enabled: true
-          bucket: gitlab-uploads
-        packages:
-          enabled: true
-          bucket: gitlab-packages
-        externalDiffs:
-          enabled: true
-          bucket: gitlab-mr-diffs
-        terraformState:
-          enabled: true
-          bucket: gitlab-terraform-state
-        ciSecureFiles:
-          enabled: true
-          bucket: gitlab-ci-secure-files
-        dependencyProxy:
-          enabled: true
-          bucket: gitlab-dependency-proxy
-        backups:
-          bucket: gitlab-backups
-          tmpBucket: tmp
       gitaly:
         persistence:
           size: 15Gi
