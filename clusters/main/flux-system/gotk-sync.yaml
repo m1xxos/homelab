@@ -8,7 +8,7 @@ metadata:
 spec:
   interval: 1m0s
   ref:
-    branch: 386-redis-operator
+    branch: 388-s3-operator
   secretRef:
     name: flux-system
   url: https://github.com/m1xxos/homelab.git
