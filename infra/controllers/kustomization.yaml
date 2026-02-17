@@ -10,5 +10,4 @@ resources:
 - longhorn/repository.yaml
 - prom-crds/release.yaml
 - prom-crds/repository.yaml
-- gateway-api/
 - traefik/
