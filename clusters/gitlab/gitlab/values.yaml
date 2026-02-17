@@ -34,14 +34,14 @@ data:
           namespace: "traefik"
       time_zone: "Europe/Moscow"
       redis:
-        serviceName: dragonfly-gl
+        host: dragonfly-gl.gitlab
         port: 6379
         auth:
           enabled: true
           secret: dragonfly-gl
           key: password
       psql:
-        host: gitlab-rails-db-global-rw
+        host: gitlab-rails-db-global-rw.gitlab
         password:
           secret: gitlab-rails-db-app
           key: password
@@ -58,4 +58,4 @@ data:
       install: false
     installCertmanager: false
     nginx-ingress: &nginx-ingress
-      enabled: true
+      enabled: false
