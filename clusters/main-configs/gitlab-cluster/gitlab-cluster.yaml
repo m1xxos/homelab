@@ -197,7 +197,7 @@ spec:
           sizeGb: 30
       format: qcow2
       full: true
-      memoryMiB: 4096
+      memoryMiB: 6144
       network:
         default:
           bridge: vmbr0

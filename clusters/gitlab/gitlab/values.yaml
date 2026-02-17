@@ -63,9 +63,9 @@ data:
           connection:
             secret: gitlab-object-storage
             key: config
-      gitaly:
-        persistence:
-          size: 15Gi
+    gitaly:
+      persistence:
+        size: 15Gi
     redis:
       install: false
     postgresql:
