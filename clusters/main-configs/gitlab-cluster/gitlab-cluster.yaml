@@ -161,7 +161,7 @@ metadata:
   namespace: gitlab-cluster
 spec:
   clusterName: proxmox-gitlab
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       cluster.x-k8s.io/cluster-name: proxmox-gitlab
