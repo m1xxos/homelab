@@ -1,7 +1,7 @@
 apiVersion: external-secrets.io/v1
 kind: ExternalSecret
 metadata:
-  name: gitlab-object-storage
+  name: gitlab-object-storage-s3cmd
   namespace: gitlab
 spec:
   refreshInterval: "1h0m0s"
@@ -9,17 +9,19 @@ spec:
     name: vault-general
     kind: ClusterSecretStore
   target:
-    name: gitlab-object-storage
+    name: gitlab-object-storage-s3cmd
     template:
       engineVersion: v2
       data:
         config: |
-          provider: AWS
-          aws_access_key_id: {{ .aws_access_key_id | quote }}
-          aws_secret_access_key: {{ .aws_secret_access_key | quote }}
-          endpoint: "http://seaweedfs-s3.seaweedfs.svc:8333"
-          path_style: true
-          region: {{ default "us-east-1" .bucket_region | quote }}
+          [default]
+          access_key = {{ .aws_access_key_id }}
+          secret_key = {{ .aws_secret_access_key }}
+          host_base = seaweedfs-s3.seaweedfs.svc:8333
+          host_bucket = seaweedfs-s3.seaweedfs.svc:8333/%(bucket)
+          bucket_location = {{ default "us-east-1" .bucket_region }}
+          use_https = False
+          signature_v2 = False
   data:
   - secretKey: aws_access_key_id
     remoteRef:
