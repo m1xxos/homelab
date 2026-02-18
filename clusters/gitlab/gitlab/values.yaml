@@ -105,9 +105,6 @@ data:
           connection:
             secret: gitlab-object-storage
             key: config
-      gitaly:
-        persistence:
-          size: 15Gi
       webservice:
         workerProcesses: 1
     redis:
@@ -115,6 +112,9 @@ data:
     postgresql:
       install: false
     gitlab:
+      gitaly:
+        persistence:
+          size: 15Gi
       toolbox:
         backups:
           objectStorage:
