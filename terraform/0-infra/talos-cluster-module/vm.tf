@@ -1,5 +1,5 @@
 locals {
-  cpu_type              = "x86-64-v2-AES"
+  cpu_type              = "host"
   operating_system_type = "l26"
   datastore_id          = "pve-nvme"
 }
