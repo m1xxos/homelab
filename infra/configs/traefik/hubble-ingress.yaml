@@ -10,7 +10,7 @@ spec:
     name: traefik-gateway
     namespace: traefik
   hostnames:
-  - "hubble.local.m1xxos.tech"
+  - "hubble.${DNS_NAME}"
   rules:
   - matches:
     - path:

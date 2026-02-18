@@ -10,7 +10,7 @@ spec:
     name: traefik-gateway
     namespace: traefik
   hostnames:
-  - "longhorn.local.m1xxos.tech"
+  - "longhorn.${DNS_NAME}"
   rules:
   - matches:
     - path:
