@@ -63,9 +63,11 @@ data:
           connection:
             secret: gitlab-object-storage
             key: config
-    gitaly:
-      persistence:
-        size: 15Gi
+      gitaly:
+        persistence:
+          size: 15Gi
+      webservice:
+        workerProcesses: 1
     redis:
       install: false
     postgresql:
@@ -80,3 +82,5 @@ data:
     installCertmanager: false
     nginx-ingress: &nginx-ingress
       enabled: false
+    prometheus:
+      install: false
