@@ -18,22 +18,6 @@ spec:
     s3:
       annotations:
         service.cilium.io/global: "true"
-    master:
-      data:
-        type: "persistentVolumeClaim"
-        size: "1Gi"
-      logs:
-        type: "emptyDir"
-    filer:
-      s3:
-        enabled: true
-        enableAuth: true
-        existingConfigSecret: seaweedfs-s3-config
-      data:
-        type: "persistentVolumeClaim"
-        size: "1Gi"
-      logs:
-        type: "emptyDir"
       createBuckets:
       - name: git-lfs
         anonymousRead: false
@@ -61,7 +45,22 @@ spec:
         anonymousRead: false
       - name: tmp
         anonymousRead: false
-
+    master:
+      data:
+        type: "persistentVolumeClaim"
+        size: "1Gi"
+      logs:
+        type: "emptyDir"
+    filer:
+      s3:
+        enabled: true
+        enableAuth: true
+        existingConfigSecret: seaweedfs-s3-config
+      data:
+        type: "persistentVolumeClaim"
+        size: "1Gi"
+      logs:
+        type: "emptyDir"
     volume:
       replicas: 2
       dataDirs:
