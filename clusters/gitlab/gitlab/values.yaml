@@ -105,8 +105,6 @@ data:
           connection:
             secret: gitlab-object-storage
             key: config
-      webservice:
-        workerProcesses: 1
     redis:
       install: false
     postgresql:
@@ -121,6 +119,8 @@ data:
             config:
               secret: gitlab-object-storage
               key: s3cmd
+      webservice:
+        workerProcesses: 1
     installCertmanager: false
     nginx-ingress: &nginx-ingress
       enabled: false
