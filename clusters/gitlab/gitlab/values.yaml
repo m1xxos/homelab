@@ -29,9 +29,51 @@ data:
       gatewayApi:
         enabled: true
         installEnvoy: false
-        gatewayRef:
-          name: "traefik-gateway"
-          namespace: "traefik"
+        class:
+          controllerName: traefik.io/gateway-controller
+          name: traefik
+        # gatewayRef:
+        #   name: "traefik-gateway"
+        #   namespace: "traefik"
+        # 18.9 feature(
+        listeners:
+          gitlab-web:
+            tls:
+              mode: Terminate
+              certificateRefs:
+                - name: gitlab-tls
+          gitlab-ssh:
+            protocol: "TCP"
+          registry-web:
+            tls:
+              mode: Terminate
+              certificateRefs:
+                - name: local-m1xxos-tech
+                  namespace: traefik
+          pages-web:
+            tls:
+              mode: Terminate
+              certificateRefs:
+                - name: local-m1xxos-tech
+                  namespace: traefik
+          kas-web:
+            tls:
+              mode: Terminate
+              certificateRefs:
+                - name: local-m1xxos-tech
+                  namespace: traefik
+          kas-workspaces-web:
+            tls:
+              mode: Terminate
+              certificateRefs:
+                - name: local-m1xxos-tech
+                  namespace: traefik
+          kas-registry-web:
+            tls:
+              mode: Terminate
+              certificateRefs:
+                - name: local-m1xxos-tech
+                  namespace: traefik
       time_zone: "Europe/Moscow"
       redis:
         host: dragonfly-gl.gitlab
