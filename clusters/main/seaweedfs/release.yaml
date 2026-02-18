@@ -34,6 +34,34 @@ spec:
         size: "1Gi"
       logs:
         type: "emptyDir"
+      createBuckets:
+      - name: git-lfs
+        anonymousRead: false
+      - name: gitlab-artifacts
+        anonymousRead: false
+      - name: gitlab-backups
+        anonymousRead: false
+      - name: gitlab-ci-secure-files
+        anonymousRead: false
+      - name: gitlab-dependency-proxy
+        anonymousRead: false
+      - name: gitlab-mr-diffs
+        anonymousRead: false
+      - name: gitlab-packages
+        anonymousRead: false
+      - name: gitlab-pages
+        anonymousRead: false
+      - name: gitlab-terraform-state
+        anonymousRead: false
+      - name: gitlab-uploads
+        anonymousRead: false
+      - name: registry
+        anonymousRead: false
+      - name: runner-cache
+        anonymousRead: false
+      - name: tmp
+        anonymousRead: false
+
     volume:
       replicas: 2
       dataDirs:
