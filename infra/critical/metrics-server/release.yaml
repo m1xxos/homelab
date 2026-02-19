@@ -12,5 +12,4 @@ spec:
       sourceRef:
         kind: HelmRepository
         name: metrics-server
-        namespace: gitlab-cluster
   targetNamespace: kube-system

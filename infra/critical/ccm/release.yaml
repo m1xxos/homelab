@@ -12,7 +12,6 @@ spec:
       sourceRef:
         kind: GitRepository
         name: talos-ccm
-        namespace: gitlab-cluster
   targetNamespace: kube-system
   values:
     enabledControllers:
