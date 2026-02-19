@@ -29,13 +29,9 @@ data:
       gatewayApi:
         enabled: true
         installEnvoy: false
-        class:
-          controllerName: traefik.io/gateway-controller
-          name: traefik
-        # gatewayRef:
-        #   name: "traefik-gateway"
-        #   namespace: "traefik"
-        # 18.9 feature(
+        gatewayRef:
+          name: "traefik-gateway"
+          namespace: "traefik"
         listeners:
           gitlab-web:
             tls:
