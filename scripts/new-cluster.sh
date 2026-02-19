@@ -515,6 +515,48 @@ spec:
 YAML
 info "cilium/external-secret-kvstoremesh.yaml"
 
+cat > "${CC_DIR}/cilium/ipPool.yaml" << YAML
+apiVersion: cilium.io/v2
+kind: CiliumLoadBalancerIPPool
+metadata:
+  name: default-ippool
+spec:
+  blocks:
+  - start: ${EXTERNAL_IP}
+    stop: ${EXTERNAL_IP}
+---
+apiVersion: "cilium.io/v2"
+kind: CiliumLoadBalancerIPPool
+metadata:
+  name: "clustermesh-pool"
+spec:
+  blocks:
+  - start: ${CLUSTERMESH_IP}
+    stop: ${CLUSTERMESH_IP}
+  serviceSelector:
+    matchLabels:
+      app.kubernetes.io/name: "clustermesh-apiserver"
+YAML
+info "cilium/ipPool.yaml"
+
+cat > "${CC_DIR}/cilium/L2Announcement.yaml" << 'YAML'
+# yaml-language-server: $schema=https://datreeio.github.io/CRDs-catalog/cilium.io/ciliuml2announcementpolicy_v2alpha1.json
+apiVersion: "cilium.io/v2alpha1"
+kind: CiliumL2AnnouncementPolicy
+metadata:
+  name: default
+spec:
+  nodeSelector:
+    matchExpressions:
+    - key: node-role.kubernetes.io/control-plane
+      operator: DoesNotExist
+  interfaces:
+  - ^eth[0-9]+
+  externalIPs: true
+  loadBalancerIPs: true
+YAML
+info "cilium/L2Announcement.yaml"
+
 cat > "${CC_DIR}/unified-configs/kustomization.yaml" << YAML
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
