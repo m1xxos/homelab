@@ -24,6 +24,10 @@ tasks:
     - flux reconcile kustomization gitlab-cluster-critical -n gitlab-cluster
     - flux reconcile kustomization gitlab-cluster-infra -n gitlab-cluster
     - flux reconcile kustomization gitlab-cluster-configs -n gitlab-cluster
+  new-cluster:
+    desc: "Scaffold a new CAPI-managed Talos cluster in the repo"
+    cmds:
+    - ./scripts/new-cluster.sh
   tfplan:
     cmds:
     - terraform -chdir=terraform/0-infra/ plan
