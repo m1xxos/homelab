@@ -12,6 +12,8 @@ spec:
       sourceRef:
         kind: HelmRepository
         name: cilium
+  install:
+    disableWait: true
   targetNamespace: kube-system
   valuesFrom:
   - kind: ConfigMap
