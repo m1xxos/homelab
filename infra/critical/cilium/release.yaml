@@ -14,6 +14,8 @@ spec:
         name: cilium
   install:
     disableWait: true
+  upgrade:
+    disableWait: true
   targetNamespace: kube-system
   valuesFrom:
   - kind: ConfigMap
