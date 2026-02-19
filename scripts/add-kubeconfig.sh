@@ -17,8 +17,7 @@ if [[ -z "$CLUSTER" ]]; then
   exit 1
 fi
 
-REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-KUBECONFIG_FILE="${REPO_ROOT}/terraform/0-infra/kubeconfig"
+KUBECONFIG_FILE="${HOME}/.kube/config"
 
 CAPI_CLUSTER="proxmox-${CLUSTER}"
 NS="${CLUSTER}-cluster"
