@@ -6,6 +6,7 @@ resources:
 - external-secrets-ns.yaml
 - flux.yaml
 - lh-ns.yaml
+- monitoring-ns.yaml
 - role.yaml
 - traefik-ns.yaml
 - vault-rid.yaml
