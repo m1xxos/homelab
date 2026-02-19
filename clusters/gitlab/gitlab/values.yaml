@@ -32,6 +32,7 @@ data:
         gatewayRef:
           name: "traefik-gateway"
           namespace: "traefik"
+          sectionName: "websecure"
         listeners:
           gitlab-web:
             tls:
