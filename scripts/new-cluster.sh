@@ -5,7 +5,7 @@
 set -euo pipefail
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-KUBECONFIG_FILE="${REPO_ROOT}/terraform/0-infra/kubeconfig"
+
 TASKFILE="${REPO_ROOT}/Taskfile.yml"
 MAIN_KVSTOREMESH="${REPO_ROOT}/clusters/main-configs/cilium/external-secret-kvstoremesh.yaml"
 
@@ -570,72 +570,7 @@ PYEOF
 fi
 
 #######################################
-# 6. Update kubeconfig (OIDC entry)
-#######################################
-header "Updating kubeconfig (OIDC, no client cert)"
-
-if grep -q "name: ${CAPI_CLUSTER}$" "${KUBECONFIG_FILE}" 2>/dev/null; then
-  warn "Cluster ${CAPI_CLUSTER} already in kubeconfig, skipping."
-else
-  python3 - << PYEOF
-import yaml, sys
-
-path = "${KUBECONFIG_FILE}"
-with open(path, "r") as f:
-    kc = yaml.safe_load(f)
-
-# --- cluster entry ---
-new_cluster = {
-    "cluster": {
-        "certificate-authority-data": "# REPLACE_WITH_BASE64_CA_AFTER_BOOTSTRAP",
-        "server": "https://${CP_VIP}:6443",
-    },
-    "name": "${CAPI_CLUSTER}",
-}
-
-# --- user entry (oidc via kubectl-oidc-login) ---
-new_user = {
-    "name": "${CAPI_CLUSTER}-oidc",
-    "user": {
-        "exec": {
-            "apiVersion": "client.authentication.k8s.io/v1beta1",
-            "command": "kubectl",
-            "args": [
-                "oidc-login",
-                "get-token",
-                "--oidc-issuer-url=https://authentik.local.m1xxos.tech/application/o/k8s/",
-                "--oidc-client-id=k8s",
-                "--oidc-extra-scope=profile",
-                "--oidc-extra-scope=email",
-                "--oidc-extra-scope=groups",
-            ],
-        }
-    },
-}
-
-# --- context entry ---
-new_context = {
-    "context": {
-        "cluster": "${CAPI_CLUSTER}",
-        "user": "${CAPI_CLUSTER}-oidc",
-    },
-    "name": "${CAPI_CLUSTER}-oidc@${CAPI_CLUSTER}",
-}
-
-kc.setdefault("clusters", []).append(new_cluster)
-kc.setdefault("users", []).append(new_user)
-kc.setdefault("contexts", []).append(new_context)
-
-with open(path, "w") as f:
-    yaml.dump(kc, f, default_flow_style=False, allow_unicode=True, sort_keys=False)
-print("  updated")
-PYEOF
-  info "Added ${CAPI_CLUSTER} context to kubeconfig (OIDC)"
-  warn "Remember to replace 'certificate-authority-data' in kubeconfig after cluster bootstrap!"
-fi
-
-#######################################
-# 7. Add task to Taskfile.yml
+# 6. Add task to Taskfile.yml
 #######################################
 header "Updating Taskfile.yml"
 
@@ -684,10 +619,10 @@ echo "  clusters/${CLUSTER_NAME}-tenant/"
 echo "    └── unified/kustomization.yaml"
 echo ""
 echo "  Updated: ${MAIN_KVSTOREMESH}"
-echo "  Updated: ${KUBECONFIG_FILE}"
 echo "  Updated: ${TASKFILE}"
 echo ""
 warn "Next steps:"
 echo "  1. Add Vault secrets:  clustermesh/${CLUSTER_NAME}  (etcd client certs for new cluster)"
-echo "  2. After cluster bootstrap, replace certificate-authority-data in kubeconfig"
-echo "  3. Commit & push — Flux will pick up the new Kustomizations automatically"
+echo "  2. Commit & push — Flux will create the cluster"
+echo "  3. Once cluster is up, run:  task add-kubeconfig CLUSTER=${CLUSTER_NAME}"
+echo "  4. Propagate SOPS key:       task add-sops NAMESPACE=${NS}"

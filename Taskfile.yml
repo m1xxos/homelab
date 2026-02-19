@@ -28,6 +28,17 @@ tasks:
     desc: "Scaffold a new CAPI-managed Talos cluster in the repo"
     cmds:
     - ./scripts/new-cluster.sh
+
+  add-kubeconfig:
+    desc: "Fetch CA from CAPI secret and add OIDC context to kubeconfig. Usage: task add-kubeconfig CLUSTER=<name>"
+    cmds:
+    - ./scripts/add-kubeconfig.sh {{.CLUSTER}}
+
+  add-sops:
+    desc: "Copy sops-gpg secret from flux-system to a target namespace. Usage: task add-sops NAMESPACE=<ns>"
+    cmds:
+    - ./scripts/add-sops.sh {{.NAMESPACE}}
+
   tfplan:
     cmds:
     - terraform -chdir=terraform/0-infra/ plan
@@ -40,4 +51,3 @@ tasks:
     - flux reconcile kustomization app-cluster-critical -n app-cluster
     - flux reconcile kustomization app-cluster-infra -n app-cluster
     - flux reconcile kustomization app-cluster-configs -n app-cluster
-
