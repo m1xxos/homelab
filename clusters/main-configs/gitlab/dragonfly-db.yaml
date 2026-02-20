@@ -21,6 +21,3 @@ spec:
     limits:
       cpu: 600m
       memory: 550Mi
-  serviceSpec:
-    annotations:
-      service.cilium.io/global: "true"

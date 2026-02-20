@@ -6,17 +6,6 @@ metadata:
 spec:
   instances: 1
   imageName: ghcr.io/cloudnative-pg/postgresql:17
-  managed:
-    services:
-      additional:
-      - selectorType: rw
-        serviceTemplate:
-          metadata:
-            name: gitlab-rails-db-global-rw
-            annotations:
-              service.cilium.io/global: "true"
-          spec:
-            type: ClusterIP
   storage:
     size: 3Gi
   bootstrap:

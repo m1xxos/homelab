@@ -38,49 +38,44 @@ data:
             tls:
               mode: Terminate
               certificateRefs:
-                - name: gitlab-tls
+                - name: local-m1xxos-tech
           gitlab-ssh:
             protocol: "TCP"
           registry-web:
             tls:
               mode: Terminate
               certificateRefs:
-                - name: local-m1xxos-tech
-                  namespace: traefik
+                - name: gl-m1xxos-tech
           pages-web:
             tls:
               mode: Terminate
               certificateRefs:
-                - name: local-m1xxos-tech
-                  namespace: traefik
+                - name: gl-m1xxos-tech
           kas-web:
             tls:
               mode: Terminate
               certificateRefs:
-                - name: local-m1xxos-tech
-                  namespace: traefik
+                - name: gl-m1xxos-tech
           kas-workspaces-web:
             tls:
               mode: Terminate
               certificateRefs:
-                - name: local-m1xxos-tech
-                  namespace: traefik
+                - name: gl-m1xxos-tech
           kas-registry-web:
             tls:
               mode: Terminate
               certificateRefs:
-                - name: local-m1xxos-tech
-                  namespace: traefik
+                - name: gl-m1xxos-tech
       time_zone: "Europe/Moscow"
       redis:
-        host: dragonfly-gl.gitlab
+        host: dragonfly-gl
         port: 6379
         auth:
           enabled: true
           secret: dragonfly-gl
           key: password
       psql:
-        host: gitlab-rails-db-global-rw.gitlab
+        host: gitlab-rails-db-rw
         password:
           secret: gitlab-rails-db-app
           key: password
@@ -109,7 +104,7 @@ data:
     gitlab:
       gitaly:
         persistence:
-          size: 15Gi
+          size: 10Gi
       toolbox:
         backups:
           objectStorage:
