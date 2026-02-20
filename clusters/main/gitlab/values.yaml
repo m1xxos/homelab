@@ -27,6 +27,7 @@ data:
         enabled: true
         configureCertmanager: false
         provider: traefik
+        class: traefik-traefik
         tls:
           enabled: true
           secretName: gl-m1xxos-tech
