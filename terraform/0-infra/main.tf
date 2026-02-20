@@ -25,7 +25,7 @@ module "main-cluster" {
     }
   ]
   worker_cpu_cores     = 6
-  worker_memory        = 6144
+  worker_memory        = 7168
   cp_memory            = 6144
   external_ip          = "192.168.1.80"
   cp_vip_address       = "192.168.1.75"
