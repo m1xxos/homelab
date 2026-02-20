@@ -24,8 +24,12 @@ data:
           https: true
         ssh: gl.m1xxos.tech
       ingress:
-        enabled: false
+        enabled: true
         configureCertmanager: false
+        provider: traefik
+        tls:
+          enabled: true
+          secretName: gl-m1xxos-tech
       gatewayApi:
         enabled: true
         installEnvoy: false
