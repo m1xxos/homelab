@@ -2,7 +2,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: gitlab-values
-  namespace: gitlab-cluster
+  namespace: gitlab
   labels:
     reconcile.fluxcd.io/watch: Enabled
 data:
