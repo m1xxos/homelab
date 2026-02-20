@@ -76,6 +76,9 @@ data:
             config:
               secret: gitlab-object-storage
               key: s3cmd
+      sidekiq:
+        minReplicas: 1
+        maxReplicas: 1
       webservice:
         workerProcesses: 1
     installCertmanager: false
