@@ -30,46 +30,6 @@ data:
         tls:
           enabled: true
           secretName: gl-m1xxos-tech
-      gatewayApi:
-        enabled: true
-        installEnvoy: false
-        gatewayRef:
-          name: "traefik-gateway"
-          namespace: "traefik"
-          sectionName: "websecure"
-        listeners:
-          gitlab-web:
-            tls:
-              mode: Terminate
-              certificateRefs:
-                - name: local-m1xxos-tech
-          gitlab-ssh:
-            protocol: "TCP"
-          registry-web:
-            tls:
-              mode: Terminate
-              certificateRefs:
-                - name: gl-m1xxos-tech
-          pages-web:
-            tls:
-              mode: Terminate
-              certificateRefs:
-                - name: gl-m1xxos-tech
-          kas-web:
-            tls:
-              mode: Terminate
-              certificateRefs:
-                - name: gl-m1xxos-tech
-          kas-workspaces-web:
-            tls:
-              mode: Terminate
-              certificateRefs:
-                - name: gl-m1xxos-tech
-          kas-registry-web:
-            tls:
-              mode: Terminate
-              certificateRefs:
-                - name: gl-m1xxos-tech
       time_zone: "Europe/Moscow"
       redis:
         host: dragonfly-gl
