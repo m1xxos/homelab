@@ -79,8 +79,14 @@ data:
       sidekiq:
         minReplicas: 1
         maxReplicas: 1
+        concurrency: 15
       webservice:
         workerProcesses: 1
+        minReplicas: 1
+        maxReplicas: 1
+        resources:
+          requests:
+            memory: 1.25G
     installCertmanager: false
     nginx-ingress: &nginx-ingress
       enabled: false
