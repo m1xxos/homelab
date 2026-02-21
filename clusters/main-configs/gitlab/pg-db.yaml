@@ -1,20 +1,20 @@
-# apiVersion: postgresql.cnpg.io/v1
-# kind: Cluster
-# metadata:
-#   name: gitlab-rails-db
-#   namespace: gitlab
-# spec:
-#   instances: 1
-#   imageName: ghcr.io/cloudnative-pg/postgresql:17
-#   storage:
-#     size: 3Gi
-#   bootstrap:
-#     initdb:
-#       database: gitlabhq_production
-#       owner: gitlab
-#       postInitSQL:
-#       - CREATE EXTENSION IF NOT EXISTS pg_trgm;
-#       - CREATE EXTENSION IF NOT EXISTS btree_gist;
-#       - CREATE EXTENSION IF NOT EXISTS plpgsql;
-#       - CREATE EXTENSION IF NOT EXISTS amcheck;
-#       - CREATE EXTENSION IF NOT EXISTS pg_stat_statements;
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: gitlab-rails-db
+  namespace: gitlab
+spec:
+  instances: 1
+  imageName: ghcr.io/cloudnative-pg/postgresql:17
+  storage:
+    size: 3Gi
+  bootstrap:
+    initdb:
+      database: gitlabhq_production
+      owner: gitlab
+      postInitSQL:
+      - CREATE EXTENSION IF NOT EXISTS pg_trgm;
+      - CREATE EXTENSION IF NOT EXISTS btree_gist;
+      - CREATE EXTENSION IF NOT EXISTS plpgsql;
+      - CREATE EXTENSION IF NOT EXISTS amcheck;
+      - CREATE EXTENSION IF NOT EXISTS pg_stat_statements;
