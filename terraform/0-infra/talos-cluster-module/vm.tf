@@ -41,6 +41,7 @@ resource "proxmox_virtual_environment_vm" "talos_cp" {
     file_format  = "raw"
     interface    = "virtio0"
     size         = var.cp_disk_size
+    iothread     = true
   }
 
   operating_system {
@@ -99,6 +100,7 @@ resource "proxmox_virtual_environment_vm" "talos_worker" {
     file_format  = "raw"
     interface    = "virtio0"
     size         = var.worker_disk_size
+    iothread     = true
   }
 
   operating_system {

@@ -8,8 +8,8 @@ resource "helm_release" "cilium_cni" {
 
   values = [
     templatefile("${path.module}/cilium-values.yaml", {
-      cluster_name        = var.cluster_name
-      cluster_id          = var.cluster_id
+      cluster_name         = var.cluster_name
+      cluster_id           = var.cluster_id
       clustermesh_endpoint = var.clustermesh_endpoint
     })
   ]
