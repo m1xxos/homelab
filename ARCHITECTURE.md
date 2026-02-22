@@ -104,7 +104,7 @@ clusters/
     namespaces/         — gitlab namespace
     global-svc/         — Cilium global service stubs (gitlab-rails-db-global-rw)
   gitlab/               — GitLab cluster controllers
-    gitlab/             — GitLab HelmRelease v9.8.4 (CE) + values ConfigMap
+    gitlab/             — GitLab HelmRelease v9.9.0 (CE) + values ConfigMap
     monitoring/         — VMAgent (remote write to main via Cilium global svc)
     unified-controllers/ — References ../../infra/controllers
   gitlab-configs/       — GitLab cluster configs
@@ -147,7 +147,7 @@ gitlab-flux.yaml (gitlab-cluster namespace, kubeConfig: proxmox-gitlab-kubeconfi
 
 ## GitLab Deployment
 
-### GitLab Helm Chart v9.8.4
+### GitLab Helm Chart v9.9.0
 | Property | Value |
 |----------|-------|
 | Edition | CE (Community Edition) |

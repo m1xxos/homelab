@@ -67,7 +67,7 @@ if not any(u["name"] == "oidc" for u in kc["users"]):
         "name": "oidc",
         "user": {
             "exec": {
-                "apiVersion": "client.authentication.k8s.io/v1beta1",
+                "apiVersion": "client.authentication.k8s.io/v1",
                 "command": "kubectl",
                 "args": [
                     "oidc-login", "get-token",
