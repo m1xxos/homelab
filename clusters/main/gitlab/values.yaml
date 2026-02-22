@@ -1,0 +1,94 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: gitlab-values
+  namespace: gitlab
+  labels:
+    reconcile.fluxcd.io/watch: Enabled
+data:
+  values.yaml: |
+    global:
+      edition: ce
+      hosts:
+        domain: gl.m1xxos.tech
+        gitlab:
+          name: gl.m1xxos.tech
+          https: true
+        registry:
+          name: registry.gl.m1xxos.tech
+          https: true
+        kas:
+          name: kas.gl.m1xxos.tech
+        pages:
+          name: pages.gl.m1xxos.tech
+          https: true
+        ssh: gl.m1xxos.tech
+      ingress:
+        enabled: true
+        configureCertmanager: false
+        provider: traefik
+        class: traefik-traefik
+        tls:
+          enabled: true
+          secretName: gl-m1xxos-tech
+      time_zone: "Europe/Moscow"
+      redis:
+        host: dragonfly-gl
+        port: 6379
+        auth:
+          enabled: true
+          secret: dragonfly-gl
+          key: password
+      psql:
+        host: gitlab-rails-db-rw
+        password:
+          secret: gitlab-rails-db-app
+          key: password
+      minio:
+        enabled: false
+      registry:
+        bucket: registry
+      pages:
+        enabled: true
+        objectStore:
+          enabled: true
+          bucket: gitlab-pages
+          connection:
+            secret: gitlab-object-storage
+            key: config
+      appConfig:
+        object_store:
+          enabled: true
+          connection:
+            secret: gitlab-object-storage
+            key: config
+    redis:
+      install: false
+    postgresql:
+      install: false
+    gitlab:
+      gitaly:
+        persistence:
+          size: 10Gi
+      toolbox:
+        backups:
+          objectStorage:
+            config:
+              secret: gitlab-object-storage
+              key: s3cmd
+      sidekiq:
+        minReplicas: 1
+        maxReplicas: 1
+        concurrency: 15
+      webservice:
+        workerProcesses: 1
+        minReplicas: 1
+        maxReplicas: 1
+        resources:
+          requests:
+            memory: 1.25G
+    installCertmanager: false
+    nginx-ingress: &nginx-ingress
+      enabled: false
+    prometheus:
+      install: false

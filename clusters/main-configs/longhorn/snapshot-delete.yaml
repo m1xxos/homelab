@@ -1,0 +1,25 @@
+apiVersion: longhorn.io/v1beta2
+kind: RecurringJob
+metadata:
+  name: snapshot-delete
+  namespace: longhorn-system
+spec:
+  cron: "30 */3 * * *"
+  task: "snapshot-delete"
+  groups:
+  - default
+  retain: 1
+  concurrency: 2
+---
+apiVersion: longhorn.io/v1beta2
+kind: RecurringJob
+metadata:
+  name: snapshot-cleanup
+  namespace: longhorn-system
+spec:
+  cron: "15 */3 * * *"
+  task: "snapshot-cleanup"
+  groups:
+  - default
+  retain: 0
+  concurrency: 2

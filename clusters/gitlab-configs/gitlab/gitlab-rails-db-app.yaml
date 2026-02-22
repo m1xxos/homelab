@@ -1,8 +1,8 @@
 apiVersion: external-secrets.io/v1
 kind: ExternalSecret
 metadata:
-  name: dragonfly-gl
-  namespace: gitlab-cluster
+  name: gitlab-rails-db-app
+  namespace: gitlab
 spec:
   refreshInterval: "1h0m0s"
   secretStoreRef:
@@ -11,5 +11,5 @@ spec:
   data:
   - secretKey: password
     remoteRef:
-      key: dragonfly-gl-password
+      key: gitlab-rails-db-password
       property: password

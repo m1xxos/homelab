@@ -2,9 +2,10 @@ providers:
   kubernetesCRD:
     allowExternalNameServices: true
   kubernetesIngress:
-    enabled: false
+    enabled: true
   kubernetesGateway:
     enabled: true
+    experimentalChannel: true
 
 gateway:
   listeners:

@@ -29,7 +29,7 @@ terraform {
 
 locals {
   kube_config = yamldecode(talos_cluster_kubeconfig.kubeconfig.kubeconfig_raw)
-  kube_host = "https://${var.cp_vip_address}:6443"
+  kube_host   = "https://${var.cp_vip_address}:6443"
 }
 
 provider "helm" {

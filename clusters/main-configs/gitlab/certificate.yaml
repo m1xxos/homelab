@@ -1,0 +1,14 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: gl-m1xxos-tech
+  namespace: gitlab
+spec:
+  secretName: gl-m1xxos-tech
+  dnsNames:
+  - "gl.m1xxos.tech"
+  - "*.gl.m1xxos.tech"
+  - "*.pages.gl.m1xxos.tech"
+  issuerRef:
+    name: acme-issuer
+    kind: ClusterIssuer
