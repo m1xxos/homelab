@@ -9,12 +9,13 @@ resource "proxmox_virtual_environment_vm" "talos_cp" {
     for cp in var.talos_cps :
     cp.name => cp
   }
-  name        = each.value.name
-  description = "Managed by Terraform, talos"
-  tags        = ["talos", var.cluster_name]
-  node_name   = var.node_name
-  vm_id       = each.value.vm_id
-  on_boot     = true
+  name          = each.value.name
+  description   = "Managed by Terraform, talos"
+  tags          = ["talos", var.cluster_name]
+  node_name     = var.node_name
+  vm_id         = each.value.vm_id
+  on_boot       = true
+  scsi_hardware = "virtio-scsi-single"
 
 
   cpu {
@@ -24,7 +25,6 @@ resource "proxmox_virtual_environment_vm" "talos_cp" {
 
   memory {
     dedicated = var.cp_memory
-    floating  = var.cp_memory
   }
 
   agent {
@@ -42,6 +42,8 @@ resource "proxmox_virtual_environment_vm" "talos_cp" {
     interface    = "virtio0"
     size         = var.cp_disk_size
     iothread     = true
+    discard      = true
+    cache        = "writeback"
   }
 
   operating_system {
@@ -67,13 +69,14 @@ resource "proxmox_virtual_environment_vm" "talos_worker" {
     for worker in var.talos_workers :
     worker.name => worker
   }
-  depends_on  = [proxmox_virtual_environment_vm.talos_cp]
-  name        = each.value.name
-  description = "Managed by Terraform"
-  tags        = ["talos", var.cluster_name]
-  node_name   = var.node_name
-  vm_id       = each.value.vm_id
-  on_boot     = true
+  depends_on    = [proxmox_virtual_environment_vm.talos_cp]
+  name          = each.value.name
+  description   = "Managed by Terraform"
+  tags          = ["talos", var.cluster_name]
+  node_name     = var.node_name
+  vm_id         = each.value.vm_id
+  on_boot       = true
+  scsi_hardware = "virtio-scsi-single"
 
 
   cpu {
@@ -83,7 +86,6 @@ resource "proxmox_virtual_environment_vm" "talos_worker" {
 
   memory {
     dedicated = var.worker_memory
-    floating  = var.worker_memory
   }
 
   agent {
@@ -101,6 +103,8 @@ resource "proxmox_virtual_environment_vm" "talos_worker" {
     interface    = "virtio0"
     size         = var.worker_disk_size
     iothread     = true
+    discard      = true
+    cache        = "writeback"
   }
 
   operating_system {
