@@ -42,7 +42,7 @@ resource "proxmox_virtual_environment_vm" "talos_cp" {
     interface    = "virtio0"
     size         = var.cp_disk_size
     iothread     = true
-    discard      = true
+    discard      = "on"
     cache        = "writeback"
   }
 
@@ -103,7 +103,7 @@ resource "proxmox_virtual_environment_vm" "talos_worker" {
     interface    = "virtio0"
     size         = var.worker_disk_size
     iothread     = true
-    discard      = true
+    discard      = "on"
     cache        = "writeback"
   }
 
