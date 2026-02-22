@@ -8,6 +8,7 @@ spec:
   dnsNames:
   - "gl.m1xxos.tech"
   - "*.gl.m1xxos.tech"
+  - "*.pages.gl.m1xxos.tech"
   issuerRef:
     name: acme-issuer
     kind: ClusterIssuer
