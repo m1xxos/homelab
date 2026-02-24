@@ -217,7 +217,7 @@ Terraform random_string (20 char access key) + random_password (40 char secret k
 ### Authentik OIDC SSO
 | Property | Value |
 |----------|-------|
-| Provider | Authentik at `https://authentik.m1xxos.tech/application/o/gitlab` |
+| Provider | Authentik at `https://authentik.local.m1xxos.tech/application/o/gitlab/` |
 | Client ID/Secret | Terraform `authentik_provider_oauth2.gitlab` → Vault `main/gitlab/gitlab-auth` |
 | K8s secret | `gitlab-authentik-oidc` (namespace `gitlab`, key: `provider`) |
 | ESO source | `clusters/main-configs/gitlab/gitlab-authentik-oidc.yaml` |

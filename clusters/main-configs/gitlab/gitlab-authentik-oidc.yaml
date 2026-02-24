@@ -20,7 +20,7 @@ spec:
             name: 'openid_connect'
             scope: ['openid', 'profile', 'email']
             response_type: 'code'
-            issuer: 'https://authentik.local.m1xxos.tech/application/o/gitlab'
+            issuer: 'https://authentik.local.m1xxos.tech/application/o/gitlab/'
             discovery: true
             client_auth_method: 'query'
             uid_field: 'preferred_username'
