@@ -27,12 +27,14 @@ spec:
             send_scope_to_token_endpoint: 'true'
             pkce: true
             groups_attribute: 'groups'
-            admin_groups:
-              - 'gitlab-admins'
             client_options:
               identifier: '{{ .oidc_client_id }}'
               secret: '{{ .oidc_client_secret }}'
               redirect_uri: 'https://gl.m1xxos.tech/users/auth/openid_connect/callback'
+              gitlab: {
+                groups_attribute: "groups",
+                admin_groups: ["gitlab-admins"]
+              }
   data:
   - secretKey: oidc_client_id
     remoteRef:
