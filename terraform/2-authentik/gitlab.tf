@@ -11,7 +11,9 @@ resource "authentik_provider_oauth2" "gitlab" {
   sub_mode           = "user_email"
   signing_key        = data.authentik_certificate_key_pair.vault.id
   property_mappings = [
-    data.authentik_property_mapping_provider_scope.profile.id
+    data.authentik_property_mapping_provider_scope.openid.id,
+    data.authentik_property_mapping_provider_scope.profile.id,
+    data.authentik_property_mapping_provider_scope.email.id,
   ]
   allowed_redirect_uris = [{
     matching_mode = "strict",
