@@ -92,3 +92,17 @@ data:
       enabled: false
     prometheus:
       install: false
+    omniauth:
+      enabled: true
+      autoSignInWithProvider: 'openid_connect'
+      syncProfileFromProvider: [ 'openid_connect' ]
+      syncProfileAttributes: ['email']
+      allowSingleSignOn: ['openid_connect']
+      blockAutoCreatedUsers: false
+      autoLinkLdapUser: false
+      autoLinkSamlUser: false
+      autoLinkUser: ['openid_connect']
+      allowBypassTwoFactor: ['openid_connect']
+      providers:
+        - secret: gitlab-authentik-oidc
+          key: provider

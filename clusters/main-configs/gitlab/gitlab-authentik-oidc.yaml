@@ -1,0 +1,41 @@
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: gitlab-authentik-oidc
+  namespace: gitlab
+spec:
+  refreshInterval: "1h0m0s"
+  secretStoreRef:
+    name: gitlab-store
+    kind: SecretStore
+  target:
+    name: gitlab-authentik-oidc
+    template:
+      engineVersion: v2
+      data:
+        provider: |
+          name: 'openid_connect'
+          label: 'm1xxo OIDC Login'
+          args:
+            name: 'openid_connect'
+            scope: ['openid', 'profile', 'email']
+            response_type: 'code'
+            issuer: 'https://authentik.m1xxos.tech/application/o/gitlab'
+            discovery: true
+            client_auth_method: 'query'
+            uid_field: 'preferred_username'
+            send_scope_to_token_endpoint: 'true'
+            pkce: true
+            client_options:
+              identifier: '{{ .oidc_client_id }}'
+              secret: '{{ .oidc_client_secret }}'
+              redirect_uri: 'https://gl.m1xxos.tech/users/auth/openid_connect/callback'
+  data:
+  - secretKey: oidc_client_id
+    remoteRef:
+      key: gitlab/gitlab-auth
+      property: oidc_client_id
+  - secretKey: oidc_client_secret
+    remoteRef:
+      key: gitlab/gitlab-auth
+      property: oidc_client_secret

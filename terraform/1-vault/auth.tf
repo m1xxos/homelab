@@ -16,6 +16,15 @@ resource "vault_kubernetes_auth_backend_role" "authentik-reader" {
   token_ttl                        = 3600
 }
 
+resource "vault_kubernetes_auth_backend_role" "gitlab-reader" {
+  backend                          = vault_auth_backend.kubernetes.path
+  role_name                        = "gitlab-reader"
+  bound_service_account_names      = ["gitlab-reader"]
+  bound_service_account_namespaces = ["gitlab"]
+  token_policies                   = [vault_policy.gitlab-reader.name]
+  token_ttl                        = 3600
+}
+
 resource "vault_jwt_auth_backend" "oidc" {
   description        = "Authentik OIDC"
   path               = "oidc"

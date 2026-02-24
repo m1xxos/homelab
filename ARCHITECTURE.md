@@ -246,6 +246,26 @@ Terraform random_string (20 char access key) + random_password (40 char secret k
   → ExternalSecret seaweedfs-s3-config (seaweedfs ns): produces IAM JSON for SeaweedFS
 ```
 
+### Authentik OIDC SSO
+| Property | Value |
+|----------|-------|
+| Provider | Authentik at `https://authentik.m1xxos.tech/application/o/gitlab` |
+| Client ID/Secret | Terraform `authentik_provider_oauth2.gitlab` → Vault `main/gitlab/gitlab-auth` |
+| K8s secret | `gitlab-authentik-oidc` (namespace `gitlab`, key: `provider`) |
+| ESO source | `clusters/main-configs/gitlab/gitlab-authentik-oidc.yaml` |
+| Helm config | `global.appConfig.omniauth.providers[0].secret: gitlab-authentik-oidc` |
+
+**OIDC credentials flow:**
+```
+Terraform random_password + authentik_provider_oauth2.gitlab
+  → Vault main/gitlab/gitlab-auth (keys: oidc_client_id, oidc_client_secret)
+  → ExternalSecret gitlab-authentik-oidc (gitlab ns): produces provider YAML
+  → GitLab reads omniauth.providers[0].secret: gitlab-authentik-oidc, key: provider
+```
+
+**omniauth settings:** `autoSignInWithProvider: openid_connect`, `blockAutoCreatedUsers: false`,
+`autoLinkUser: [openid_connect]`, `allowSingleSignOn: [openid_connect]`.
+
 ### Cilium ClusterMesh — Cross-Cluster Global Services
 | Service | Namespace | Port | Purpose |
 |---------|-----------|------|---------|
@@ -283,6 +303,7 @@ Mirror service stubs exist in `clusters/gitlab-tenant/global-svc/`.
 | general/gitlab-rails-db-password | PushSecret (CNPG) | ESO → GitLab psql |
 | general/dragonfly-gl-password | Terraform random_password | ESO → GitLab redis, Dragonfly auth |
 | general/gitlab-object-storage | Terraform random_string + random_password | ESO → GitLab object store, SeaweedFS IAM |
+| main/gitlab/gitlab-auth | Terraform (Authentik provider) | ESO → GitLab omniauth OIDC (client_id, client_secret) |
 | main/grafana/grafana-auth | Terraform (Authentik OIDC) | Vault Agent sidecar → Grafana |
 | main/minio/access-token | Manual | ESO → etcd backup CronJob |
 | main/authentik/* | Terraform | ESO → Authentik |
@@ -291,13 +312,14 @@ Mirror service stubs exist in `clusters/gitlab-tenant/global-svc/`.
 | Backend | Path | Type | Used by |
 |---------|------|------|---------|
 | cluster-general | cluster-general | AppRole | ESO ClusterSecretStore (vault-general) on both clusters |
-| kubernetes | kubernetes | Kubernetes | Authentik, Minio, Grafana SecretStores on main |
+| kubernetes | kubernetes | Kubernetes | Authentik, GitLab, Minio, Grafana SecretStores on main |
 
 ### Policies
 | Policy | Access |
 |--------|--------|
 | general-reader | Read general/data/*, Write general/data/clustermesh/* (for PushSecret) |
 | authentik-reader | Read main/data/authentik/* |
+| gitlab-reader | Read main/data/gitlab/* |
 | minio-reader | Read main/data/minio/* |
 | grafana-reader | Read main/data/grafana/* |
 
@@ -477,6 +499,7 @@ Each cluster:
 | K8s Secret | Namespace | Source | Keys | Consumer |
 |------------|-----------|--------|------|----------|
 | `gitlab-object-storage` | `gitlab` | ESO ← Vault `gitlab-object-storage` | `config`, `s3cmd` | GitLab object store + backups |
+| `gitlab-authentik-oidc` | `gitlab` | ESO ← Vault `gitlab/gitlab-auth` | `provider` | GitLab omniauth OIDC |
 | `gitlab-rails-db-app` | `gitlab` | ESO ← Vault `gitlab-rails-db-password` | `password` | GitLab psql |
 | `dragonfly-gl` | `gitlab` | ESO ← Vault `dragonfly-gl-password` | `password` | GitLab redis, Dragonfly auth |
 | `seaweedfs-s3-config` | `seaweedfs` | ESO ← Vault `gitlab-object-storage` | `seaweedfs_s3_config` | SeaweedFS S3 IAM |
@@ -488,6 +511,7 @@ Each cluster:
 | `vault-rid`, `vault-sid` | `external-secrets` | SOPS | - | ClusterSecretStore AppRole auth |
 
 All ExternalSecrets use **ClusterSecretStore** `vault-general`, Vault KV v2 mount `general`, refresh interval 1h.
+`gitlab-authentik-oidc` uses namespace **SecretStore** `gitlab-store`, Vault KV v2 mount `main` (K8s auth, role `gitlab-reader`).
 
 ## Terraform Module: talos-cluster-module
 
