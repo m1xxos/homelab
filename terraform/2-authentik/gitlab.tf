@@ -2,6 +2,10 @@ resource "random_password" "gitlab-auth-secret" {
   length = 30
 }
 
+resource "authentik_group" "gitlab-admins" {
+  name = "gitlab-admins"
+}
+
 resource "authentik_provider_oauth2" "gitlab" {
   name               = "gitlab"
   client_id          = "gitlab"
