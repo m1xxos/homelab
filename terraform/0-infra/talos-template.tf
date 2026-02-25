@@ -45,6 +45,7 @@ resource "proxmox_virtual_environment_vm" "talos_template" {
     discard      = "on"
     iothread     = true
     ssd          = true
+    cache        = "writeback"
   }
 
   operating_system {

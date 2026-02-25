@@ -2,27 +2,22 @@
 
 ## Overview
 
-Multi-cluster Kubernetes homelab managed via GitOps (Flux CD) with Talos Linux, deployed on Proxmox.
+Single-cluster Kubernetes homelab managed via GitOps (Flux CD) with Talos Linux, deployed on Proxmox.
+Additional clusters can be provisioned on demand via CAPI + `task new-cluster`.
 
-## Clusters
+## Cluster: main
 
-| Cluster | Role | VIP | External IP | Clustermesh IP | Cilium ID |
-|---------|------|-----|-------------|----------------|-----------|
-| main | Management | 192.168.1.75 | 192.168.1.80 | 192.168.1.81 | 1 |
-| gitlab | Workload (CAPI-managed) | 192.168.1.20 | 192.168.1.30 | 192.168.1.31 | 2 |
-
-### GitLab Cluster Details (CAPI / Talos / Proxmox)
 | Property | Value |
 |----------|-------|
-| CAPI cluster name | `proxmox-gitlab` |
-| Management namespace | `gitlab-cluster` (on main) |
+| Role | All workloads (management + apps) |
+| Control plane VIP | 192.168.1.75 |
+| External/L2 IP | 192.168.1.80 |
+| ClusterMesh IP | 192.168.1.81 |
+| Cilium ID | 1 |
+| CP nodes | 1 × `main-cp-0` (192.168.1.70) |
+| Worker nodes | 3 × `main-worker-{0,1,2}` (192.168.1.10–12) |
 | Kubernetes version | v1.35.0 |
 | Talos version | v1.12.2 |
-| CP replicas | 1 (4 CPU / 4 GiB / 30 GB) |
-| Worker replicas | 1 (4 CPU / 4 GiB / 30 GB) |
-| Proxmox node | `plusha`, template ID `110` |
-| Pod CIDR | 10.168.0.0/16 |
-| Worker IP range | 192.168.1.21–192.168.1.30 |
 | OIDC | Authentik at `https://authentik.local.m1xxos.tech/application/o/k8s/`, client `k8s` |
 
 ## Infrastructure
@@ -87,37 +82,24 @@ clusters/
     logs/               — Loki HelmRelease (distributed, embedded MinIO)
     tracing/            — Tempo HelmRelease
     capi-operator-system/ — Cluster API Operator (Talos bootstrap/CP, Proxmox infra)
+    gitlab/             — GitLab HelmRelease v9.9.0 (CE) + values ConfigMap
   main-configs/         — Main cluster configs
     authentik/          — Authentik SecretStore + ExternalSecret
     capi/               — CAPI provider manifests
-    cilium/             — Clustermesh ExternalSecrets + global svc
+    cilium/             — ClusterMesh ExternalSecrets + ClusterMesh config
     etcd/               — etcd backup CronJob (talos-backup → MinIO S3 at 192.168.1.77:9000)
-    gitlab-cluster/     — CAPI cluster definition + CNPG gitlab-rails-db + gitlab-flux.yaml
-    gitlab/             — PushSecret (DB password), BucketClaims (13 COSI buckets)
+    gitlab/             — CNPG gitlab-rails-db, BucketClaims (13 COSI buckets),
+                          ExternalSecrets (DB password, object storage, Authentik OIDC),
+                          Dragonfly instance, SecretStore gitlab-store
     longhorn/           — Backup target (NFS), recurring jobs, volume snapshots
-    monitoring/         — Global vmsingle service (Cilium global)
+    monitoring/         — VMSingle service config
     seaweedfs/          — SeaweedFS S3 IAM config ESO
     traefik/            — IngressRoute (dashboard), HTTPRoutes (hubble UI, vault UI)
-    unified-configs/    — References ../../infra/configs (shared)
-  gitlab-tenant/        — GitLab cluster tenant
-    unified/            — References ../../infra/tenant
-    namespaces/         — gitlab namespace
-    global-svc/         — Cilium global service stubs (gitlab-rails-db-global-rw)
-  gitlab/               — GitLab cluster controllers
-    gitlab/             — GitLab HelmRelease v9.9.0 (CE) + values ConfigMap
-    monitoring/         — VMAgent (remote write to main via Cilium global svc)
-    unified-controllers/ — References ../../infra/controllers
-  gitlab-configs/       — GitLab cluster configs
-    cilium/             — Clustermesh ExternalSecrets + IP pools + L2 announcements
-    external-secrets/   — ExternalSecrets (Dragonfly password)
-    gitlab/             — ExternalSecrets (DB password, object storage creds)
-    monitoring/         — VMAgent config, global vmsingle stub service
     unified-configs/    — References ../../infra/configs (shared)
 ```
 
 ## Flux Kustomization Hierarchy
 
-### Main Cluster
 ```
 config-sync.yaml (flux-system namespace):
   main-tenant     → infra/tenant       (CLUSTER_NAME=main-cluster, SOPS decryption: sops-gpg)
@@ -128,22 +110,8 @@ config-sync.yaml (flux-system namespace):
                               CILIUM_CLUSTERMESH_ENDPOINT=192.168.1.81
 ```
 
-### GitLab Cluster (managed from main via CAPI)
-```
-gitlab-flux.yaml (gitlab-cluster namespace, kubeConfig: proxmox-gitlab-kubeconfig):
-  gitlab-cluster-tenant   → clusters/gitlab-tenant  (CLUSTER_NAME=gitlab-cluster)
-  gitlab-cluster-critical → infra/critical           (depends: tenant)
-                            Variables: CILIUM_CLUSTER_NAME=gitlab
-                                       CILIUM_CLUSTER_ID=2
-                                       CILIUM_CLUSTERMESH_ENDPOINT=192.168.1.31
-                            Patches: HelmRelease → kubeConfig + serviceAccountName
-  gitlab-cluster-infra    → clusters/gitlab          (depends: tenant, critical)
-                            Patches: HelmRelease → kubeConfig + serviceAccountName + namespace
-  gitlab-cluster-configs  → clusters/gitlab-configs   (depends: tenant, critical)
-                            Variables: DNS_NAME=gl.m1xxos.tech
-                                       CILIUM_CLUSTER_NAME=gitlab
-                                       CILIUM_CLUSTERMESH_ENDPOINT=192.168.1.31
-```
+For CAPI-managed remote clusters a separate `<cluster>-flux.yaml` is created in the management
+namespace — see **Adding a New Cluster** section below.
 
 ## GitLab Deployment
 
@@ -151,8 +119,8 @@ gitlab-flux.yaml (gitlab-cluster namespace, kubeConfig: proxmox-gitlab-kubeconfi
 | Property | Value |
 |----------|-------|
 | Edition | CE (Community Edition) |
-| HelmRelease namespace | `gitlab-cluster` (remote target: `gitlab`) |
-| Values source | ConfigMap `gitlab-values` (label `reconcile.fluxcd.io/watch: Enabled`) |
+| HelmRelease namespace | `gitlab` |
+| Values source | ConfigMap `gitlab-values` in `gitlab` ns (label `reconcile.fluxcd.io/watch: Enabled`) |
 
 **Hostnames:**
 | Service | Hostname |
@@ -165,7 +133,7 @@ gitlab-flux.yaml (gitlab-cluster namespace, kubeConfig: proxmox-gitlab-kubeconfi
 **External services (bundled charts disabled):**
 | Service | Backend | Host | Port | Auth Secret |
 |---------|---------|------|------|-------------|
-| PostgreSQL | CNPG `gitlab-rails-db` | `gitlab-rails-db-global-rw.gitlab` | 5432 | `gitlab-rails-db-app` (key: `password`) |
+| PostgreSQL | CNPG `gitlab-rails-db` | `gitlab-rails-db-rw.gitlab` | 5432 | `gitlab-rails-db-app` (key: `password`) |
 | Redis | Dragonfly `dragonfly-gl` | `dragonfly-gl.gitlab` | 6379 | `dragonfly-gl` (key: `password`) |
 | Object Storage | SeaweedFS S3 | `http://seaweedfs-s3.seaweedfs.svc:8333` | 8333 | `gitlab-object-storage` (keys: `config`, `s3cmd`) |
 
@@ -181,20 +149,20 @@ gitlab-flux.yaml (gitlab-cluster namespace, kubeConfig: proxmox-gitlab-kubeconfi
 | Operator chart | `cloudnative-pg` v0.26.1 |
 | Operator namespace | `cnpg-system` |
 | Cluster name | `gitlab-rails-db` |
-| Cluster namespace | `gitlab-cluster` (on main) |
+| Cluster namespace | `gitlab` |
 | Instances | 1 |
 | Image | `ghcr.io/cloudnative-pg/postgresql:17` |
 | Storage | 3 GiB |
 | Database | `gitlabhq_production` |
 | Owner | `gitlab` |
 | Extensions | `pg_trgm`, `btree_gist`, `plpgsql`, `amcheck`, `pg_stat_statements` |
-| Global service | `gitlab-rails-db-global-rw` annotated `service.cilium.io/global: "true"` |
+| Primary service | `gitlab-rails-db-rw` in `gitlab` ns |
 
 **DB password flow:**
 ```
-CNPG auto-generates → Secret gitlab-rails-db-app (in gitlab-cluster ns)
+CNPG auto-generates → Secret gitlab-rails-db-app (in gitlab ns)
   → PushSecret gitlab-rails-db-push → Vault general/gitlab-rails-db-password
-  → ExternalSecret gitlab-rails-db-app (in gitlab ns on gitlab cluster) ← Vault
+  → ExternalSecret gitlab-rails-db-app (in gitlab ns) ← Vault
   → GitLab reads global.psql.password.secret: gitlab-rails-db-app
 ```
 
@@ -212,7 +180,7 @@ CNPG auto-generates → Secret gitlab-rails-db-app (in gitlab-cluster ns)
 **Password flow:**
 ```
 Terraform random_password (60 char) → Vault general/dragonfly-gl-password
-  → ExternalSecret dragonfly-gl (on both clusters) ← Vault
+  → ExternalSecret dragonfly-gl (gitlab ns) ← Vault
   → GitLab reads global.redis.host: dragonfly-gl.gitlab, secret: dragonfly-gl
 ```
 
@@ -246,15 +214,27 @@ Terraform random_string (20 char access key) + random_password (40 char secret k
   → ExternalSecret seaweedfs-s3-config (seaweedfs ns): produces IAM JSON for SeaweedFS
 ```
 
-### Cilium ClusterMesh — Cross-Cluster Global Services
-| Service | Namespace | Port | Purpose |
-|---------|-----------|------|---------|
-| `dragonfly-gl` | `gitlab` | 6379/TCP | Redis |
-| `gitlab-rails-db-global-rw` | `gitlab` | 5432/TCP | PostgreSQL RW |
-| `seaweedfs-s3` | `seaweedfs` | 8333/TCP | S3 object storage |
-| `vmsingle-vm-global` | `monitoring` | 8428/TCP | VictoriaMetrics (for GitLab cluster VMAgent) |
+### Authentik OIDC SSO
+| Property | Value |
+|----------|-------|
+| Provider | Authentik at `https://authentik.local.m1xxos.tech/application/o/gitlab/` |
+| Client ID/Secret | Terraform `authentik_provider_oauth2.gitlab` → Vault `main/gitlab/gitlab-auth` |
+| K8s secret | `gitlab-authentik-oidc` (namespace `gitlab`, key: `provider`) |
+| ESO source | `clusters/main-configs/gitlab/gitlab-authentik-oidc.yaml` |
+| Helm config | `global.appConfig.omniauth.providers[0].secret: gitlab-authentik-oidc` |
 
-Mirror service stubs exist in `clusters/gitlab-tenant/global-svc/`.
+**OIDC credentials flow:**
+```
+Terraform random_password + authentik_provider_oauth2.gitlab
+  → Vault main/gitlab/gitlab-auth (keys: oidc_client_id, oidc_client_secret)
+  → ExternalSecret gitlab-authentik-oidc (gitlab ns): produces provider YAML
+  → GitLab reads omniauth.providers[0].secret: gitlab-authentik-oidc, key: provider
+```
+
+**omniauth settings:** `autoSignInWithProvider: openid_connect`, `blockAutoCreatedUsers: false`,
+`autoLinkUser: [openid_connect]`, `allowSingleSignOn: [openid_connect]`.
+
+
 
 ## Vault Configuration
 
@@ -283,6 +263,7 @@ Mirror service stubs exist in `clusters/gitlab-tenant/global-svc/`.
 | general/gitlab-rails-db-password | PushSecret (CNPG) | ESO → GitLab psql |
 | general/dragonfly-gl-password | Terraform random_password | ESO → GitLab redis, Dragonfly auth |
 | general/gitlab-object-storage | Terraform random_string + random_password | ESO → GitLab object store, SeaweedFS IAM |
+| main/gitlab/gitlab-auth | Terraform (Authentik provider) | ESO → GitLab omniauth OIDC (client_id, client_secret) |
 | main/grafana/grafana-auth | Terraform (Authentik OIDC) | Vault Agent sidecar → Grafana |
 | main/minio/access-token | Manual | ESO → etcd backup CronJob |
 | main/authentik/* | Terraform | ESO → Authentik |
@@ -290,14 +271,15 @@ Mirror service stubs exist in `clusters/gitlab-tenant/global-svc/`.
 ### Auth Backends
 | Backend | Path | Type | Used by |
 |---------|------|------|---------|
-| cluster-general | cluster-general | AppRole | ESO ClusterSecretStore (vault-general) on both clusters |
-| kubernetes | kubernetes | Kubernetes | Authentik, Minio, Grafana SecretStores on main |
+| cluster-general | cluster-general | AppRole | ESO ClusterSecretStore (vault-general) |
+| kubernetes | kubernetes | Kubernetes | Authentik, GitLab, Minio, Grafana SecretStores |
 
 ### Policies
 | Policy | Access |
 |--------|--------|
 | general-reader | Read general/data/*, Write general/data/clustermesh/* (for PushSecret) |
 | authentik-reader | Read main/data/authentik/* |
+| gitlab-reader | Read main/data/gitlab/* |
 | minio-reader | Read main/data/minio/* |
 | grafana-reader | Read main/data/grafana/* |
 
@@ -330,7 +312,7 @@ Mirror service stubs exist in `clusters/gitlab-tenant/global-svc/`.
 | Hubble UI | hubble.local.m1xxos.tech |
 | Longhorn UI | longhorn.local.m1xxos.tech |
 | Traefik Dashboard | traefik.local.m1xxos.tech (IngressRoute) |
-| GitLab | gl.m1xxos.tech (on gitlab cluster) |
+| GitLab | gl.m1xxos.tech |
 | Registry | registry.gl.m1xxos.tech |
 | KAS | kas.gl.m1xxos.tech |
 | Pages | pages.gl.m1xxos.tech |
@@ -398,10 +380,6 @@ Mirror service stubs exist in `clusters/gitlab-tenant/global-svc/`.
 | Persistence | 5 GiB PV |
 | Endpoint | `http://tempo.tracing.svc.cluster.local:3200` |
 
-### GitLab Cluster Monitoring
-- VMAgent only → remote write to main via Cilium global service `vmsingle-vm-global`
-- Stub service without selector in gitlab cluster, Cilium provides remote backends
-
 ## Longhorn Storage
 
 | Property | Value |
@@ -433,7 +411,41 @@ Mirror service stubs exist in `clusters/gitlab-tenant/global-svc/`.
 | Namespace | `capi-operator-system` |
 | Providers | Bootstrap: Talos, ControlPlane: Talos, Infrastructure: Proxmox |
 
+The operator is installed on the management cluster and is used only when a new workload cluster
+is provisioned with `task new-cluster`. Currently no CAPI-managed remote clusters are active.
+
+## Adding a New Cluster
+
+```
+task new-cluster
+```
+
+The interactive script `scripts/new-cluster.sh` collects parameters (name, IPs, CPU/RAM, Cilium ID)
+and scaffolds the following files:
+
+```
+clusters/main-configs/<name>-cluster/
+  namespace.yaml              — Namespace for CAPI objects on main
+  <name>-cluster.yaml         — CAPI Cluster + ProxmoxCluster + TalosControlPlane + MachineTemplates
+  <name>-flux.yaml            — Flux Kustomizations (tenant → critical → infra → configs)
+clusters/<name>-tenant/       — infra/tenant reference (namespaces, RBAC, Vault SOPS secrets)
+clusters/<name>/              — Controllers (references infra/controllers)
+clusters/<name>-configs/
+  cilium/                     — ClusterMesh ExternalSecrets + IP pools + L2 announcements
+  unified-configs/            — References infra/configs
+terraform/0-infra/            — asks to add Terraform VM/DNS/Talos config
+```
+
+After scaffolding:
+1. `terraform apply` in `terraform/0-infra/` to create VMs and DNS
+2. Commit + push → Flux applies CAPI objects → cluster bootstraps
+3. `task add-kubeconfig CLUSTER=<name>` to add OIDC kubeconfig locally
+4. Update existing clusters' ClusterMesh ExternalSecrets to include the new cluster
+
 ## Cilium Clustermesh
+
+Currently only the `main` cluster is active, so ClusterMesh is configured but has no peers.
+The infrastructure for adding peers is in place (PushSecrets, KVStoreMesh architecture ready).
 
 ### Architecture (with KVStoreMesh)
 ```
@@ -462,21 +474,20 @@ Each cluster:
     cilium-clustermesh  = static Secret pointing to local kvstoremesh
 ```
 
-### Adding a New Cluster (e.g. dev, id=3, mesh IP=192.168.1.41)
+### Adding ClusterMesh for a New Cluster (e.g. dev, id=3, mesh IP=192.168.1.41)
 
+Handled automatically by `task new-cluster`. Manually:
 1. **PushSecret** — automatic via infra/configs (uses ${CILIUM_CLUSTER_NAME})
-2. **Flux variables** — add to new cluster's kustomizations:
-   - CILIUM_CLUSTER_NAME=dev, CILIUM_CLUSTER_ID=3, CILIUM_CLUSTERMESH_ENDPOINT=192.168.1.41
-3. **New cluster** — create `clusters/dev-configs/cilium/`:
-   - `external-secret-kvstoremesh.yaml`: dataFrom with all remote clusters
-   - `external-secret-clustermesh.yaml`: static Secret with all remote cluster names
-4. **Existing clusters** — update their ExternalSecrets to add `clustermesh/dev`
+2. **Flux variables** — CILIUM_CLUSTER_NAME=dev, CILIUM_CLUSTER_ID=3, CILIUM_CLUSTERMESH_ENDPOINT=192.168.1.41
+3. **New cluster** — `clusters/dev-configs/cilium/`: ExternalSecrets for kvstoremesh + clustermesh
+4. **main cluster** — update `clusters/main-configs/cilium/` ExternalSecrets to add `clustermesh/dev`
 
 ## Secret Summary
 
 | K8s Secret | Namespace | Source | Keys | Consumer |
 |------------|-----------|--------|------|----------|
 | `gitlab-object-storage` | `gitlab` | ESO ← Vault `gitlab-object-storage` | `config`, `s3cmd` | GitLab object store + backups |
+| `gitlab-authentik-oidc` | `gitlab` | ESO ← Vault `gitlab/gitlab-auth` | `provider` | GitLab omniauth OIDC |
 | `gitlab-rails-db-app` | `gitlab` | ESO ← Vault `gitlab-rails-db-password` | `password` | GitLab psql |
 | `dragonfly-gl` | `gitlab` | ESO ← Vault `dragonfly-gl-password` | `password` | GitLab redis, Dragonfly auth |
 | `seaweedfs-s3-config` | `seaweedfs` | ESO ← Vault `gitlab-object-storage` | `seaweedfs_s3_config` | SeaweedFS S3 IAM |
@@ -488,6 +499,7 @@ Each cluster:
 | `vault-rid`, `vault-sid` | `external-secrets` | SOPS | - | ClusterSecretStore AppRole auth |
 
 All ExternalSecrets use **ClusterSecretStore** `vault-general`, Vault KV v2 mount `general`, refresh interval 1h.
+`gitlab-authentik-oidc` uses namespace **SecretStore** `gitlab-store`, Vault KV v2 mount `main` (K8s auth, role `gitlab-reader`).
 
 ## Terraform Module: talos-cluster-module
 
@@ -548,8 +560,8 @@ Grafana Datasources
  ├─► Loki (logs, trace→log correlation)
  └─► Tempo (traces, trace→log/metric correlation)
 
-GitLab (on gitlab cluster) → external services on main cluster via Cilium ClusterMesh:
- ├─► PostgreSQL: gitlab-rails-db-global-rw.gitlab:5432
- ├─► Redis: dragonfly-gl.gitlab:6379
- └─► S3: seaweedfs-s3.seaweedfs:8333
+GitLab (gitlab namespace, same cluster)
+ ├─► PostgreSQL: gitlab-rails-db-rw.gitlab:5432 (CNPG)
+ ├─► Redis: dragonfly-gl.gitlab:6379 (Dragonfly)
+ └─► S3: seaweedfs-s3.seaweedfs:8333 (SeaweedFS)
 ```

@@ -62,6 +62,19 @@ data:
           connection:
             secret: gitlab-object-storage
             key: config
+        omniauth:
+          enabled: true
+          syncProfileFromProvider: ['openid_connect']
+          syncProfileAttributes: ['email']
+          allowSingleSignOn: ['openid_connect']
+          blockAutoCreatedUsers: false
+          autoLinkLdapUser: false
+          autoLinkSamlUser: false
+          autoLinkUser: ['openid_connect']
+          allowBypassTwoFactor: ['openid_connect']
+          providers:
+            - secret: gitlab-authentik-oidc
+              key: provider
     redis:
       install: false
     postgresql:

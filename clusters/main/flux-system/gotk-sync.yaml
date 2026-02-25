@@ -8,7 +8,7 @@ metadata:
 spec:
   interval: 1m0s
   ref:
-    branch: 390-gitlab-deployment
+    branch: 391-gitlab-authentik
   secretRef:
     name: flux-system
   url: https://github.com/m1xxos/homelab.git
