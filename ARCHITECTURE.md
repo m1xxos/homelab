@@ -86,7 +86,7 @@ clusters/
   main-configs/         — Main cluster configs
     authentik/          — Authentik SecretStore + ExternalSecret
     capi/               — CAPI provider manifests
-    cilium/             — Cistermesh ExternalSecrets + ClusterMesh config
+    cilium/             — ClusterMesh ExternalSecrets + ClusterMesh config
     etcd/               — etcd backup CronJob (talos-backup → MinIO S3 at 192.168.1.77:9000)
     gitlab/             — CNPG gitlab-rails-db, BucketClaims (13 COSI buckets),
                           ExternalSecrets (DB password, object storage, Authentik OIDC),
