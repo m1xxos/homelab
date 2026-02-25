@@ -64,7 +64,6 @@ data:
             key: config
         omniauth:
           enabled: true
-          autoSignInWithProvider: 'openid_connect'
           syncProfileFromProvider: ['openid_connect']
           syncProfileAttributes: ['email']
           allowSingleSignOn: ['openid_connect']
