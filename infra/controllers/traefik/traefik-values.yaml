@@ -42,5 +42,5 @@ tracing:
     enabled: true
     grpc:
       enabled: true
-      endpoint: "otel-opentelemetry-collector.monitoring.svc.cluster.local:4317"
+      endpoint: "otel-collector.monitoring.svc.cluster.local:4317"
       insecure: true

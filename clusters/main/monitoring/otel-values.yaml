@@ -9,6 +9,7 @@ metadata:
 data:
   values.yaml: |
     mode: deployment
+    fullnameOverride: otel-collector
     image:
       repository: "otel/opentelemetry-collector-contrib"
     presets:
