@@ -32,7 +32,7 @@ Additional clusters can be provisioned on demand via CAPI + `task new-cluster`.
 - **Auth**: Authentik v2025.12.4 (OIDC)
 - **Monitoring**: VictoriaMetrics k8s stack v0.63.2 + OpenTelemetry Collector v0.142.0
 - **Logging**: Loki (distributed mode, embedded MinIO)
-- **Tracing**: Tempo v1.24.1
+- **Tracing**: VictoriaMetrics VTSingle (1d retention, 5 GiB)
 - **Storage**: Longhorn (ReadWriteMany, NFS backup to 192.168.1.138)
 - **Object Storage**: SeaweedFS v4.0.412 (S3-compatible, COSI)
 - **Database**: CloudNative-PG v0.26.1
@@ -80,7 +80,7 @@ clusters/
     dragonfly/          — Dragonfly operator HelmRelease + instances
     seaweedfs/          — SeaweedFS HelmRelease (S3 with COSI + IAM auth)
     logs/               — Loki HelmRelease (distributed, embedded MinIO)
-    tracing/            — Tempo HelmRelease
+    tracing/            — VTSingle (VictoriaMetrics tracing)
     capi-operator-system/ — Cluster API Operator (Talos bootstrap/CP, Proxmox infra)
     gitlab/             — GitLab HelmRelease v9.9.0 (CE) + values ConfigMap
   main-configs/         — Main cluster configs
@@ -317,7 +317,7 @@ Terraform random_password + authentik_provider_oauth2.gitlab
 | KAS | kas.gl.m1xxos.tech |
 | Pages | pages.gl.m1xxos.tech |
 
-**Tracing:** OTLP gRPC → `tempo.tracing.svc.cluster.local:4317`
+**Tracing:** OTLP HTTP → `http://vtsingle-vts.tracing.svc.cluster.local:10428/insert/opentelemetry/v1/traces`
 **Metrics:** Prometheus (routers + services labels)
 
 ## Authentik (Identity Provider)
@@ -351,7 +351,7 @@ Terraform random_password + authentik_provider_oauth2.gitlab
 **Grafana datasources:**
 - VictoriaMetrics (default)
 - Loki at `http://loki-gateway.logging.svc.cluster.local` (trace→log correlation)
-- Tempo at `http://tempo.tracing.svc.cluster.local:3200` (trace→log/metric correlation)
+- Tempo at `http://vtsingle-vts.tracing.svc.cluster.local:10428` (trace→log/metric correlation)
 
 ### OpenTelemetry Collector
 | Property | Value |
@@ -375,10 +375,13 @@ Terraform random_password + authentik_provider_oauth2.gitlab
 ### Tempo (Tracing)
 | Property | Value |
 |----------|-------|
-| Chart | `tempo` v1.24.1 |
+| CRD | VTSingle (`operator.victoriametrics.com/v1`) |
+| Name | `vts` |
 | Namespace | `tracing` |
+| Retention | 1 day |
 | Persistence | 5 GiB PV |
-| Endpoint | `http://tempo.tracing.svc.cluster.local:3200` |
+| OTLP HTTP | `vtsingle-vts.tracing.svc.cluster.local:10428` |
+| UI | `tracing.local.m1xxos.tech` (HTTPRoute → port 10428) |
 
 ## Longhorn Storage
 
