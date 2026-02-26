@@ -40,6 +40,7 @@ metrics:
 tracing:
   otlp:
     enabled: true
-    http:
+    grpc:
       enabled: true
-      endpoint: "http://vtsingle-vts.tracing.svc.cluster.local:10428/insert/opentelemetry/v1/traces"
+      endpoint: "otel-opentelemetry-collector.monitoring.svc.cluster.local:4317"
+      insecure: true
