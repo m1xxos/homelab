@@ -40,6 +40,6 @@ metrics:
 tracing:
   otlp:
     enabled: true
-    grpc:
+    http:
       enabled: true
-      endpoint: "tempo.tracing.svc.cluster.local:4317"
+      endpoint: "http://vtsingle-vts.tracing.svc.cluster.local:10428/insert/opentelemetry/v1/traces"
