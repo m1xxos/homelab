@@ -42,6 +42,13 @@ data:
       enabled: true
     kube-state-metrics:
       enabled: true
+    eleteDatasources:
+      - name: Loki
+        orgId: 1
+      - name: Tempo
+        orgId: 1
+      - name: VictoriaLogs
+        orgId: 1
     defaultDatasources:
       extra:
         - name: VictoriaTraces
