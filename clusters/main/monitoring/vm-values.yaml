@@ -42,7 +42,7 @@ data:
       enabled: true
     kube-state-metrics:
       enabled: true
-    eleteDatasources:
+    deleteDatasources:
       - name: Loki
         orgId: 1
       - name: Tempo
