@@ -19,7 +19,7 @@
 
 ## Architecture diagram
 
-![Architecture](/assets/architecture_v3.png?raw=true "Architecture")
+![Architecture](/assets/architecture_v3-1.png?raw=true "Architecture")
 
 ## Made with
 
@@ -51,6 +51,10 @@ This software uses the following open source packages:
 * MetalLB
 * Vault
 * Authentik
+* ESO
+* GitLab
+* Seaweedfs S3
+* Dragonfly DB
 
 ### Docker systems
 
@@ -74,7 +78,6 @@ This software uses the following open source packages:
 
 ### Git
 
-* GitLab
 * GitHub actions
 * Linters
 
