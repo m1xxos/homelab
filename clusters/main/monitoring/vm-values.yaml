@@ -44,30 +44,12 @@ data:
       enabled: true
     defaultDatasources:
       extra:
-        - name: Loki
-          type: loki
-          access: proxy
-          url: http://loki-gateway.logging.svc.cluster.local
-          jsonData:
-            timeout: 60
-            maxLines: 1000
-        - name: Tempo
-          type: tempo
-          url: http://tempo.tracing.svc.cluster.local:3200
+        - name: VictoriaTraces
+          type: jaeger
+          url: http://vtsingle-vts.tracing.svc.cluster.local:10428/select/jaeger
           access: proxy
           basicAuth: false
           jsonData:
-            tracesToLogsV2:
-              # Field with an internal link pointing to a logs data source in Grafana.
-              # datasourceUid value must match the uid value of the logs data source.
-              datasourceUid: 'Loki'
-              spanStartTimeShift: '-1h'
-              spanEndTimeShift: '1h'
-              tags: ['k8s_job_name', 'service_instance_id', 'k8s_pod_name', 'k8s_namespace_name']
-              filterByTraceID: false
-              filterBySpanID: false
-              customQuery: true
-              query: 'method="$${__span.tags.method}"'
             tracesToMetrics:
               datasourceUid: 'VictoriaMetrics'
               spanStartTimeShift: '-1h'
@@ -79,8 +61,6 @@ data:
             nodeGraph:
               enabled: true
     grafana:
-      plugins:
-        - victoriametrics-logs-datasource
       serviceAccount:
         name: grafana-reader
       podAnnotations:

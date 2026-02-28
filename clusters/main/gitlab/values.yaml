@@ -75,6 +75,10 @@ data:
           providers:
             - secret: gitlab-authentik-oidc
               key: provider
+      tracing:
+        connection:
+          string: 'opentracing://jaeger?http_endpoint=http%3A%2F%2Fotel-collector.monitoring.svc.cluster.local%3A14268%2Fapi%2Ftraces&sampler=const&sampler_param=1'
+        urlTemplate: 'https://tracing.m1xxos.tech/search?service={{ service }}&tags=%7B"correlation_id"%3A"{{ correlation_id }}"%7D'
     redis:
       install: false
     postgresql:

@@ -1,0 +1,11 @@
+apiVersion: operator.victoriametrics.com/v1
+kind: VTSingle
+metadata:
+  name: vts
+  namespace: tracing
+spec:
+  retentionPeriod: "1d"
+  storage:
+    resources:
+      requests:
+        storage: 5Gi

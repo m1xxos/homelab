@@ -30,9 +30,8 @@ Additional clusters can be provisioned on demand via CAPI + `task new-cluster`.
 - **DNS**: Cloudflare (managed via Terraform), domains: `local.m1xxos.tech` (main), `gl.m1xxos.tech` (gitlab)
 - **Ingress**: Traefik v38.0.1 (Gateway API + experimental channel for TCPRoute/TLSRoute)
 - **Auth**: Authentik v2025.12.4 (OIDC)
-- **Monitoring**: VictoriaMetrics k8s stack v0.63.2 + OpenTelemetry Collector v0.142.0
-- **Logging**: Loki (distributed mode, embedded MinIO)
-- **Tracing**: Tempo v1.24.1
+- **Monitoring**: VictoriaMetrics k8s stack v0.63.2 + OpenTelemetry Collector v0.146.0
+- **Tracing**: VictoriaMetrics VTSingle (1d retention, 5 GiB) + OTEL Collector bridge (Jaeger Thrift → OTLP)
 - **Storage**: Longhorn (ReadWriteMany, NFS backup to 192.168.1.138)
 - **Object Storage**: SeaweedFS v4.0.412 (S3-compatible, COSI)
 - **Database**: CloudNative-PG v0.26.1
@@ -73,14 +72,13 @@ clusters/
   main/                 — Main cluster Flux entry point
     configs/            — config-sync.yaml (3-stage: main-tenant → main-infra → main-configs)
                           CiliumL2AnnouncementPolicy, CiliumLoadBalancerIPPool (192.168.1.81)
-    monitoring/         — VictoriaMetrics stack, OpenTelemetry Collector
+    monitoring/         — VictoriaMetrics stack, OpenTelemetry Collector (traces bridge)
     vault/              — Vault Helm release (HA Raft, 3 replicas, YC KMS unseal)
     authentik/          — Authentik HelmRelease (CNPG backend)
     cloudnative-pg/     — CNPG operator HelmRelease
     dragonfly/          — Dragonfly operator HelmRelease + instances
     seaweedfs/          — SeaweedFS HelmRelease (S3 with COSI + IAM auth)
-    logs/               — Loki HelmRelease (distributed, embedded MinIO)
-    tracing/            — Tempo HelmRelease
+    tracing/            — VTSingle (VictoriaMetrics tracing)
     capi-operator-system/ — Cluster API Operator (Talos bootstrap/CP, Proxmox infra)
     gitlab/             — GitLab HelmRelease v9.9.0 (CE) + values ConfigMap
   main-configs/         — Main cluster configs
@@ -142,6 +140,9 @@ namespace — see **Adding a New Cluster** section below.
 **Disabled bundled sub-charts:** Redis, PostgreSQL, MinIO, nginx-ingress, cert-manager.
 
 **Gitaly persistence:** 15 GiB
+
+**Tracing:** OpenTracing/Jaeger via `GITLAB_TRACING` env var → Jaeger Thrift HTTP → `otel-collector.monitoring.svc.cluster.local:14268` → VTSingle.
+Performance bar `urlTemplate` links to `tracing.m1xxos.tech`.
 
 ### CloudNative-PG (PostgreSQL)
 | Property | Value |
@@ -317,7 +318,7 @@ Terraform random_password + authentik_provider_oauth2.gitlab
 | KAS | kas.gl.m1xxos.tech |
 | Pages | pages.gl.m1xxos.tech |
 
-**Tracing:** OTLP gRPC → `tempo.tracing.svc.cluster.local:4317`
+**Tracing:** OTLP gRPC → `otel-collector.monitoring.svc.cluster.local:4317` (OTEL Collector) → OTLP HTTP → VTSingle
 **Metrics:** Prometheus (routers + services labels)
 
 ## Authentik (Identity Provider)
@@ -350,35 +351,35 @@ Terraform random_password + authentik_provider_oauth2.gitlab
 
 **Grafana datasources:**
 - VictoriaMetrics (default)
-- Loki at `http://loki-gateway.logging.svc.cluster.local` (trace→log correlation)
-- Tempo at `http://tempo.tracing.svc.cluster.local:3200` (trace→log/metric correlation)
+- VictoriaTraces (Jaeger type) at `http://vtsingle-vts.tracing.svc.cluster.local:10428/select/jaeger` (trace→metric correlation)
 
 ### OpenTelemetry Collector
 | Property | Value |
 |----------|-------|
-| Chart | `opentelemetry-collector` v0.142.0 |
-| Mode | DaemonSet (contrib image, runs on control-plane nodes) |
-| Receivers | OTLP gRPC (:4317), OTLP HTTP (:4318) |
-| Metrics pipeline | OTLP → deltatocumulative → VMSingle at `http://vmsingle-vm.monitoring.svc.cluster.local:8428/opentelemetry/v1/metrics` |
-| Logs pipeline | OTLP → Loki at `http://loki-gateway.logging.svc.cluster.local/otlp` |
-| Presets | logsCollection, kubernetesAttributes |
+| Chart | `opentelemetry-collector` v0.146.0 |
+| Mode | Deployment (contrib image) |
+| fullnameOverride | `otel-collector` |
+| Receivers | OTLP gRPC (:4317), OTLP HTTP (:4318), Jaeger Thrift HTTP (:14268) |
+| Traces pipeline | [OTLP, Jaeger] → OTLP HTTP → VTSingle at `http://vtsingle-vts.tracing.svc.cluster.local:10428/insert/opentelemetry/v1/traces` |
+| Presets | kubernetesAttributes |
 
-### Loki (Distributed)
+### VictoriaTraces (VTSingle)
 | Property | Value |
 |----------|-------|
-| Namespace | `logging` |
-| Mode | Distributed (3 ingesters, 3 queriers, 2 query-frontend, 2 query-scheduler, 3 distributors, 1 compactor, 2 index-gateways) |
-| Storage | Embedded MinIO, S3-compatible, schema v13/TSDB |
-| Config | auth_enabled: false, chunk_encoding: snappy, chunksCache: 2048MB, bloom: disabled |
-| Gateway | ClusterIP at `http://loki-gateway.logging.svc.cluster.local` |
-
-### Tempo (Tracing)
-| Property | Value |
-|----------|-------|
-| Chart | `tempo` v1.24.1 |
+| CRD | VTSingle (`operator.victoriametrics.com/v1`) |
+| Name | `vts` |
 | Namespace | `tracing` |
+| Retention | 1 day |
 | Persistence | 5 GiB PV |
-| Endpoint | `http://tempo.tracing.svc.cluster.local:3200` |
+| OTLP HTTP ingestion | `vtsingle-vts.tracing.svc.cluster.local:10428/insert/opentelemetry/v1/traces` |
+| Jaeger Query API | `vtsingle-vts.tracing.svc.cluster.local:10428/select/jaeger` |
+| UI | `tracing.local.m1xxos.tech` (HTTPRoute → port 10428) |
+
+**Trace flow:**
+```
+Traefik → OTLP gRPC → OTEL Collector (:4317) → OTLP HTTP → VTSingle
+GitLab  → Jaeger Thrift HTTP → OTEL Collector (:14268) → OTLP HTTP → VTSingle
+```
 
 ## Longhorn Storage
 
@@ -551,14 +552,12 @@ Traefik Gateway (listeners: HTTP/8000, HTTPS/8443)
  ├─► TCPRoute: gitlab-shell SSH (requires experimental channel CRDs)
  └─► TLS: wildcard cert *.local.m1xxos.tech (Let's Encrypt + Cloudflare DNS01)
 
-OTEL Collector (DaemonSet)
- ├─► Metrics → VictoriaMetrics (VMSingle)
- └─► Logs → Loki (gateway)
+OTEL Collector (Deployment, traces bridge)
+ └─► Traces → VictoriaTraces (VTSingle, OTLP HTTP)
 
 Grafana Datasources
  ├─► VictoriaMetrics (metrics, default)
- ├─► Loki (logs, trace→log correlation)
- └─► Tempo (traces, trace→log/metric correlation)
+ └─► VictoriaTraces (Jaeger type, trace→metric correlation)
 
 GitLab (gitlab namespace, same cluster)
  ├─► PostgreSQL: gitlab-rails-db-rw.gitlab:5432 (CNPG)
