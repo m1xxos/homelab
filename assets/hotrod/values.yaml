@@ -160,6 +160,6 @@ tolerations: []
 affinity: {}
 
 prometheus:
-  enabled: false
+  enabled: true
   service:
     annotations: {}

@@ -1,4 +1,4 @@
-{{ {{- if .Values.prometheus.enabled -}}
+{{- if .Values.prometheus.enabled -}}
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
@@ -8,7 +8,7 @@ metadata:
 spec:
   selector:
     matchLabels:
-      {{- .Values.prometheus.service.annotations | default include "hotrod.selectorLabels" . | nindent 4 }}
+      {{- include "hotrod.selectorLabels" . | default .Values.prometheus.service.annotations | nindent 6 }}
   endpoints:
   - port: {{ .Values.service.port }}
-{{- end -}}}}
+{{- end -}}
