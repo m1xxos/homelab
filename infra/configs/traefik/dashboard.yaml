@@ -14,4 +14,4 @@ spec:
     - name: api@internal
       kind: TraefikService
   tls:
-    secretName: local-m1xxos-tech
+    secretName: local-m1xxos

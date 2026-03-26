@@ -301,7 +301,7 @@ Terraform random_password + authentik_provider_oauth2.gitlab
 | web | 8000 | HTTP | All |
 | websecure | 8443 | HTTPS | All |
 
-**TLS:** Secret `local-m1xxos-tech` (wildcard cert from cert-manager: `local.m1xxos.online` + `*.local.m1xxos.online`)
+**TLS:** Secret `local-m1xxos` (wildcard cert from cert-manager: `local.m1xxos.online` + `*.local.m1xxos.online`)
 
 **Exposed Services (via HTTPRoute through `traefik-gateway`):**
 | App | Hostname |
@@ -493,7 +493,7 @@ Handled automatically by `task new-cluster`. Manually:
 | `dragonfly-gl` | `gitlab` | ESO ← Vault `dragonfly-gl-password` | `password` | GitLab redis, Dragonfly auth |
 | `seaweedfs-s3-config` | `seaweedfs` | ESO ← Vault `gitlab-object-storage` | `seaweedfs_s3_config` | SeaweedFS S3 IAM |
 | `gitlab-rails-db-push` | `gitlab` | PushSecret → Vault `gitlab-rails-db-password` | `password` | Vault (destination) |
-| `local-m1xxos-tech` | `traefik` | cert-manager (Let's Encrypt + Cloudflare DNS01) | tls.crt, tls.key | Traefik HTTPS |
+| `local-m1xxos` | `traefik` | cert-manager (Let's Encrypt + Cloudflare DNS01) | tls.crt, tls.key | Traefik HTTPS |
 | `authentik-new-app` | `authentik` | CNPG auto-generated | password, etc | Authentik PG |
 | `authentik-secret-key` | `authentik` | ESO ← Vault | secret-key | Authentik app |
 | `vault-key` | `vault` | SOPS | - | Vault HelmRelease |
