@@ -6,9 +6,9 @@ metadata:
 spec:
   secretName: gl-m1xxos-tech
   dnsNames:
-  - "gl.m1xxos.tech"
-  - "*.gl.m1xxos.tech"
-  - "*.pages.gl.m1xxos.tech"
+  - "gl.m1xxos.online"
+  - "*.gl.m1xxos.online"
+  - "*.pages.gl.m1xxos.online"
   issuerRef:
     name: acme-issuer
     kind: ClusterIssuer

@@ -10,19 +10,19 @@ data:
     global:
       edition: ce
       hosts:
-        domain: gl.m1xxos.tech
+        domain: gl.m1xxos.online
         gitlab:
-          name: gl.m1xxos.tech
+          name: gl.m1xxos.online
           https: true
         registry:
-          name: registry.gl.m1xxos.tech
+          name: registry.gl.m1xxos.online
           https: true
         kas:
-          name: kas.gl.m1xxos.tech
+          name: kas.gl.m1xxos.online
         pages:
-          name: pages.gl.m1xxos.tech
+          name: pages.gl.m1xxos.online
           https: true
-        ssh: gl.m1xxos.tech
+        ssh: gl.m1xxos.online
       ingress:
         enabled: true
         configureCertmanager: false
@@ -78,7 +78,7 @@ data:
       tracing:
         connection:
           string: 'opentracing://jaeger?http_endpoint=http%3A%2F%2Fotel-collector.monitoring.svc.cluster.local%3A14268%2Fapi%2Ftraces&sampler=const&sampler_param=1'
-        urlTemplate: 'https://tracing.m1xxos.tech/search?service={{ service }}&tags=%7B"correlation_id"%3A"{{ correlation_id }}"%7D'
+        urlTemplate: 'https://tracing.m1xxos.online/search?service={{ service }}&tags=%7B"correlation_id"%3A"{{ correlation_id }}"%7D'
     redis:
       install: false
     postgresql:

@@ -20,7 +20,7 @@ spec:
             name: 'openid_connect'
             scope: ['openid', 'profile', 'email']
             response_type: 'code'
-            issuer: 'https://authentik.local.m1xxos.tech/application/o/gitlab/'
+            issuer: 'https://authentik.local.m1xxos.online/application/o/gitlab/'
             discovery: true
             client_auth_method: 'query'
             uid_field: 'preferred_username'
@@ -29,7 +29,7 @@ spec:
             client_options:
               identifier: '{{ .oidc_client_id }}'
               secret: '{{ .oidc_client_secret }}'
-              redirect_uri: 'https://gl.m1xxos.tech/users/auth/openid_connect/callback'
+              redirect_uri: 'https://gl.m1xxos.online/users/auth/openid_connect/callback'
   data:
   - secretKey: oidc_client_id
     remoteRef:

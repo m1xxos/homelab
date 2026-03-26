@@ -29,7 +29,7 @@ variable "minio-sa-name" {
 
 variable "vault_address" {
   type    = string
-  default = "https://vault.local.m1xxos.tech"
+  default = "https://vault.local.m1xxos.online"
 }
 
 variable "cloudflare_api_token" {

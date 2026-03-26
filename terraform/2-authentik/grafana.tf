@@ -7,7 +7,7 @@ resource "authentik_provider_oauth2" "grafana" {
   allowed_redirect_uris = [
     {
       matching_mode = "strict",
-      url           = "https://grafana.local.m1xxos.tech/login/generic_oauth",
+      url           = "https://grafana.local.m1xxos.online/login/generic_oauth",
     }
   ]
 

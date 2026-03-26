@@ -38,7 +38,7 @@ header "New Cluster — Parameters"
 
 ask "Cluster short name (e.g. staging, prod2)"      CLUSTER_NAME
 ask "CAPI namespace on main cluster"                 CAPI_NS       "gitlab-cluster"
-ask "DNS domain (e.g. staging.m1xxos.tech)"         DNS_NAME
+ask "DNS domain (e.g. staging.m1xxos.online)"         DNS_NAME
 ask "Proxmox node name"                              PROX_NODE     "plusha"
 ask "Proxmox VM template ID"                         TEMPLATE_ID   "110"
 
@@ -207,7 +207,7 @@ spec:
       - op: add
         path: /cluster/apiServer/extraArgs
         value:
-          oidc-issuer-url: "https://authentik.local.m1xxos.tech/application/o/k8s/"
+          oidc-issuer-url: "https://authentik.local.m1xxos.online/application/o/k8s/"
           oidc-client-id: "k8s"
           oidc-username-claim: name
           oidc-groups-claim: groups

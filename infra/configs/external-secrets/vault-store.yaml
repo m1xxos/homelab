@@ -5,7 +5,7 @@ metadata:
 spec:
   provider:
     vault:
-      server: "https://vault.local.m1xxos.tech"
+      server: "https://vault.local.m1xxos.online"
       path: "general"
       version: "v2"
       auth:

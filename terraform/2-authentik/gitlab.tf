@@ -21,7 +21,7 @@ resource "authentik_provider_oauth2" "gitlab" {
   ]
   allowed_redirect_uris = [{
     matching_mode = "strict",
-    url           = "https://gl.m1xxos.tech/users/auth/openid_connect/callback"
+    url           = "https://gl.m1xxos.online/users/auth/openid_connect/callback"
     }
   ]
 }

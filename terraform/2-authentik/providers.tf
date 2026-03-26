@@ -28,7 +28,7 @@ terraform {
 }
 
 provider "authentik" {
-  url   = "https://authentik.local.m1xxos.tech/"
+  url   = "https://authentik.local.m1xxos.online/"
   token = ephemeral.vault_kv_secret_v2.authentik_token.data.token
 }
 

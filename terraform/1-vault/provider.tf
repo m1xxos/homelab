@@ -24,5 +24,5 @@ terraform {
 }
 
 provider "vault" {
-  address = "https://vault.local.m1xxos.tech/"
+  address = "https://vault.local.m1xxos.online/"
 }
