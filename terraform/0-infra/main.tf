@@ -34,9 +34,9 @@ module "main-cluster" {
   worker_disk_size     = 70
   cloudflare_zone_id   = local.cloudflare_zone_id
   cluster_name         = "main"
-  cluster_dns          = "main.k8s.m1xxos.tech"
+  cluster_dns          = "main.k8s.m1xxos.online"
   github_token         = local.github_token
-  branch               = "396-v3-release"
+  branch               = "dns-update"
   cilium_version       = "1.18.6"
   clustermesh_endpoint = "192.168.1.81"
 }
