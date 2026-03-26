@@ -10,7 +10,7 @@ spec:
     name: traefik-gateway
     namespace: traefik
   hostnames:
-  - "vault.local.m1xxos.tech"
+  - "vault.local.m1xxos.online"
   rules:
   - matches:
     - path:

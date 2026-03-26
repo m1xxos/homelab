@@ -1,14 +1,14 @@
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: gl-m1xxos-tech
+  name: gl-local-m1xxos
   namespace: gitlab
 spec:
-  secretName: gl-m1xxos-tech
+  secretName: gl-local-m1xxos
   dnsNames:
-  - "gl.m1xxos.tech"
-  - "*.gl.m1xxos.tech"
-  - "*.pages.gl.m1xxos.tech"
+  - "gl.m1xxos.online"
+  - "*.gl.m1xxos.online"
+  - "*.pages.gl.m1xxos.online"
   issuerRef:
     name: acme-issuer
     kind: ClusterIssuer

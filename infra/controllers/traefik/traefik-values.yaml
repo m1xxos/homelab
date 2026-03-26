@@ -23,7 +23,7 @@ gateway:
         from: All
       certificateRefs:
       - kind: Secret
-        name: local-m1xxos-tech
+        name: local-m1xxos
 
 logs:
   access:

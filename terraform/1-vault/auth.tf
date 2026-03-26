@@ -29,7 +29,7 @@ resource "vault_jwt_auth_backend" "oidc" {
   description        = "Authentik OIDC"
   path               = "oidc"
   type               = "oidc"
-  oidc_discovery_url = "https://authentik.local.m1xxos.tech/application/o/vault/"
+  oidc_discovery_url = "https://authentik.local.m1xxos.online/application/o/vault/"
   oidc_client_id     = data.vault_kv_secret_v2.authentik-auth.data.oidc_client_id
   oidc_client_secret = data.vault_kv_secret_v2.authentik-auth.data.oidc_client_secret
   default_role       = "reader"

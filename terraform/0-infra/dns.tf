@@ -1,10 +1,10 @@
 locals {
-  local_name = "local.m1xxos.tech"
+  domain = "m1xxos.online"
 }
 
 resource "cloudflare_dns_record" "main" {
   zone_id = local.cloudflare_zone_id
-  name    = local.local_name
+  name    = "local.${local.domain}"
   content = "192.168.1.80"
   type    = "A"
   ttl     = 300
@@ -12,47 +12,15 @@ resource "cloudflare_dns_record" "main" {
 
 resource "cloudflare_dns_record" "main-extra" {
   zone_id = local.cloudflare_zone_id
-  name    = "*.${local.local_name}"
-  content = local.local_name
-  type    = "CNAME"
-  ttl     = 300
-}
-
-resource "cloudflare_dns_record" "pi" {
-  zone_id = local.cloudflare_zone_id
-  name    = "pi.m1xxos.tech"
-  content = "192.168.1.77"
-  type    = "A"
-  ttl     = 300
-}
-
-resource "cloudflare_dns_record" "pi-extra" {
-  zone_id = local.cloudflare_zone_id
-  name    = "*.pi.m1xxos.tech"
-  content = "pi.m1xxos.tech"
-  type    = "CNAME"
-  ttl     = 300
-}
-
-resource "cloudflare_dns_record" "home" {
-  zone_id = local.cloudflare_zone_id
-  name    = "home.m1xxos.tech"
-  content = "192.168.1.128"
-  type    = "A"
-  ttl     = 300
-}
-
-resource "cloudflare_dns_record" "home-extra" {
-  zone_id = local.cloudflare_zone_id
-  name    = "*.home.m1xxos.tech"
-  content = "home.m1xxos.tech"
+  name    = "*.local.${local.domain}"
+  content = cloudflare_dns_record.main.name
   type    = "CNAME"
   ttl     = 300
 }
 
 resource "cloudflare_dns_record" "gl" {
   zone_id = local.cloudflare_zone_id
-  name    = "gl.m1xxos.tech"
+  name    = "gl.${local.domain}"
   content = "192.168.1.80"
   type    = "A"
   ttl     = 300
@@ -60,8 +28,8 @@ resource "cloudflare_dns_record" "gl" {
 
 resource "cloudflare_dns_record" "gl-extra" {
   zone_id = local.cloudflare_zone_id
-  name    = "*.gl.m1xxos.tech"
-  content = "gl.m1xxos.tech"
+  name    = "*.gl.${local.domain}"
+  content = cloudflare_dns_record.gl.name
   type    = "CNAME"
   ttl     = 300
 }

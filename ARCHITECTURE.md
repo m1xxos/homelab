@@ -18,7 +18,7 @@ Additional clusters can be provisioned on demand via CAPI + `task new-cluster`.
 | Worker nodes | 3 × `main-worker-{0,1,2}` (192.168.1.10–12) |
 | Kubernetes version | v1.35.0 |
 | Talos version | v1.12.2 |
-| OIDC | Authentik at `https://authentik.local.m1xxos.tech/application/o/k8s/`, client `k8s` |
+| OIDC | Authentik at `https://authentik.local.m1xxos.online/application/o/k8s/`, client `k8s` |
 
 ## Infrastructure
 
@@ -27,7 +27,7 @@ Additional clusters can be provisioned on demand via CAPI + `task new-cluster`.
 - **CNI**: Cilium v1.18.6 (kube-proxy disabled, kubeProxyReplacement: true, L2 announcements, KVStoreMesh)
 - **GitOps**: Flux CD (bootstrapped from Terraform, SOPS decryption via `sops-gpg`)
 - **Secrets**: HashiCorp Vault (HA Raft, 3 replicas, YC KMS auto-unseal) + ESO + SOPS
-- **DNS**: Cloudflare (managed via Terraform), domains: `local.m1xxos.tech` (main), `gl.m1xxos.tech` (gitlab)
+- **DNS**: Cloudflare (managed via Terraform), domains: `local.m1xxos.online` (main), `gl.m1xxos.online` (gitlab)
 - **Ingress**: Traefik v38.0.1 (Gateway API + experimental channel for TCPRoute/TLSRoute)
 - **Auth**: Authentik v2025.12.4 (OIDC)
 - **Monitoring**: VictoriaMetrics k8s stack v0.63.2 + OpenTelemetry Collector v0.146.0
@@ -57,10 +57,10 @@ infra/
                           cert-manager, external-secrets, longhorn, traefik,
                           prom-crds, gateway-api (TCPRoute CRD v1.4.1 experimental)
   configs/              — Shared configs:
-                          ClusterSecretStore vault-general (Vault at https://vault.local.m1xxos.tech,
+                          ClusterSecretStore vault-general (Vault at https://vault.local.m1xxos.online,
                             mount general, AppRole auth with SOPS-encrypted RoleID/SecretID),
-                          ClusterIssuer (Let's Encrypt ACME via Cloudflare DNS01 for *.m1xxos.tech),
-                          Certificate (wildcard local.m1xxos.tech + *.local.m1xxos.tech in traefik ns),
+                          ClusterIssuer (Let's Encrypt ACME via Cloudflare DNS01 for *.m1xxos.online),
+                          Certificate (wildcard local.m1xxos.online + *.local.m1xxos.online in traefik ns),
                           Cloudflare token ExternalSecret, DHI secret ExternalSecret,
                           Cilium PushSecret, volume-snapshotter CRD + controller
                           Uses ${DNS_NAME}, ${CILIUM_CLUSTER_NAME}, ${CILIUM_CLUSTERMESH_ENDPOINT}
@@ -103,7 +103,7 @@ config-sync.yaml (flux-system namespace):
   main-tenant     → infra/tenant       (CLUSTER_NAME=main-cluster, SOPS decryption: sops-gpg)
   main-infra      → infra/controllers  (depends: flux-system, main-tenant)
   main-configs    → clusters/main-configs (depends: main-infra)
-                    Variables: DNS_NAME=local.m1xxos.tech
+                    Variables: DNS_NAME=local.m1xxos.online
                               CILIUM_CLUSTER_NAME=main
                               CILIUM_CLUSTERMESH_ENDPOINT=192.168.1.81
 ```
@@ -123,10 +123,10 @@ namespace — see **Adding a New Cluster** section below.
 **Hostnames:**
 | Service | Hostname |
 |---------|----------|
-| Web + SSH | gl.m1xxos.tech |
-| Registry | registry.gl.m1xxos.tech |
-| KAS | kas.gl.m1xxos.tech |
-| Pages | pages.gl.m1xxos.tech |
+| Web + SSH | gl.m1xxos.online |
+| Registry | registry.gl.m1xxos.online |
+| KAS | kas.gl.m1xxos.online |
+| Pages | pages.gl.m1xxos.online |
 
 **External services (bundled charts disabled):**
 | Service | Backend | Host | Port | Auth Secret |
@@ -142,7 +142,7 @@ namespace — see **Adding a New Cluster** section below.
 **Gitaly persistence:** 15 GiB
 
 **Tracing:** OpenTracing/Jaeger via `GITLAB_TRACING` env var → Jaeger Thrift HTTP → `otel-collector.monitoring.svc.cluster.local:14268` → VTSingle.
-Performance bar `urlTemplate` links to `tracing.m1xxos.tech`.
+Performance bar `urlTemplate` links to `tracing.m1xxos.online`.
 
 ### CloudNative-PG (PostgreSQL)
 | Property | Value |
@@ -218,7 +218,7 @@ Terraform random_string (20 char access key) + random_password (40 char secret k
 ### Authentik OIDC SSO
 | Property | Value |
 |----------|-------|
-| Provider | Authentik at `https://authentik.local.m1xxos.tech/application/o/gitlab/` |
+| Provider | Authentik at `https://authentik.local.m1xxos.online/application/o/gitlab/` |
 | Client ID/Secret | Terraform `authentik_provider_oauth2.gitlab` → Vault `main/gitlab/gitlab-auth` |
 | K8s secret | `gitlab-authentik-oidc` (namespace `gitlab`, key: `provider`) |
 | ESO source | `clusters/main-configs/gitlab/gitlab-authentik-oidc.yaml` |
@@ -247,7 +247,7 @@ Terraform random_password + authentik_provider_oauth2.gitlab
 | HA mode | 3 replicas, Raft storage |
 | Cluster name | `main-vault` |
 | Auto-unseal | Yandex Cloud KMS (key `abjc7mkspu26rij5khdc`) |
-| UI | Exposed via HTTPRoute at `vault.local.m1xxos.tech` |
+| UI | Exposed via HTTPRoute at `vault.local.m1xxos.online` |
 
 ### KV Engines
 | Engine | Path | Description |
@@ -301,22 +301,22 @@ Terraform random_password + authentik_provider_oauth2.gitlab
 | web | 8000 | HTTP | All |
 | websecure | 8443 | HTTPS | All |
 
-**TLS:** Secret `local-m1xxos-tech` (wildcard cert from cert-manager: `local.m1xxos.tech` + `*.local.m1xxos.tech`)
+**TLS:** Secret `local-m1xxos` (wildcard cert from cert-manager: `local.m1xxos.online` + `*.local.m1xxos.online`)
 
 **Exposed Services (via HTTPRoute through `traefik-gateway`):**
 | App | Hostname |
 |-----|----------|
-| Grafana | grafana.local.m1xxos.tech |
-| VMAgent | vmagent.local.m1xxos.tech |
-| Vault | vault.local.m1xxos.tech |
-| Authentik | authentik.local.m1xxos.tech |
-| Hubble UI | hubble.local.m1xxos.tech |
-| Longhorn UI | longhorn.local.m1xxos.tech |
-| Traefik Dashboard | traefik.local.m1xxos.tech (IngressRoute) |
-| GitLab | gl.m1xxos.tech |
-| Registry | registry.gl.m1xxos.tech |
-| KAS | kas.gl.m1xxos.tech |
-| Pages | pages.gl.m1xxos.tech |
+| Grafana | grafana.local.m1xxos.online |
+| VMAgent | vmagent.local.m1xxos.online |
+| Vault | vault.local.m1xxos.online |
+| Authentik | authentik.local.m1xxos.online |
+| Hubble UI | hubble.local.m1xxos.online |
+| Longhorn UI | longhorn.local.m1xxos.online |
+| Traefik Dashboard | traefik.local.m1xxos.online (IngressRoute) |
+| GitLab | gl.m1xxos.online |
+| Registry | registry.gl.m1xxos.online |
+| KAS | kas.gl.m1xxos.online |
+| Pages | pages.gl.m1xxos.online |
 
 **Tracing:** OTLP gRPC → `otel-collector.monitoring.svc.cluster.local:4317` (OTEL Collector) → OTLP HTTP → VTSingle
 **Metrics:** Prometheus (routers + services labels)
@@ -330,7 +330,7 @@ Terraform random_password + authentik_provider_oauth2.gitlab
 | PostgreSQL | CNPG cluster `authentik-new-rw` (secret: `authentik-new-app`) |
 | Redis | Embedded (redis.enabled: true) |
 | Secret key | From Secret `authentik-secret-key` mounted at `/secret-key/secret-key` |
-| UI | HTTPRoute at `authentik.local.m1xxos.tech` |
+| UI | HTTPRoute at `authentik.local.m1xxos.online` |
 | SA | `authentik-reader` |
 
 **OIDC consumers:**
@@ -345,8 +345,8 @@ Terraform random_password + authentik_provider_oauth2.gitlab
 | Chart | `victoria-metrics-k8s-stack` v0.63.2 |
 | Namespace | `monitoring` |
 | VMSingle | 5 GiB storage (RWX), OTel prometheus naming, Cilium global service |
-| VMAgent | Exposed at `vmagent.local.m1xxos.tech` |
-| Grafana | 5 GiB PVC, exposed at `grafana.local.m1xxos.tech`, Vault Agent sidecar for OIDC creds |
+| VMAgent | Exposed at `vmagent.local.m1xxos.online` |
+| Grafana | 5 GiB PVC, exposed at `grafana.local.m1xxos.online`, Vault Agent sidecar for OIDC creds |
 | Node Exporter + KSM | enabled |
 
 **Grafana datasources:**
@@ -373,7 +373,7 @@ Terraform random_password + authentik_provider_oauth2.gitlab
 | Persistence | 5 GiB PV |
 | OTLP HTTP ingestion | `vtsingle-vts.tracing.svc.cluster.local:10428/insert/opentelemetry/v1/traces` |
 | Jaeger Query API | `vtsingle-vts.tracing.svc.cluster.local:10428/select/jaeger` |
-| UI | `tracing.local.m1xxos.tech` (HTTPRoute → port 10428) |
+| UI | `tracing.local.m1xxos.online` (HTTPRoute → port 10428) |
 
 **Trace flow:**
 ```
@@ -388,7 +388,7 @@ GitLab  → Jaeger Thrift HTTP → OTEL Collector (:14268) → OTLP HTTP → VTS
 | Namespace | `longhorn-system` |
 | Backup target | NFS at `nfs://192.168.1.138:/mnt/main/lh-backup`, poll interval 300s |
 | Recurring jobs | `full-backup` (every 3h, retain 1), `system-backup` (every 3h, retain 1), `full-trim` (every 3h) |
-| UI | HTTPRoute at `longhorn.local.m1xxos.tech` |
+| UI | HTTPRoute at `longhorn.local.m1xxos.online` |
 | VolumeSnapshotClass | `longhorn-backup-vsc` (full backup mode) |
 | Snapshots | authentik-2 PVC in authentik namespace |
 
@@ -493,7 +493,7 @@ Handled automatically by `task new-cluster`. Manually:
 | `dragonfly-gl` | `gitlab` | ESO ← Vault `dragonfly-gl-password` | `password` | GitLab redis, Dragonfly auth |
 | `seaweedfs-s3-config` | `seaweedfs` | ESO ← Vault `gitlab-object-storage` | `seaweedfs_s3_config` | SeaweedFS S3 IAM |
 | `gitlab-rails-db-push` | `gitlab` | PushSecret → Vault `gitlab-rails-db-password` | `password` | Vault (destination) |
-| `local-m1xxos-tech` | `traefik` | cert-manager (Let's Encrypt + Cloudflare DNS01) | tls.crt, tls.key | Traefik HTTPS |
+| `local-m1xxos` | `traefik` | cert-manager (Let's Encrypt + Cloudflare DNS01) | tls.crt, tls.key | Traefik HTTPS |
 | `authentik-new-app` | `authentik` | CNPG auto-generated | password, etc | Authentik PG |
 | `authentik-secret-key` | `authentik` | ESO ← Vault | secret-key | Authentik app |
 | `vault-key` | `vault` | SOPS | - | Vault HelmRelease |
@@ -547,10 +547,10 @@ Authentik (OIDC IdP)
  └─► PostgreSQL (CNPG cluster authentik-new-rw)
 
 Traefik Gateway (listeners: HTTP/8000, HTTPS/8443)
- ├─► HTTPRoutes: Grafana, VMAgent, Authentik, Vault, Hubble, Longhorn (*.local.m1xxos.tech)
- ├─► HTTPRoutes: GitLab, Registry, KAS, Pages (*.gl.m1xxos.tech)
+ ├─► HTTPRoutes: Grafana, VMAgent, Authentik, Vault, Hubble, Longhorn (*.local.m1xxos.online)
+ ├─► HTTPRoutes: GitLab, Registry, KAS, Pages (*.gl.m1xxos.online)
  ├─► TCPRoute: gitlab-shell SSH (requires experimental channel CRDs)
- └─► TLS: wildcard cert *.local.m1xxos.tech (Let's Encrypt + Cloudflare DNS01)
+ └─► TLS: wildcard cert *.local.m1xxos.online (Let's Encrypt + Cloudflare DNS01)
 
 OTEL Collector (Deployment, traces bridge)
  └─► Traces → VictoriaTraces (VTSingle, OTLP HTTP)

@@ -28,7 +28,7 @@ terraform {
 }
 
 provider "infisical" {
-  host = "https://infisical.home.m1xxos.tech"
+  host = "https://infisical.home.m1xxos.online"
   auth = {
     universal = {
       client_id     = var.infisical_id

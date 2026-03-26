@@ -71,7 +71,7 @@ if not any(u["name"] == "oidc" for u in kc["users"]):
                 "command": "kubectl",
                 "args": [
                     "oidc-login", "get-token",
-                    "--oidc-issuer-url=https://authentik.local.m1xxos.tech/application/o/k8s/",
+                    "--oidc-issuer-url=https://authentik.local.m1xxos.online/application/o/k8s/",
                     "--oidc-client-id=k8s",
                     "--oidc-extra-scope=profile",
                     "--oidc-extra-scope=email",

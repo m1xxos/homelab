@@ -55,6 +55,6 @@ spec:
     name: flux-system
   postBuild:
     substitute:
-      DNS_NAME: local.m1xxos.tech
+      DNS_NAME: local.m1xxos.online
       CILIUM_CLUSTER_NAME: main
       CILIUM_CLUSTERMESH_ENDPOINT: "192.168.1.81"
