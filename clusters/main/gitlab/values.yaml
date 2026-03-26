@@ -30,7 +30,7 @@ data:
         class: traefik-traefik
         tls:
           enabled: true
-          secretName: gl-m1xxos-tech
+          secretName: gl-local-m1xxos
       time_zone: "Europe/Moscow"
       redis:
         host: dragonfly-gl
