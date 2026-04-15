@@ -16,6 +16,7 @@ resource "proxmox_virtual_environment_vm" "talos_cp" {
   vm_id         = each.value.vm_id
   on_boot       = true
   scsi_hardware = "virtio-scsi-single"
+  started       = var.vm_started
 
 
   cpu {
@@ -77,6 +78,7 @@ resource "proxmox_virtual_environment_vm" "talos_worker" {
   vm_id         = each.value.vm_id
   on_boot       = true
   scsi_hardware = "virtio-scsi-single"
+  started       = var.vm_started
 
 
   cpu {

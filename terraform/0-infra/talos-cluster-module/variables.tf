@@ -122,3 +122,8 @@ variable "cp_vip_address" {
 variable "talos_image_id" {
   type = string
 }
+
+variable "vm_started" {
+  type    = bool
+  default = true
+}

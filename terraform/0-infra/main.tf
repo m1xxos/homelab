@@ -39,4 +39,5 @@ module "main-cluster" {
   branch               = "dns-update"
   cilium_version       = "1.18.6"
   clustermesh_endpoint = "192.168.1.81"
+  vm_started           = false
 }
