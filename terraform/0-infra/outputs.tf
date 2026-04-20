@@ -8,7 +8,7 @@ output "kubeconfig" {
   sensitive = true
 }
 
-output "kubeconfig_istion" {
+output "kubeconfig_istio" {
   value     = module.istio-cluster.kubeconfig
   sensitive = true
 }
