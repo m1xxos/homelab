@@ -14,7 +14,7 @@ resource "proxmox_virtual_environment_vm" "talos_cp" {
   tags          = ["talos", var.cluster_name]
   node_name     = var.node_name
   vm_id         = each.value.vm_id
-  on_boot       = true
+  on_boot       = var.vm_started
   scsi_hardware = "virtio-scsi-single"
   started       = var.vm_started
 
@@ -76,7 +76,7 @@ resource "proxmox_virtual_environment_vm" "talos_worker" {
   tags          = ["talos", var.cluster_name]
   node_name     = var.node_name
   vm_id         = each.value.vm_id
-  on_boot       = true
+  on_boot       = var.vm_started
   scsi_hardware = "virtio-scsi-single"
   started       = var.vm_started
 

@@ -16,6 +16,7 @@ resource "helm_release" "cilium_cni" {
 }
 
 resource "kubernetes_manifest" "cilium_ipv4_pool" {
+  count      = var.create_cilium_ipv4_pool ? 1 : 0
   depends_on = [helm_release.cilium_cni]
   manifest = {
     apiVersion = "cilium.io/v2"

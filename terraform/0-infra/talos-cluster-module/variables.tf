@@ -127,3 +127,9 @@ variable "vm_started" {
   type    = bool
   default = true
 }
+
+variable "create_cilium_ipv4_pool" {
+  type        = bool
+  description = "Create CiliumLoadBalancerIPPool after the cluster API is reachable"
+  default     = true
+}

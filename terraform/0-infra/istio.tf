@@ -39,5 +39,5 @@ module "istio-cluster" {
   branch               = "istio-test"
   cilium_version       = "1.18.6"
   clustermesh_endpoint = "192.168.1.85"
-  vm_started           = false
+  create_cilium_ipv4_pool = false
 }
