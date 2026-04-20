@@ -1,0 +1,21 @@
+# yaml-language-server: $schema=https://datreeio.github.io/CRDs-catalog/helm.toolkit.fluxcd.io/helmrelease_v2.json
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: kiali-server
+  namespace: istio-system
+spec:
+  interval: 20m
+  chart:
+    spec:
+      chart: kiali-server
+      version: v2.24.0
+      sourceRef:
+        kind: HelmRepository
+        name: kiali
+        namespace: istio-system
+  releaseName: kiali-server
+  values:
+    server:
+      web_fqdn: kiali.istio.m1xxos.online
