@@ -10,6 +10,13 @@ tasks:
     - flux reconcile kustomization main-tenant
     - flux reconcile kustomization main-infra
     - flux reconcile kustomization main-configs
+  istio:
+    desc: "Full Flux reconciliation for istio cluster"
+    cmds:
+    - flux reconcile source git flux-system
+    - flux reconcile kustomization flux-system
+    - flux reconcile kustomization istio-controllers
+    - flux reconcile kustomization istio-configs
   new-cluster:
     desc: "Scaffold a new CAPI-managed Talos cluster in the repo"
     cmds:
