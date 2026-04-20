@@ -29,7 +29,7 @@ module "istio-cluster" {
   cp_memory            = 4096
   external_ip          = "192.168.1.86"
   cp_vip_address       = "192.168.1.76"
-  talos_image_id       = proxmox_virtual_environment_download_file.talos_nocloud_image_1_11_3.id
+  talos_image_id       = proxmox_virtual_environment_download_file.talos_nocloud_template.id
   node_name            = "plusha"
   worker_disk_size     = 70
   cloudflare_zone_id   = local.cloudflare_zone_id
@@ -38,6 +38,7 @@ module "istio-cluster" {
   github_token         = local.github_token
   branch               = "istio-test"
   cilium_version       = "1.18.6"
+  cluster_id           = 7
   clustermesh_endpoint = "192.168.1.85"
   create_cilium_ipv4_pool = false
 }

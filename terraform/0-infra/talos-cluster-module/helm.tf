@@ -45,7 +45,7 @@ resource "helm_release" "metrics-server" {
 }
 
 resource "helm_release" "talos_ccm" {
-  depends_on = [talos_cluster_kubeconfig.kubeconfig, helm_release.cilium_cni]
+  depends_on = [talos_cluster_kubeconfig.kubeconfig]
   name       = "talos-ccm"
   chart      = "oci://ghcr.io/siderolabs/charts/talos-cloud-controller-manager"
   namespace  = "kube-system"
