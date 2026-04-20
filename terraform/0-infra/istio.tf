@@ -40,5 +40,5 @@ module "istio-cluster" {
   cilium_version       = "1.18.6"
   cluster_id           = 7
   clustermesh_endpoint = "192.168.1.85"
-  create_cilium_ipv4_pool = false
+  create_cilium_ipv4_pool = true
 }
