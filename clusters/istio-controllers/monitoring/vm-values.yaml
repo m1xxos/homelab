@@ -11,7 +11,8 @@ data:
     nameOverride: "vm"
     fullnameOverride: "vm"
     vmagent:
-      ingres:
+      ingress:
+        enabled: true
         hosts:
           - vmagent.istio.m1xxos.online
     vmsingle:
@@ -32,7 +33,8 @@ data:
     kube-state-metrics:
       enabled: true
     grafana:
-      ingres:
+      ingress:
+        enabled: true
         hosts:
           - grafana.istio.m1xxos.online
       server:
