@@ -13,6 +13,7 @@ data:
     vmagent:
       ingress:
         enabled: true
+        ingressClassName: istio
         hosts:
           - vmagent.istio.m1xxos.online
     vmsingle:
@@ -35,6 +36,7 @@ data:
     grafana:
       ingress:
         enabled: true
+        ingressClassName: istio
         hosts:
           - grafana.istio.m1xxos.online
       server:
