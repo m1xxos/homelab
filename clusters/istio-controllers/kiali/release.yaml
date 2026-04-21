@@ -21,4 +21,6 @@ spec:
       web_fqdn: kiali.istio.m1xxos.online
     external_services:
       prometheus:
-        url: "http://vmsingle-vm.monitoring:8428/"
+        url: "http://vmsingle-vm.monitoring:8428"
+      grafana:
+        internalURL: "http://monitoring-vm-stack-grafana.monitoring:80"
