@@ -1,0 +1,60 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: vm-values
+  namespace: monitoring
+  labels:
+    reconcile.fluxcd.io/watch: Enabled
+data:
+  values.yaml: |
+    nameOverride: "vm"
+    fullnameOverride: "vm"
+    vmagent:
+      ingres:
+        hosts:
+          - vmagent.istio.m1xxos.online
+    vmsingle:
+      spec:
+        retentionPeriod: "1d"
+        extraArgs:
+          opentelemetry.usePrometheusNaming: "true"
+        storage:
+          accessModes:
+            - ReadWriteMany
+          resources:
+            requests:
+              storage: 5Gi
+      route:
+        enabled: false
+    prometheus-node-exporter:
+      enabled: true
+    kube-state-metrics:
+      enabled: true
+    grafana:
+      ingres:
+        hosts:
+          - grafana.istio.m1xxos.online
+      server:
+        root_url: https://grafana.istio.m1xxos.online
+    kubeScheduler:
+      vmScrape:
+        spec:
+          endpoints:
+          - bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
+            port: http-metrics
+            scheme: https
+            tlsConfig:
+              caFile: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+              insecureSkipVerify: true
+    kubeControllerManager:
+      vmScrape:
+        spec:
+          endpoints:
+          - bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
+            port: http-metrics
+            scheme: https
+            tlsConfig:
+              caFile: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+              serverName: kubernetes
+              insecureSkipVerify: true
