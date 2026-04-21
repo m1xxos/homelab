@@ -1,0 +1,29 @@
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMPodScrape
+metadata:
+  name: annotated-pods
+  namespace: monitoring
+spec:
+  namespaceSelector:
+    any: true # or specify namespaces
+  selector: {} # match all pods (filtered by relabeling below)
+
+  podMetricsEndpoints:
+  - relabelConfigs:
+    # Only scrape pods with prometheus.io/scrape: "true"
+    - sourceLabels: [ __meta_kubernetes_pod_annotation_prometheus_io_scrape ]
+      action: keep
+      regex: "true"
+
+    # Dynamic path from annotation
+    - sourceLabels: [ __meta_kubernetes_pod_annotation_prometheus_io_path ]
+      action: replace
+      targetLabel: __metrics_path__
+      regex: (.+)
+
+    # Dynamic port from annotation
+    - sourceLabels: [ __address__, __meta_kubernetes_pod_annotation_prometheus_io_port ]
+      action: replace
+      regex: ([^:]+)(?::\d+)?;(\d+)
+      replacement: $1:$2
+      targetLabel: __address__

@@ -3,3 +3,4 @@ kind: Kustomization
 resources:
 - ciliumL2.yaml
 - bookinfo/
+- podScrape.yaml
