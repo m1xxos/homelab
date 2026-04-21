@@ -19,3 +19,6 @@ spec:
   values:
     server:
       web_fqdn: kiali.istio.m1xxos.online
+    external_services:
+      prometheus:
+        url: "http://vmsingle-vm.monitoring:8428/"
