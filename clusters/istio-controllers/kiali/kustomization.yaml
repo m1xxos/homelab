@@ -4,3 +4,4 @@ kind: Kustomization
 resources:
 - repo.yaml
 - release.yaml
+- pdb.yaml
