@@ -19,7 +19,7 @@ spec:
     replicaCount: 2
     autoscaleEnabled: true
     autoscaleMin: 2
-    autoscaleMax: 5
+    autoscaleMax: 3
     pdb:
       minAvailable: 1
     affinity:

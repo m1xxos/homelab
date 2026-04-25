@@ -29,7 +29,7 @@ spec:
         api_version: autoscaling/v2
         spec:
           minReplicas: 2
-          maxReplicas: 5
+          maxReplicas: 3
           metrics:
           - type: Resource
             resource:

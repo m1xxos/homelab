@@ -21,7 +21,7 @@ spec:
     autoscaling:
       enabled: true
       minReplicas: 2
-      maxReplicas: 5
+      maxReplicas: 3
     podDisruptionBudget:
       minAvailable: 1
     affinity:
