@@ -4,3 +4,4 @@ resources:
 - ciliumL2.yaml
 - bookinfo/
 - podScrape.yaml
+- vm-external-workload.yaml

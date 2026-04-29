@@ -1,0 +1,52 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: vm
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: ubutu
+  namespace: vm
+---
+apiVersion: networking.istio.io/v1beta1
+kind: WorkloadGroup
+metadata:
+  name: ubutu
+  namespace: vm
+spec:
+  metadata:
+    labels:
+      app: ubutu
+  template:
+    serviceAccount: ubutu
+    network: vm
+    labels:
+      app: ubutu
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: istio-external-workload
+  namespace: vm
+rules:
+- apiGroups: [ "networking.istio.io" ]
+  resources: [ "workloadentries" ]
+  verbs: [ "get", "list", "watch", "create", "update", "patch", "delete" ]
+- apiGroups: [ "" ]
+  resources: [ "configmaps" ]
+  verbs: [ "get", "list", "watch" ]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: istio-external-workload
+  namespace: vm
+subjects:
+- kind: ServiceAccount
+  name: ubutu
+  namespace: vm
+roleRef:
+  kind: Role
+  name: istio-external-workload
+  apiGroup: rbac.authorization.k8s.io
