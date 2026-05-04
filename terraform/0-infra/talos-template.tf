@@ -50,4 +50,8 @@ resource "proxmox_virtual_environment_vm" "talos_template" {
   }
 
   scsi_hardware = "virtio-scsi-single"
+
+  lifecycle {
+    ignore_changes = all
+  }
 }
