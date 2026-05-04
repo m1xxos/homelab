@@ -7,8 +7,3 @@ output "kubeconfig" {
   value     = module.main-cluster.kubeconfig
   sensitive = true
 }
-
-output "kubeconfig_istio" {
-  value     = module.istio-cluster.kubeconfig
-  sensitive = true
-}
