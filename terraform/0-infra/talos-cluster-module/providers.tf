@@ -61,7 +61,7 @@ provider "flux" {
   git = {
     url = var.git_url
     http = {
-      username = "flux"
+      username = var.github_username
       password = var.github_token
     }
     branch = var.branch

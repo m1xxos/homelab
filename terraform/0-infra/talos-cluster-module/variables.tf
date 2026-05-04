@@ -75,6 +75,11 @@ variable "github_token" {
   sensitive = true
 }
 
+variable "github_username" {
+  type    = string
+  default = "m1xxos"
+}
+
 variable "git_url" {
   type    = string
   default = "https://github.com/m1xxos/homelab.git"
@@ -108,7 +113,7 @@ variable "metrics_server_version" {
 
 variable "talos_ccm_version" {
   type    = string
-  default = "0.5.2"
+  default = "0.5.4"
 }
 
 variable "node_name" {
@@ -121,4 +126,15 @@ variable "cp_vip_address" {
 
 variable "talos_image_id" {
   type = string
+}
+
+variable "vm_started" {
+  type    = bool
+  default = true
+}
+
+variable "create_cilium_ipv4_pool" {
+  type        = bool
+  description = "Create CiliumLoadBalancerIPPool after the cluster API is reachable"
+  default     = true
 }

@@ -1,0 +1,62 @@
+# yaml-language-server: $schema=https://datreeio.github.io/CRDs-catalog/helm.toolkit.fluxcd.io/helmrelease_v2.json
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: kiali-server
+  namespace: istio-system
+spec:
+  interval: 20m
+  chart:
+    spec:
+      chart: kiali-server
+      version: v2.24.0
+      sourceRef:
+        kind: HelmRepository
+        name: kiali
+        namespace: istio-system
+  releaseName: kiali-server
+  values:
+    deployment:
+      instance_name: kiali
+      replicas: 2
+      strategy:
+        rollingUpdate:
+          maxSurge: 1
+          maxUnavailable: 0
+        type: RollingUpdate
+      hpa:
+        api_version: autoscaling/v2
+        spec:
+          minReplicas: 2
+          maxReplicas: 3
+          metrics:
+          - type: Resource
+            resource:
+              name: cpu
+              target:
+                type: Utilization
+                averageUtilization: 80
+      affinity:
+        pod_anti:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchLabels:
+                  app.kubernetes.io/name: kiali
+              topologyKey: kubernetes.io/hostname
+      topology_spread_constraints:
+      - maxSkew: 1
+        topologyKey: kubernetes.io/hostname
+        whenUnsatisfiable: ScheduleAnyway
+        labelSelector:
+          matchLabels:
+            app.kubernetes.io/name: kiali
+    server:
+      web_fqdn: kiali.istio.m1xxos.online
+    external_services:
+      prometheus:
+        url: "http://vmsingle-vm.monitoring:8428"
+      grafana:
+        internalURL: "http://monitoring-vm-stack-grafana.monitoring:80"

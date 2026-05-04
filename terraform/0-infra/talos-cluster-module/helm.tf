@@ -16,6 +16,7 @@ resource "helm_release" "cilium_cni" {
 }
 
 resource "kubernetes_manifest" "cilium_ipv4_pool" {
+  count      = var.create_cilium_ipv4_pool ? 1 : 0
   depends_on = [helm_release.cilium_cni]
   manifest = {
     apiVersion = "cilium.io/v2"
@@ -44,7 +45,7 @@ resource "helm_release" "metrics-server" {
 }
 
 resource "helm_release" "talos_ccm" {
-  depends_on = [talos_cluster_kubeconfig.kubeconfig, helm_release.cilium_cni]
+  depends_on = [talos_cluster_kubeconfig.kubeconfig]
   name       = "talos-ccm"
   chart      = "oci://ghcr.io/siderolabs/charts/talos-cloud-controller-manager"
   namespace  = "kube-system"

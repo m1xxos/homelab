@@ -18,6 +18,9 @@
       "matchUpdateTypes": [
         "minor",
         "patch"
+      ],
+      "schedule": [
+        "every week"
       ]
     }
   ]
