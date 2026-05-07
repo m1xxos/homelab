@@ -1,6 +1,6 @@
 # Homelab Architecture Reference for coding agents
 
-_Last updated: 2026-04-30 (reflects repository changes through 2026-04-29)_
+_Last updated: 2026-05-07 (reflects repository changes through 2026-05-07)_
 
 ## Overview
 
@@ -90,17 +90,14 @@ infra/
 
 clusters/
   main/                 — Main cluster Flux entry point
-    configs/            — config-sync.yaml (3-stage: main-tenant → main-infra → main-configs)
-                          CiliumL2AnnouncementPolicy, CiliumLoadBalancerIPPool (192.168.1.81)
-    monitoring/         — VictoriaMetrics stack, OpenTelemetry Collector (traces bridge)
-    vault/              — Vault Helm release (HA Raft, 3 replicas, YC KMS unseal)
-    authentik/          — Authentik HelmRelease (CNPG backend)
-    cloudnative-pg/     — CNPG operator HelmRelease
-    dragonfly/          — Dragonfly operator HelmRelease + instances
-    seaweedfs/          — SeaweedFS HelmRelease (S3 with COSI + IAM auth)
-    tracing/            — VTSingle (VictoriaMetrics tracing)
-    capi-operator-system/ — Cluster API Operator (Talos bootstrap/CP, Proxmox infra)
-    gitlab/             — GitLab HelmRelease v9.9.0 (CE) + values ConfigMap
+    namespaces/         — Cluster namespaces (`authentik`, `monitoring`, `vault`, etc.)
+    flux-system/        — Flux components/sync manifests for main cluster
+    flux-configs/       — config-sync.yaml (`main-tenant` → `main-infra` → `main-controllers` → `main-configs`)
+    configs/            — CiliumL2AnnouncementPolicy, CiliumLoadBalancerIPPool (192.168.1.81)
+  main-controllers/     — Main cluster shared controllers:
+                          Authentik, CNPG operator, Cluster API Operator, Dragonfly operator,
+                          VictoriaMetrics stack + OpenTelemetry, SeaweedFS, Vault
+    unified-controllers/ — References ../../../infra/controllers (shared controllers layer)
   main-configs/         — Main cluster configs
     authentik/          — Authentik SecretStore + ExternalSecret
     capi/               — CAPI provider manifests
@@ -136,10 +133,11 @@ terraform/0-infra/
 ## Flux Kustomization Hierarchy
 
 ```
-config-sync.yaml (flux-system namespace):
+clusters/main/flux-configs/config-sync.yaml (flux-system namespace on main cluster):
   main-tenant     → infra/tenant       (CLUSTER_NAME=main-cluster, SOPS decryption: sops-gpg)
-  main-infra      → infra/controllers  (depends: flux-system, main-tenant)
-  main-configs    → clusters/main-configs (depends: main-infra)
+  main-infra      → clusters/main-controllers/unified-controllers (depends: flux-system, main-tenant)
+  main-controllers → clusters/main-controllers (depends: main-infra)
+  main-configs    → clusters/main-configs (depends: main-infra, main-controllers)
                      Variables: DNS_NAME=local.m1xxos.online
                                CILIUM_CLUSTER_NAME=main
                                CILIUM_CLUSTERMESH_ENDPOINT=192.168.1.81
@@ -603,7 +601,8 @@ Flux GitOps (config-sync)
  ├─► infra/tenant (namespaces, RBAC, Vault SOPS secrets)
  ├─► infra/controllers (cert-manager, ESO, traefik, longhorn, gateway-api, prom-crds)
  ├─► infra/critical (cilium, talos-ccm, metrics-server)
- └─► clusters/main-configs + clusters/main/*
+ └─► clusters/main-controllers + clusters/main-configs
+     (+ clusters/main/namespaces and clusters/main/configs via main Flux entrypoint)
 
 Istio cluster Flux GitOps (clusters/istio/flux-configs/config-sync.yaml)
  ├─► clusters/istio-controllers (Istio + Kiali + Longhorn + VM stack + Prom CRDs)

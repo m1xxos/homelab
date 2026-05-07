@@ -9,6 +9,7 @@ tasks:
     - flux reconcile kustomization flux-system
     - flux reconcile kustomization main-tenant
     - flux reconcile kustomization main-infra
+    - flux reconcile kustomization main-controllers
     - flux reconcile kustomization main-configs
   new-cluster:
     desc: "Scaffold a new CAPI-managed Talos cluster in the repo"
