@@ -8,7 +8,6 @@ tasks:
     - flux reconcile source git flux-system
     - flux reconcile kustomization flux-system
     - flux reconcile kustomization main-tenant
-    - flux reconcile kustomization main-infra
     - flux reconcile kustomization main-controllers
     - flux reconcile kustomization main-configs
   new-cluster:
