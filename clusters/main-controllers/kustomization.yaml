@@ -8,3 +8,4 @@ resources:
 - monitoring/
 - seaweedfs/
 - vault/
+- unified-controllers/
