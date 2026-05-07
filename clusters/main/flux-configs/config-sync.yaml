@@ -29,8 +29,6 @@ metadata:
   name: main-controllers
   namespace: flux-system
 spec:
-  dependsOn:
-  - name: main-infra
   interval: 10m0s
   path: ./clusters/main-controllers
   prune: true
@@ -45,7 +43,6 @@ metadata:
   namespace: flux-system
 spec:
   dependsOn:
-  - name: main-infra
   - name: main-controllers
   interval: 10m0s
   path: ./clusters/main-configs
