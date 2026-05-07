@@ -26,6 +26,22 @@ spec:
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
+  name: main-infra
+  namespace: flux-system
+spec:
+  dependsOn:
+  - name: flux-system
+  - name: main-tenant
+  interval: 10m0s
+  path: ./clusters/main-controllers/unified-controllers
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
   name: main-controllers
   namespace: flux-system
 spec:
