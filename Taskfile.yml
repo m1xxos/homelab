@@ -13,17 +13,17 @@ tasks:
   new-cluster:
     desc: "Scaffold a new CAPI-managed Talos cluster in the repo"
     cmds:
-    - ./scripts/new-cluster.sh
+    - ./assets/scripts/new-cluster.sh
 
   add-kubeconfig:
     desc: "Fetch CA from CAPI secret and add OIDC context to kubeconfig. Usage: task add-kubeconfig CLUSTER=<name>"
     cmds:
-    - ./scripts/add-kubeconfig.sh {{.CLUSTER}}
+    - ./assets/scripts/add-kubeconfig.sh {{.CLUSTER}}
 
   add-sops:
     desc: "Copy sops-gpg secret from flux-system to a target namespace. Usage: task add-sops NAMESPACE=<ns>"
     cmds:
-    - ./scripts/add-sops.sh {{.NAMESPACE}}
+    - ./assets/scripts/add-sops.sh {{.NAMESPACE}}
 
   tfplan:
     cmds:
