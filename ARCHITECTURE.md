@@ -1,6 +1,6 @@
 # Homelab Architecture Reference for coding agents
 
-_Last updated: 2026-05-07 (reflects repository changes through 2026-05-07)_
+_Last updated: 2026-05-1 (reflects repository changes through 2026-05-11)_
 
 ## Overview
 
