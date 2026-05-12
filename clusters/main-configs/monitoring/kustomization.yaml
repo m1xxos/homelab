@@ -1,6 +1,10 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
+- grafana-sa.yaml
+- grafana.yaml
+- grafana-datasources.yaml
+- grafana-route.yaml
 - authentik-pod-scraper.yaml
 - cnpg-auth-pod-scraper.yaml
 - cnpg-monitoring.yaml

@@ -1,0 +1,50 @@
+---
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDatasource
+metadata:
+  name: victoriametrics
+  namespace: monitoring
+spec:
+  instanceSelector:
+    matchLabels:
+      dashboards: grafana
+  datasource:
+    uid: VictoriaMetrics
+    name: VictoriaMetrics
+    type: prometheus
+    access: proxy
+    url: http://vm-vmsingle:8429
+    isDefault: true
+    jsonData:
+      tlsSkipVerify: true
+      timeInterval: 5s
+---
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDatasource
+metadata:
+  name: victoriatraces
+  namespace: monitoring
+spec:
+  instanceSelector:
+    matchLabels:
+      dashboards: grafana
+  datasource:
+    name: VictoriaTraces
+    type: jaeger
+    url: http://vtsingle-vts.tracing.svc.cluster.local:10428/select/jaeger
+    access: proxy
+    basicAuth: false
+    jsonData:
+      tracesToMetrics:
+        datasourceUid: "VictoriaMetrics"
+        spanStartTimeShift: "-1h"
+        spanEndTimeShift: "1h"
+        tags:
+        - key: "service.name"
+          value: "service"
+        - key: "job"
+        queries:
+        - name: "Sample query"
+          query: 'sum(rate(traces_spanmetrics_latency_bucket{$$__tags}[5m]))'
+      nodeGraph:
+        enabled: true

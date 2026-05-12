@@ -1,6 +1,6 @@
 # Homelab Architecture Reference for coding agents
 
-_Last updated: 2026-05-1 (reflects repository changes through 2026-05-11)_
+_Last updated: 2026-05-12 (reflects repository changes through 2026-05-12)_
 
 ## Overview
 
@@ -33,7 +33,7 @@ Additional CAPI-managed clusters can still be provisioned on demand via `task ne
 - **DNS**: Cloudflare (managed via Terraform), domains: `local.m1xxos.online` (main), `gl.m1xxos.online` (gitlab),
 - **Ingress**: Traefik v38.0.1 (Gateway API + experimental channel for TCPRoute/TLSRoute)
 - **Auth**: Authentik v2025.12.4 (OIDC)
-- **Monitoring**: VictoriaMetrics k8s stack v0.63.2 + OpenTelemetry Collector v0.146.0
+- **Monitoring**: VictoriaMetrics k8s stack v0.72.2 + Grafana Operator v5.22.2 + OpenTelemetry Collector v0.146.1
 - **Tracing**: VictoriaMetrics VTSingle (1d retention, 5 GiB) + OTEL Collector bridge (Jaeger Thrift → OTLP)
 - **Storage**: Longhorn (ReadWriteMany, NFS backup to 192.168.1.138)
 - **Object Storage**: SeaweedFS v4.0.412 (S3-compatible, COSI)
@@ -79,7 +79,7 @@ clusters/
     configs/            — CiliumL2AnnouncementPolicy, CiliumLoadBalancerIPPool (192.168.1.81)
   main-controllers/     — Main cluster shared controllers:
                           Authentik, CNPG operator, Cluster API Operator, Dragonfly operator,
-                          VictoriaMetrics stack + OpenTelemetry, SeaweedFS, Vault
+                          VictoriaMetrics stack + Grafana Operator + OpenTelemetry, SeaweedFS, Vault
     unified-controllers/ — References ../../../infra/controllers (shared controllers layer)
   main-configs/         — Main cluster configs
     authentik/          — Authentik SecretStore + ExternalSecret
@@ -90,7 +90,7 @@ clusters/
                           ExternalSecrets (DB password, object storage, Authentik OIDC),
                           Dragonfly instance, SecretStore gitlab-store
     longhorn/           — Backup target (NFS), recurring jobs, volume snapshots
-    monitoring/         — VMSingle service config
+    monitoring/         — VM scrapes/alerts + Grafana CRs (instance, datasources, route)
     seaweedfs/          — SeaweedFS S3 IAM config ESO
     traefik/            — IngressRoute (dashboard), HTTPRoutes (hubble UI, vault UI)
     unified-configs/    — References ../../infra/configs (shared)
@@ -343,21 +343,31 @@ Terraform random_password + authentik_provider_oauth2.gitlab
 ### VictoriaMetrics k8s Stack
 | Property | Value |
 |----------|-------|
-| Chart | `victoria-metrics-k8s-stack` v0.63.2 |
+| Chart | `victoria-metrics-k8s-stack` v0.72.2 |
 | Namespace | `monitoring` |
 | VMSingle | 5 GiB storage (RWX), OTel prometheus naming, Cilium global service |
 | VMAgent | Exposed at `vmagent.local.m1xxos.online` |
-| Grafana | 5 GiB PVC, exposed at `grafana.local.m1xxos.online`, Vault Agent sidecar for OIDC creds |
+| Grafana | Disabled in VM stack (managed by Grafana Operator) |
 | Node Exporter + KSM | enabled |
 
 **Grafana datasources:**
 - VictoriaMetrics (default)
 - VictoriaTraces (Jaeger type) at `http://vtsingle-vts.tracing.svc.cluster.local:10428/select/jaeger` (trace→metric correlation)
 
+### Grafana Operator
+| Property | Value |
+|----------|-------|
+| Chart | `grafana-operator` v5.22.2 (OCI: `ghcr.io/grafana/helm-charts/grafana-operator`) |
+| Namespace | `monitoring` |
+| Grafana CR | `grafana` (`grafana.integreatly.org/v1beta1`) |
+| Storage | 5 GiB PVC |
+| UI | `grafana.local.m1xxos.online` (HTTPRoute → `grafana-service:3000`) |
+| Auth | Authentik OIDC via Vault Agent sidecar (`main/grafana/grafana-auth`, role `grafana-reader`) |
+
 ### OpenTelemetry Collector
 | Property | Value |
 |----------|-------|
-| Chart | `opentelemetry-collector` v0.146.0 |
+| Chart | `opentelemetry-collector` v0.146.1 |
 | Mode | Deployment (contrib image) |
 | fullnameOverride | `otel-collector` |
 | Receivers | OTLP gRPC (:4317), OTLP HTTP (:4318), Jaeger Thrift HTTP (:14268) |
