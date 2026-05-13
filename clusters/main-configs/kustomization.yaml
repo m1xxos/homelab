@@ -6,6 +6,7 @@ resources:
 - capi/
 - cilium/
 - etcd/
+- grafana/
 - longhorn/
 - monitoring/
 - seaweedfs/

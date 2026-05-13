@@ -86,11 +86,12 @@ clusters/
     capi/               — CAPI provider manifests
     cilium/             — ClusterMesh ExternalSecrets + ClusterMesh config
     etcd/               — etcd backup CronJob (talos-backup → MinIO S3 at 192.168.1.77:9000)
+    grafana/            — Grafana CRs (instance, datasources, dashboards, route)
     gitlab/             — CNPG gitlab-rails-db, BucketClaims (13 COSI buckets),
                           ExternalSecrets (DB password, object storage, Authentik OIDC),
                           Dragonfly instance, SecretStore gitlab-store
     longhorn/           — Backup target (NFS), recurring jobs, volume snapshots
-    monitoring/         — VM scrapes/alerts + Grafana CRs (instance, datasources, route)
+    monitoring/         — VM scrapes/alerts
     seaweedfs/          — SeaweedFS S3 IAM config ESO
     traefik/            — IngressRoute (dashboard), HTTPRoutes (hubble UI, vault UI)
     unified-configs/    — References ../../infra/configs (shared)
@@ -353,6 +354,10 @@ Terraform random_password + authentik_provider_oauth2.gitlab
 **Grafana datasources:**
 - VictoriaMetrics (default)
 - VictoriaTraces (Jaeger type) at `http://vtsingle-vts.tracing.svc.cluster.local:10428/select/jaeger` (trace→metric correlation)
+
+**Grafana dashboards (GrafanaDashboard CR):**
+- Kubernetes Views / Global (Grafana.com dashboard `15757`)
+- Node Exporter Full (Grafana.com dashboard `1860`)
 
 ### Grafana Operator
 | Property | Value |
