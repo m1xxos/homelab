@@ -357,7 +357,12 @@ Terraform random_password + authentik_provider_oauth2.gitlab
 
 **Grafana dashboards (GrafanaDashboard CR):**
 - Kubernetes Views / Global (Grafana.com dashboard `15757`)
+- Kubernetes Views / Namespaces (Grafana.com dashboard `15758`)
+- Kubernetes Views / Nodes (Grafana.com dashboard `15759`)
+- Kubernetes Views / Pods (Grafana.com dashboard `15760`)
+- Kubernetes / System / API Server (Grafana.com dashboard `15761`)
 - Node Exporter Full (Grafana.com dashboard `1860`)
+- Etcd by Prometheus (Grafana.com dashboard `3070`)
 
 ### Grafana Operator
 | Property | Value |
