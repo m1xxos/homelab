@@ -5,6 +5,7 @@ metadata:
   name: victoriametrics
   namespace: monitoring
 spec:
+  resyncPeriod: 10m
   instanceSelector:
     matchLabels:
       dashboards: grafana
