@@ -8,29 +8,22 @@ tasks:
     - flux reconcile source git flux-system
     - flux reconcile kustomization flux-system
     - flux reconcile kustomization main-tenant
-    - flux reconcile kustomization main-infra
+    - flux reconcile kustomization main-controllers
     - flux reconcile kustomization main-configs
-  istio:
-    desc: "Full Flux reconciliation for istio cluster"
-    cmds:
-    - flux reconcile source git flux-system
-    - flux reconcile kustomization flux-system
-    - flux reconcile kustomization istio-controllers
-    - flux reconcile kustomization istio-configs
   new-cluster:
     desc: "Scaffold a new CAPI-managed Talos cluster in the repo"
     cmds:
-    - ./scripts/new-cluster.sh
+    - ./assets/scripts/new-cluster.sh
 
   add-kubeconfig:
     desc: "Fetch CA from CAPI secret and add OIDC context to kubeconfig. Usage: task add-kubeconfig CLUSTER=<name>"
     cmds:
-    - ./scripts/add-kubeconfig.sh {{.CLUSTER}}
+    - ./assets/scripts/add-kubeconfig.sh {{.CLUSTER}}
 
   add-sops:
     desc: "Copy sops-gpg secret from flux-system to a target namespace. Usage: task add-sops NAMESPACE=<ns>"
     cmds:
-    - ./scripts/add-sops.sh {{.NAMESPACE}}
+    - ./assets/scripts/add-sops.sh {{.NAMESPACE}}
 
   tfplan:
     cmds:

@@ -1,0 +1,52 @@
+apiVersion: grafana.integreatly.org/v1beta1
+kind: Grafana
+metadata:
+  name: grafana
+  namespace: monitoring
+  labels:
+    dashboards: grafana
+spec:
+  persistentVolumeClaim:
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 5Gi
+  config:
+    auth:
+      oauth_auto_login: "true"
+      signout_redirect_url: "https://authentik.local.m1xxos.online/application/o/grafana/end-session/"
+    auth.generic_oauth:
+      name: authentik
+      enabled: "true"
+      client_id: $__file{/vault/secrets/client-id.txt}
+      client_secret: $__file{/vault/secrets/client-secret.txt}
+      scopes: "openid profile email"
+      auth_url: "https://authentik.local.m1xxos.online/application/o/authorize/"
+      token_url: "https://authentik.local.m1xxos.online/application/o/token/"
+      api_url: "https://authentik.local.m1xxos.online/application/o/userinfo/"
+      role_attribute_path: contains(groups, 'Grafana Admins') && 'Admin' || contains(groups, 'Grafana Editors') && 'Editor' || 'Viewer'
+    server:
+      root_url: https://grafana.local.m1xxos.online
+  deployment:
+    spec:
+      strategy:
+        type: Recreate
+      template:
+        metadata:
+          annotations:
+            vault.hashicorp.com/agent-inject: "true"
+            vault.hashicorp.com/role: "grafana-reader"
+            vault.hashicorp.com/agent-inject-secret-client-id.txt: "main/grafana/grafana-auth"
+            vault.hashicorp.com/agent-inject-template-client-id.txt: |
+              {{- with secret "main/grafana/grafana-auth" -}}
+              {{ .Data.data.oidc_client_id }}
+              {{- end -}}
+            vault.hashicorp.com/agent-inject-secret-client-secret.txt: "main/grafana/grafana-auth"
+            vault.hashicorp.com/agent-inject-template-client-secret.txt: |
+              {{- with secret "main/grafana/grafana-auth" -}}
+              {{ .Data.data.oidc_client_secret }}
+              {{- end -}}
+        spec:
+          serviceAccountName: grafana-reader

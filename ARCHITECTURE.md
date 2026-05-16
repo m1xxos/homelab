@@ -1,11 +1,11 @@
 # Homelab Architecture Reference for coding agents
 
-_Last updated: 2026-04-30 (reflects repository changes through 2026-04-29)_
+_Last updated: 2026-05-12 (reflects repository changes through 2026-05-12)_
 
 ## Overview
 
 Multi-cluster Kubernetes homelab managed via GitOps (Flux CD) with Talos Linux, deployed on Proxmox.
-Active clusters are `main` (core platform + apps) and `istio` (service mesh stack + external workload integration).
+Active clusters are `main` (core platform + apps)
 Additional CAPI-managed clusters can still be provisioned on demand via `task new-cluster`.
 
 ## Cluster: main
@@ -23,34 +23,17 @@ Additional CAPI-managed clusters can still be provisioned on demand via `task ne
 | Talos version | v1.12.2 |
 | OIDC | Authentik at `https://authentik.local.m1xxos.online/application/o/k8s/`, client `k8s` |
 
-## Cluster: istio
-
-| Property | Value |
-|----------|-------|
-| Role | Service mesh platform and ingress/monitoring testbed |
-| Control plane VIP | 192.168.1.76 |
-| External/L2 IP | 192.168.1.86 |
-| ClusterMesh IP | 192.168.1.85 (reserved; ClusterMesh bootstrap currently disabled in Terraform values) |
-| Cilium ID | 7 |
-| CP nodes | 1 × `istio-cp-0` (192.168.1.71) |
-| Worker nodes | 3 × `istio-worker-{0,1,2}` (192.168.1.20–22) |
-| Talos image | v1.12.2 template (`talos_nocloud_template`) |
-| DNS | `istio.m1xxos.online` (+ wildcard via Terraform module) |
-| Flux chain | `flux-system` → `istio-controllers` → `istio-configs` |
-
 ## Infrastructure
 
 - **OS**: Talos Linux (v1.12.2)
-- **Provisioning**: Terraform → Proxmox VMs → Talos config → bootstrap (plus a Terraform-managed Ubuntu VM for Istio external workload testing)
+- **Provisioning**: Terraform → Proxmox VMs → Talos config → bootstrap
 - **CNI**: Cilium v1.18.6 (kube-proxy disabled, kubeProxyReplacement: true, L2 announcements; ClusterMesh block currently commented in Terraform cilium-values template)
 - **GitOps**: Flux CD (bootstrapped from Terraform, SOPS decryption via `sops-gpg`)
 - **Secrets**: HashiCorp Vault (HA Raft, 3 replicas, YC KMS auto-unseal) + ESO + SOPS
-- **DNS**: Cloudflare (managed via Terraform), domains: `local.m1xxos.online` (main), `gl.m1xxos.online` (gitlab), `istio.m1xxos.online` (istio cluster)
+- **DNS**: Cloudflare (managed via Terraform), domains: `local.m1xxos.online` (main), `gl.m1xxos.online` (gitlab),
 - **Ingress**: Traefik v38.0.1 (Gateway API + experimental channel for TCPRoute/TLSRoute)
-- **Service Mesh**: Istio v1.29.2 (base + istiod + ingress gateway) + Kiali v2.24.0
 - **Auth**: Authentik v2025.12.4 (OIDC)
-- **Monitoring**: VictoriaMetrics k8s stack v0.63.2 + OpenTelemetry Collector v0.146.0
-- **Istio cluster monitoring**: VictoriaMetrics k8s stack v0.74.1 + Prometheus Operator CRDs v25.0.0
+- **Monitoring**: VictoriaMetrics k8s stack v0.72.2 + Grafana Operator v5.22.2 + OpenTelemetry Collector v0.146.1
 - **Tracing**: VictoriaMetrics VTSingle (1d retention, 5 GiB) + OTEL Collector bridge (Jaeger Thrift → OTLP)
 - **Storage**: Longhorn (ReadWriteMany, NFS backup to 192.168.1.138)
 - **Object Storage**: SeaweedFS v4.0.412 (S3-compatible, COSI)
@@ -90,63 +73,41 @@ infra/
 
 clusters/
   main/                 — Main cluster Flux entry point
-    configs/            — config-sync.yaml (3-stage: main-tenant → main-infra → main-configs)
-                          CiliumL2AnnouncementPolicy, CiliumLoadBalancerIPPool (192.168.1.81)
-    monitoring/         — VictoriaMetrics stack, OpenTelemetry Collector (traces bridge)
-    vault/              — Vault Helm release (HA Raft, 3 replicas, YC KMS unseal)
-    authentik/          — Authentik HelmRelease (CNPG backend)
-    cloudnative-pg/     — CNPG operator HelmRelease
-    dragonfly/          — Dragonfly operator HelmRelease + instances
-    seaweedfs/          — SeaweedFS HelmRelease (S3 with COSI + IAM auth)
-    tracing/            — VTSingle (VictoriaMetrics tracing)
-    capi-operator-system/ — Cluster API Operator (Talos bootstrap/CP, Proxmox infra)
-    gitlab/             — GitLab HelmRelease v9.9.0 (CE) + values ConfigMap
+    namespaces/         — Cluster namespaces (`authentik`, `monitoring`, `vault`, etc.)
+    flux-system/        — Flux components/sync manifests for main cluster
+    flux-configs/       — config-sync.yaml (`main-tenant` → `main-infra` → `main-controllers` → `main-configs`)
+    configs/            — CiliumL2AnnouncementPolicy, CiliumLoadBalancerIPPool (192.168.1.81)
+  main-controllers/     — Main cluster shared controllers:
+                          Authentik, CNPG operator, Cluster API Operator, Dragonfly operator,
+                          VictoriaMetrics stack + Grafana Operator + OpenTelemetry, SeaweedFS, Vault
+    unified-controllers/ — References ../../../infra/controllers (shared controllers layer)
   main-configs/         — Main cluster configs
     authentik/          — Authentik SecretStore + ExternalSecret
     capi/               — CAPI provider manifests
     cilium/             — ClusterMesh ExternalSecrets + ClusterMesh config
     etcd/               — etcd backup CronJob (talos-backup → MinIO S3 at 192.168.1.77:9000)
+    grafana/            — Grafana CRs (instance, datasources, dashboards, route)
     gitlab/             — CNPG gitlab-rails-db, BucketClaims (13 COSI buckets),
                           ExternalSecrets (DB password, object storage, Authentik OIDC),
                           Dragonfly instance, SecretStore gitlab-store
     longhorn/           — Backup target (NFS), recurring jobs, volume snapshots
-    monitoring/         — VMSingle service config
+    monitoring/         — VM scrapes/alerts
     seaweedfs/          — SeaweedFS S3 IAM config ESO
     traefik/            — IngressRoute (dashboard), HTTPRoutes (hubble UI, vault UI)
     unified-configs/    — References ../../infra/configs (shared)
-  istio/                — Istio cluster Flux entry point
-    namespaces/         — `istio-system`, `istio-ingress`, `monitoring`, `longhorn-system`
-    flux-system/        — Flux components/sync manifests for istio cluster
-    flux-configs/       — config-sync.yaml (`istio-controllers` → `istio-configs`)
-  istio-controllers/    — Istio cluster shared controllers:
-                          Istio base/istiod/ingress (v1.29.2),
-                          Kiali (v2.24.0),
-                          Longhorn (v1.10.0),
-                          Prometheus CRDs (v25.0.0),
-                          VictoriaMetrics stack (v0.74.1)
-  istio-configs/        — Istio cluster configs:
-                          Cilium L2 policy, Bookinfo gateway/virtual service,
-                          pod scrape rules, external VM workload bootstrap resources
-
-terraform/0-infra/
-  istio.tf              — Terraform module instance for the `istio` Talos cluster
-  ubuntu-istio-vm.tf    — Ubuntu VM + cloud-init for Istio external workload onboarding
 ```
 
 ## Flux Kustomization Hierarchy
 
 ```
-config-sync.yaml (flux-system namespace):
+clusters/main/flux-configs/config-sync.yaml (flux-system namespace on main cluster):
   main-tenant     → infra/tenant       (CLUSTER_NAME=main-cluster, SOPS decryption: sops-gpg)
-  main-infra      → infra/controllers  (depends: flux-system, main-tenant)
-  main-configs    → clusters/main-configs (depends: main-infra)
+  main-infra      → clusters/main-controllers/unified-controllers (depends: flux-system, main-tenant)
+  main-controllers → clusters/main-controllers (depends: main-infra)
+  main-configs    → clusters/main-configs (depends: main-infra, main-controllers)
                      Variables: DNS_NAME=local.m1xxos.online
                                CILIUM_CLUSTER_NAME=main
                                CILIUM_CLUSTERMESH_ENDPOINT=192.168.1.81
-
-clusters/istio/flux-configs/config-sync.yaml (flux-system namespace on istio cluster):
-  istio-controllers → clusters/istio-controllers (depends: flux-system)
-  istio-configs     → clusters/istio-configs     (depends: istio-controllers)
 ```
 
 For CAPI-managed remote clusters a separate `<cluster>-flux.yaml` is created in the management
@@ -383,21 +344,40 @@ Terraform random_password + authentik_provider_oauth2.gitlab
 ### VictoriaMetrics k8s Stack
 | Property | Value |
 |----------|-------|
-| Chart | `victoria-metrics-k8s-stack` v0.63.2 |
+| Chart | `victoria-metrics-k8s-stack` v0.72.2 |
 | Namespace | `monitoring` |
 | VMSingle | 5 GiB storage (RWX), OTel prometheus naming, Cilium global service |
 | VMAgent | Exposed at `vmagent.local.m1xxos.online` |
-| Grafana | 5 GiB PVC, exposed at `grafana.local.m1xxos.online`, Vault Agent sidecar for OIDC creds |
+| Grafana | Disabled in VM stack (managed by Grafana Operator) |
 | Node Exporter + KSM | enabled |
 
 **Grafana datasources:**
 - VictoriaMetrics (default)
 - VictoriaTraces (Jaeger type) at `http://vtsingle-vts.tracing.svc.cluster.local:10428/select/jaeger` (trace→metric correlation)
 
+**Grafana dashboards (GrafanaDashboard CR):**
+- Kubernetes Views / Global (Grafana.com dashboard `15757`)
+- Kubernetes Views / Namespaces (Grafana.com dashboard `15758`)
+- Kubernetes Views / Nodes (Grafana.com dashboard `15759`)
+- Kubernetes Views / Pods (Grafana.com dashboard `15760`)
+- Kubernetes / System / API Server (Grafana.com dashboard `15761`)
+- Node Exporter Full (Grafana.com dashboard `1860`)
+- Etcd by Prometheus (Grafana.com dashboard `3070`)
+
+### Grafana Operator
+| Property | Value |
+|----------|-------|
+| Chart | `grafana-operator` v5.22.2 (OCI: `ghcr.io/grafana/helm-charts/grafana-operator`) |
+| Namespace | `monitoring` |
+| Grafana CR | `grafana` (`grafana.integreatly.org/v1beta1`) |
+| Storage | 5 GiB PVC |
+| UI | `grafana.local.m1xxos.online` (HTTPRoute → `grafana-service:3000`) |
+| Auth | Authentik OIDC via Vault Agent sidecar (`main/grafana/grafana-auth`, role `grafana-reader`) |
+
 ### OpenTelemetry Collector
 | Property | Value |
 |----------|-------|
-| Chart | `opentelemetry-collector` v0.146.0 |
+| Chart | `opentelemetry-collector` v0.146.1 |
 | Mode | Deployment (contrib image) |
 | fullnameOverride | `otel-collector` |
 | Receivers | OTLP gRPC (:4317), OTLP HTTP (:4318), Jaeger Thrift HTTP (:14268) |
@@ -454,31 +434,8 @@ GitLab  → Jaeger Thrift HTTP → OTEL Collector (:14268) → OTLP HTTP → VTS
 | Providers | Bootstrap: Talos, ControlPlane: Talos, Infrastructure: Proxmox |
 
 The operator is installed on the management cluster and is used only when a new workload cluster
-is provisioned with `task new-cluster`. The current `istio` workload cluster is Terraform-managed
+is provisioned with `task new-cluster`.
 and does not use CAPI bootstrap manifests.
-
-## Istio Cluster Stack
-
-### Controllers
-| Component | Version/Config |
-|-----------|----------------|
-| Istio base | Helm chart `base` v1.29.2 (`istio-system`) |
-| Istiod | Helm chart `istiod` v1.29.2, `replicaCount: 2`, HPA `min: 2`, `max: 3` |
-| Istio ingress gateway | Helm chart `gateway` v1.29.2, `replicaCount: 2`, HPA `min: 2`, `max: 3` |
-| Kiali | Helm chart `kiali-server` v2.24.0, replicas 2, HPA `min: 2`, `max: 3`, PDB `minAvailable: 1` |
-| VictoriaMetrics stack | Helm chart `victoria-metrics-k8s-stack` v0.74.1 (`monitoring`) |
-| Prometheus CRDs | Helm chart `prometheus-operator-crds` v25.0.0 (`monitoring`) |
-| Longhorn | Helm chart `longhorn` v1.10.0 (`longhorn-system`) |
-
-### Workloads and ingress
-- `IngressClass` `istio` is marked as default in istio cluster configs.
-- Bookinfo sample app is exposed via Istio `Gateway` + `VirtualService` at `bookinfo.istio.m1xxos.online`.
-- `VMPodScrape` (`monitoring/annotated-pods`) scrapes pods with `prometheus.io/scrape: "true"` annotations.
-
-### External VM workload integration
-- Terraform file `terraform/0-infra/ubuntu-istio-vm.tf` provisions Ubuntu VM `istio-01` (vm_id `501`).
-- Cloud-init installs `istioctl` v1.29.2 and runs `istioctl x workload entry configure` for workload group `ubutu` in namespace `vm`.
-- `clusters/istio-configs/vm-external-workload.yaml` creates namespace, service account, `WorkloadGroup`, and RBAC needed for that VM registration.
 
 ## Adding a New Cluster
 
@@ -510,7 +467,7 @@ After scaffolding:
 
 ## Cilium Clustermesh
 
-Both `main` and `istio` clusters are active. ClusterMesh bootstrap is currently disabled in the
+`main` cluster are active. ClusterMesh bootstrap is currently disabled in the
 shared Terraform `cilium-values.yaml` template (the `clustermesh` block is commented out), so new
 applies do not automatically enable KVStoreMesh/apiserver wiring.
 Legacy secret flow manifests are still present (PushSecret + ExternalSecret paths), and can be used
@@ -603,11 +560,8 @@ Flux GitOps (config-sync)
  ├─► infra/tenant (namespaces, RBAC, Vault SOPS secrets)
  ├─► infra/controllers (cert-manager, ESO, traefik, longhorn, gateway-api, prom-crds)
  ├─► infra/critical (cilium, talos-ccm, metrics-server)
- └─► clusters/main-configs + clusters/main/*
-
-Istio cluster Flux GitOps (clusters/istio/flux-configs/config-sync.yaml)
- ├─► clusters/istio-controllers (Istio + Kiali + Longhorn + VM stack + Prom CRDs)
- └─► clusters/istio-configs (Bookinfo ingress, pod scrape rules, external VM workload resources)
+ └─► clusters/main-controllers + clusters/main-configs
+     (+ clusters/main/namespaces and clusters/main/configs via main Flux entrypoint)
 
 Vault (HA Raft, YC KMS auto-unseal)
  ├─► ESO (ClusterSecretStore vault-general, AppRole auth)
@@ -636,7 +590,4 @@ GitLab (gitlab namespace, same cluster)
  ├─► PostgreSQL: gitlab-rails-db-rw.gitlab:5432 (CNPG)
  ├─► Redis: dragonfly-gl.gitlab:6379 (Dragonfly)
  └─► S3: seaweedfs-s3.seaweedfs:8333 (SeaweedFS)
-
-External VM workload (Proxmox vm_id 501)
- └─► istioctl workload entry bootstrap → namespace `vm` / WorkloadGroup `ubutu` on istio cluster
 ```
