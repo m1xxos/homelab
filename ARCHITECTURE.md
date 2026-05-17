@@ -73,12 +73,12 @@ infra/
 
 clusters/
   main/                 — Main cluster Flux entry point
-    namespaces/         — Cluster namespaces (`authentik`, `monitoring`, `vault`, etc.)
+    namespaces/         — Cluster namespaces (`authentik`, `harbor`, `monitoring`, `vault`, etc.)
     flux-system/        — Flux components/sync manifests for main cluster
     flux-configs/       — config-sync.yaml (`main-tenant` → `main-infra` → `main-controllers` → `main-configs`)
     configs/            — CiliumL2AnnouncementPolicy, CiliumLoadBalancerIPPool (192.168.1.81)
   main-controllers/     — Main cluster shared controllers:
-                          Authentik, CNPG operator, Cluster API Operator, Dragonfly operator,
+                          Authentik, CNPG operator, Cluster API Operator, Dragonfly operator, Harbor,
                           VictoriaMetrics stack + Grafana Operator + OpenTelemetry, SeaweedFS, Vault
     unified-controllers/ — References ../../../infra/controllers (shared controllers layer)
   main-configs/         — Main cluster configs
@@ -87,6 +87,7 @@ clusters/
     cilium/             — ClusterMesh ExternalSecrets + ClusterMesh config
     etcd/               — etcd backup CronJob (talos-backup → MinIO S3 at 192.168.1.77:9000)
     grafana/            — Grafana CRs (instance, datasources, dashboards, route)
+    harbor/             — Harbor route, ESO secrets, external CNPG/Dragonfly backends, manual proxy registry configuration
     gitlab/             — CNPG gitlab-rails-db, BucketClaims (13 COSI buckets),
                           ExternalSecrets (DB password, object storage, Authentik OIDC),
                           Dragonfly instance, SecretStore gitlab-store
@@ -312,6 +313,7 @@ Terraform random_password + authentik_provider_oauth2.gitlab
 | VMAgent | vmagent.local.m1xxos.online |
 | Vault | vault.local.m1xxos.online |
 | Authentik | authentik.local.m1xxos.online |
+| Harbor | harbor.local.m1xxos.online (external PostgreSQL via CNPG + external Dragonfly Redis) |
 | Hubble UI | hubble.local.m1xxos.online |
 | Longhorn UI | longhorn.local.m1xxos.online |
 | Traefik Dashboard | traefik.local.m1xxos.online (IngressRoute) |
