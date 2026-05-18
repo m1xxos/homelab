@@ -17,6 +17,11 @@ variable "authentik-sa-name" {
   default = "authentik-reader"
 }
 
+variable "harbor-sa-name" {
+  type    = string
+  default = "harbor-reader"
+}
+
 variable "grafana-sa-name" {
   type    = string
   default = "grafana-reader"
