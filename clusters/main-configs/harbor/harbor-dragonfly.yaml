@@ -5,7 +5,3 @@ metadata:
   namespace: harbor
 spec:
   replicas: 1
-  authentication:
-    passwordFromSecret:
-      name: harbor-redis
-      key: password

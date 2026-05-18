@@ -32,7 +32,6 @@ data:
       type: external
       external:
         addr: harbor-dragonfly.harbor:6379
-        existingSecret: harbor-redis
     persistence:
       persistentVolumeClaim:
         registry:

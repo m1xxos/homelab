@@ -11,5 +11,3 @@ spec:
     initdb:
       database: harbor
       owner: harbor
-      secret:
-        name: harbor-pg-app

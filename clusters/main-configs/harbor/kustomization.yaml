@@ -5,7 +5,5 @@ resources:
 - secret-store.yaml
 - harbor-admin-secret.yaml
 - harbor-core-secret.yaml
-- harbor-pg-secret.yaml
 - harbor-pg-cluster.yaml
-- harbor-redis-secret.yaml
 - harbor-dragonfly.yaml
