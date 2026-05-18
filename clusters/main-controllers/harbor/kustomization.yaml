@@ -3,4 +3,5 @@ kind: Kustomization
 resources:
 - repository.yaml
 - values.yaml
+- sa.yaml
 - release.yaml

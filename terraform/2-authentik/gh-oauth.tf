@@ -19,5 +19,5 @@ resource "authentik_source_oauth" "github" {
   provider_type   = "github"
   consumer_key    = local.consumer_key
   consumer_secret = local.consumer_secret
-  oidc_jwks_url = "https://token.actions.githubusercontent.com/.well-known/jwks"
+  oidc_jwks_url   = "https://token.actions.githubusercontent.com/.well-known/jwks"
 }
