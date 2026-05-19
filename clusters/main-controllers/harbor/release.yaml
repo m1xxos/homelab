@@ -21,3 +21,7 @@ spec:
   - kind: ConfigMap
     name: harbor-values
     valuesKey: values.yaml
+  - kind: Secret
+    name: harbor-oidc-values
+    valuesKey: values.yaml
+    optional: true
