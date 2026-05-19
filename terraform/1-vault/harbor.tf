@@ -15,10 +15,10 @@ resource "vault_kv_secret_v2" "harbor-admin" {
 }
 
 resource "random_password" "harbor-core-secret-key" {
-  length      = 60
-  min_numeric = 10
-  min_special = 10
-  min_upper   = 10
+  length      = 16
+  min_numeric = 4
+  min_special = 4
+  min_upper   = 4
 }
 
 resource "vault_kv_secret_v2" "harbor-core" {
