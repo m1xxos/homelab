@@ -13,12 +13,12 @@ resource "vault_kv_secret_v2" "harbor_proxy_registries" {
   mount = "main"
   name  = "harbor/proxy-registries"
   data_json = jsonencode({
-    docker_hub  = harbor_registry.dockerhub.url
-    quay_io     = harbor_registry.quay.url
-    ghcr_io     = harbor_registry.ghcr.url
-    k8s         = harbor_registry.k8s_gcr.url
-    bitnami     = harbor_registry.bitnami.url
-    jetbrains   = harbor_registry.jetbrains.url
-    mcr         = harbor_registry.mcr.url
+    docker_hub = harbor_registry.dockerhub.endpoint_url
+    quay_io    = harbor_registry.quay.endpoint_url
+    ghcr_io    = harbor_registry.ghcr.endpoint_url
+    k8s        = harbor_registry.k8s_gcr.endpoint_url
+    bitnami    = harbor_registry.bitnami.endpoint_url
+    jetbrains  = harbor_registry.jetbrains.endpoint_url
+    mcr        = harbor_registry.mcr.endpoint_url
   })
 }
