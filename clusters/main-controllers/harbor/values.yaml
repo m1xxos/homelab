@@ -15,7 +15,6 @@ data:
     externalURL: https://harbor.local.m1xxos.online
     existingSecretAdminPassword: harbor-admin-secret
     existingSecretAdminPasswordKey: HARBOR_ADMIN_PASSWORD
-    existingSecretSecretKey: harbor-core-secret
     jobservice:
       jobLoggers:
         - stdout
