@@ -1,6 +1,6 @@
 resource "harbor_robot_account" "terraform" {
-  name        = "terraform"
-  description = "Terraform automation account"
+  name        = "K8s-sa"
+  description = "K8s sa account"
   level       = "system"
   duration    = -1
 
