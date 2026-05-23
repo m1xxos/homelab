@@ -32,6 +32,11 @@ data "vault_kv_secret_v2" "harbor_admin" {
   name  = "harbor/admin"
 }
 
+data "vault_kv_secret_v2" "harbor_gcr" {
+  mount = "main"
+  name  = "harbor/gcr"
+}
+
 provider "harbor" {
   url      = "https://harbor.local.m1xxos.online"
   username = "admin"

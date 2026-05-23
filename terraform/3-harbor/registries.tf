@@ -38,5 +38,5 @@ resource "harbor_registry" "gcr" {
   provider_name = "google"
   endpoint_url  = "https://gcr.io"
   description   = "Proxy cache registry for gcr"
-  access_secret = 
+  access_secret = data.vault_kv_secret_v2.harbor_gcr.data["access_secret"]
 }
