@@ -35,8 +35,7 @@ resource "harbor_registry" "mcr" {
 
 resource "harbor_registry" "gcr" {
   name          = "gcr"
-  provider_name = "google"
+  provider_name = "docker-registry"
   endpoint_url  = "https://gcr.io"
   description   = "Proxy cache registry for gcr"
-  access_secret = data.vault_kv_secret_v2.harbor_gcr.data["access_secret"]
 }

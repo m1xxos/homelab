@@ -5,16 +5,6 @@ resource "harbor_robot_account" "terraform" {
   duration    = -1
 
   permissions {
-    kind      = "system"
-    namespace = "/"
-
-    access {
-      action   = "manage"
-      resource = "catalog"
-    }
-  }
-
-  permissions {
     kind      = "project"
     namespace = "*"
 
