@@ -1,34 +1,35 @@
 resource "harbor_project" "dockerhub_proxy" {
-  name        = "proxy-dockerhub"
+  name        = "dockerhub"
+  public      = true
   registry_id = harbor_registry.dockerhub.registry_id
 }
 
 resource "harbor_project" "ghcr_proxy" {
-  name        = "proxy-ghcr"
+  name        = "ghcr"
+  public      = true
   registry_id = harbor_registry.ghcr.registry_id
 }
 
 resource "harbor_project" "quay_proxy" {
-  name        = "proxy-quay"
+  name        = "quay"
+  public      = true
   registry_id = harbor_registry.quay.registry_id
 }
 
 resource "harbor_project" "k8s_gcr_proxy" {
-  name        = "proxy-k8s-gcr"
+  name        = "k8s-gcr"
+  public      = true
   registry_id = harbor_registry.k8s_gcr.registry_id
 }
 
-resource "harbor_project" "bitnami_proxy" {
-  name        = "proxy-bitnami"
-  registry_id = harbor_registry.bitnami.registry_id
-}
-
-resource "harbor_project" "jetbrains_proxy" {
-  name        = "proxy-jetbrains"
-  registry_id = harbor_registry.jetbrains.registry_id
-}
-
 resource "harbor_project" "mcr_proxy" {
-  name        = "proxy-mcr"
+  name        = "mcr"
+  public      = true
   registry_id = harbor_registry.mcr.registry_id
+}
+
+resource "harbor_project" "gcr_proxy" {
+  name        = "gcr"
+  public      = true
+  registry_id = harbor_registry.gcr.registry_id
 }
