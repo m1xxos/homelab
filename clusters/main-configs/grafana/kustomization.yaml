@@ -5,4 +5,5 @@ resources:
 - grafana.yaml
 - grafana-datasources.yaml
 - grafana-dashboards.yaml
+- grafana-dashboard-k8s-top-pods.yaml
 - grafana-route.yaml
