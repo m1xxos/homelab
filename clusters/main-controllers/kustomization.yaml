@@ -5,6 +5,7 @@ resources:
 - capi-operator-system/
 - cloudnative-pg/
 - dragonfly/
+- harbor/
 - monitoring/
 - seaweedfs/
 - vault/

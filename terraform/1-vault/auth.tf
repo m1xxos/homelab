@@ -16,6 +16,15 @@ resource "vault_kubernetes_auth_backend_role" "authentik-reader" {
   token_ttl                        = 3600
 }
 
+resource "vault_kubernetes_auth_backend_role" "harbor-reader" {
+  backend                          = vault_auth_backend.kubernetes.path
+  role_name                        = var.harbor-sa-name
+  bound_service_account_names      = [var.harbor-sa-name]
+  bound_service_account_namespaces = ["harbor"]
+  token_policies                   = [vault_policy.harbor-reader.name]
+  token_ttl                        = 3600
+}
+
 resource "vault_kubernetes_auth_backend_role" "gitlab-reader" {
   backend                          = vault_auth_backend.kubernetes.path
   role_name                        = "gitlab-reader"

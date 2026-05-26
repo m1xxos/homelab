@@ -1,0 +1,41 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: harbor-values
+  namespace: harbor
+  labels:
+    reconcile.fluxcd.io/watch: Enabled
+data:
+  values.yaml: |
+    expose:
+      type: clusterIP
+      tls:
+        enabled: false
+    externalURL: https://harbor.local.m1xxos.online
+    existingSecretAdminPassword: harbor-admin-secret
+    existingSecretAdminPasswordKey: HARBOR_ADMIN_PASSWORD
+    jobservice:
+      jobLoggers:
+        - stdout
+    database:
+      type: external
+      external:
+        host: harbor-pg-rw.harbor
+        port: "5432"
+        username: harbor
+        coreDatabase: harbor
+        existingSecret: harbor-pg-app
+        sslmode: disable
+    redis:
+      type: external
+      external:
+        addr: harbor-dragonfly.harbor:6379
+    persistence:
+      persistentVolumeClaim:
+        registry:
+          storageClass: longhorn
+          size: 10Gi
+        trivy:
+          storageClass: longhorn
+          size: 5Gi

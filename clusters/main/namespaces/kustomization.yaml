@@ -5,6 +5,7 @@ resources:
 - capi-operator-system.yaml
 - cnpg-system.yaml
 - dragonfly-operator-system.yaml
+- harbor.yaml
 - monitoring.yaml
 - seaweedfs.yaml
 - vault.yaml

@@ -10,6 +10,18 @@ path "main/metadata/*" {
 EOT
 }
 
+resource "vault_policy" "harbor-reader" {
+  name   = var.harbor-sa-name
+  policy = <<EOT
+path "main/data/harbor/*" {
+  capabilities = ["read", "list"]
+}
+path "main/metadata/harbor/*" {
+  capabilities = ["list"]
+}
+EOT
+}
+
 resource "vault_policy" "gitlab-reader" {
   name   = "gitlab-reader"
   policy = <<EOT

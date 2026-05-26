@@ -7,6 +7,7 @@ resources:
 - cilium/
 - etcd/
 - grafana/
+- harbor/
 - longhorn/
 - monitoring/
 - seaweedfs/
