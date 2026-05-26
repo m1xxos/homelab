@@ -4,7 +4,6 @@ resources:
 - harbor-route.yaml
 - secret-store.yaml
 - harbor-admin-secret.yaml
-- harbor-core-secret.yaml
 - harbor-oidc-values.yaml
 - harbor-pg-cluster.yaml
 - harbor-dragonfly.yaml
