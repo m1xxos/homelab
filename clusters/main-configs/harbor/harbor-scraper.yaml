@@ -11,6 +11,6 @@ spec:
     matchLabels:
       app: harbor-dragonfly
   podTargetLabels:
-  - harbor
+  - app
   podMetricsEndpoints:
   - port: admin
