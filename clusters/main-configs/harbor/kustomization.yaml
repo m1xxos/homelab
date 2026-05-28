@@ -7,3 +7,4 @@ resources:
 - harbor-oidc-values.yaml
 - harbor-pg-cluster.yaml
 - harbor-dragonfly.yaml
+- harbor-scraper.yaml

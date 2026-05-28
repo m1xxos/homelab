@@ -7,4 +7,3 @@ resources:
 - longhorn-alert.yaml
 - longhorn-service-scraper.yaml
 - traefik-service-scrape.yaml
-- dragonfly-harbor.yaml

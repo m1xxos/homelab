@@ -1,7 +1,8 @@
 apiVersion: operator.victoriametrics.com/v1beta1
 kind: VMPodScrape
 metadata:
-  name: dragonfly-sample
+  name: harbor-dragonfly
+  namespace: harbor
   labels:
     group: dragonfly
     app: harbor-dragonfly
