@@ -1,0 +1,15 @@
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMPodScrape
+metadata:
+  name: dragonfly-sample
+  labels:
+    group: dragonfly
+    app: harbor-dragonfly
+spec:
+  selector:
+    matchLabels:
+      app: harbor-dragonfly
+  podTargetLabels:
+  - harbor
+  podMetricsEndpoints:
+  - port: admin
