@@ -15,6 +15,9 @@ spec:
         name: seaweedfs
         namespace: seaweedfs
   values:
+    global:
+      monitoring:
+        enabled: true
     s3:
       annotations:
         service.cilium.io/global: "true"
