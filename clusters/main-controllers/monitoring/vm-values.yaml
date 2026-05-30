@@ -11,6 +11,11 @@ data:
     nameOverride: "vm"
     fullnameOverride: "vm"
     vmagent:
+      spec:
+        # kube-apiserver /metrics exceeds the 16MiB default scrape limit on this
+        # cluster; raise the cap so the API server target can be scraped.
+        extraArgs:
+          promscrape.maxScrapeSize: "32MiB"
       route:
         enabled: true
         hostnames:
