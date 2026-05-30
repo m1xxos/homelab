@@ -8,3 +8,4 @@ resources:
 - harbor-pg-cluster.yaml
 - harbor-dragonfly.yaml
 - harbor-scraper.yaml
+- harbor-dragonfly-netpol.yaml
