@@ -10,41 +10,11 @@ spec:
       dashboards: grafana
   json: |
     {
-      "__inputs": [
-        {
-          "name": "DS_PROMETHEUS",
-          "label": "Prometheus",
-          "description": "",
-          "type": "datasource",
-          "pluginId": "prometheus",
-          "pluginName": "Prometheus"
-        }
-      ],
-      "__requires": [
-        {
-          "type": "grafana",
-          "id": "grafana",
-          "name": "Grafana",
-          "version": "8.1.2"
-        },
-        {
-          "type": "panel",
-          "id": "graph",
-          "name": "Graph (old)",
-          "version": ""
-        },
-        {
-          "type": "datasource",
-          "id": "prometheus",
-          "name": "Prometheus",
-          "version": "1.0.0"
-        }
-      ],
       "annotations": {
         "list": [
           {
             "builtIn": 1,
-            "datasource": "${DS_PROMETHEUS}",
+            "datasource": "$DS_PROMETHEUS",
             "enable": true,
             "hide": true,
             "iconColor": "rgba(0, 211, 255, 1)",
@@ -58,770 +28,22 @@ spec:
       "editable": true,
       "gnetId": 10423,
       "graphTooltip": 0,
-      "id": null,
+      "id": 3690,
+      "iteration": 1602763266349,
       "links": [],
       "panels": [
         {
-          "collapsed": true,
+          "collapsed": false,
           "datasource": null,
-          "fieldConfig": {
-            "defaults": {},
-            "overrides": []
-          },
           "gridPos": {
             "h": 1,
             "w": 24,
             "x": 0,
             "y": 0
           },
-          "id": 69,
-          "panels": [
-            {
-              "aliasColors": {},
-              "bars": false,
-              "dashLength": 10,
-              "dashes": false,
-              "datasource": "${DS_PROMETHEUS}",
-              "editable": true,
-              "error": false,
-              "fill": 1,
-              "grid": {},
-              "gridPos": {
-                "h": 7,
-                "w": 8,
-                "x": 0,
-                "y": 1
-              },
-              "id": 46,
-              "legend": {
-                "avg": false,
-                "current": false,
-                "max": false,
-                "min": false,
-                "show": true,
-                "total": false,
-                "values": false
-              },
-              "lines": true,
-              "linewidth": 1,
-              "links": [],
-              "nullPointMode": "null as zero",
-              "percentage": false,
-              "pointradius": 5,
-              "points": false,
-              "renderer": "flot",
-              "seriesOverrides": [],
-              "spaceLength": 10,
-              "stack": false,
-              "steppedLine": false,
-              "targets": [
-                {
-                  "expr": "histogram_quantile(0.90, sum(rate(SeaweedFS_filerStore_request_seconds_bucket[1m])) by (le))",
-                  "format": "time_series",
-                  "hide": false,
-                  "intervalFactor": 2,
-                  "legendFormat": "average",
-                  "refId": "A",
-                  "step": 60
-                },
-                {
-                  "expr": "histogram_quantile(0.90, sum(rate(SeaweedFS_filerStore_request_seconds_bucket[1m])) by (le, type))",
-                  "format": "time_series",
-                  "hide": false,
-                  "intervalFactor": 2,
-                  "legendFormat": "{{type}}",
-                  "refId": "B",
-                  "step": 60
-                }
-              ],
-              "thresholds": [],
-              "timeFrom": null,
-              "timeShift": null,
-              "title": "Filer Request Duration 90th percentile",
-              "tooltip": {
-                "msResolution": true,
-                "shared": true,
-                "sort": 0,
-                "value_type": "cumulative"
-              },
-              "type": "graph",
-              "xaxis": {
-                "buckets": null,
-                "mode": "time",
-                "name": null,
-                "show": true,
-                "values": []
-              },
-              "yaxes": [
-                {
-                  "format": "s",
-                  "label": null,
-                  "logBase": 1,
-                  "max": null,
-                  "min": 0,
-                  "show": true
-                },
-                {
-                  "format": "short",
-                  "label": null,
-                  "logBase": 1,
-                  "max": null,
-                  "min": null,
-                  "show": false
-                }
-              ]
-            },
-            {
-              "aliasColors": {},
-              "bars": false,
-              "dashLength": 10,
-              "dashes": false,
-              "datasource": "${DS_PROMETHEUS}",
-              "editable": true,
-              "error": false,
-              "fill": 1,
-              "grid": {},
-              "gridPos": {
-                "h": 7,
-                "w": 8,
-                "x": 8,
-                "y": 1
-              },
-              "id": 49,
-              "legend": {
-                "avg": false,
-                "current": false,
-                "max": false,
-                "min": false,
-                "show": true,
-                "total": false,
-                "values": false
-              },
-              "lines": true,
-              "linewidth": 1,
-              "links": [],
-              "nullPointMode": "null as zero",
-              "percentage": false,
-              "pointradius": 5,
-              "points": false,
-              "renderer": "flot",
-              "seriesOverrides": [],
-              "spaceLength": 10,
-              "stack": false,
-              "steppedLine": false,
-              "targets": [
-                {
-                  "expr": "histogram_quantile(0.95, sum(rate(SeaweedFS_filerStore_request_seconds_bucket[1m])) by (le))",
-                  "format": "time_series",
-                  "hide": false,
-                  "intervalFactor": 2,
-                  "legendFormat": "average",
-                  "refId": "A",
-                  "step": 60
-                },
-                {
-                  "expr": "histogram_quantile(0.95, sum(rate(SeaweedFS_filerStore_request_seconds_bucket[1m])) by (le, type))",
-                  "format": "time_series",
-                  "hide": false,
-                  "intervalFactor": 2,
-                  "legendFormat": "{{type}}",
-                  "refId": "B",
-                  "step": 60
-                },
-                {
-                  "expr": "",
-                  "format": "time_series",
-                  "intervalFactor": 2,
-                  "refId": "C"
-                }
-              ],
-              "thresholds": [],
-              "timeFrom": null,
-              "timeShift": null,
-              "title": "Filer Request Duration 95th percentile",
-              "tooltip": {
-                "msResolution": true,
-                "shared": true,
-                "sort": 0,
-                "value_type": "cumulative"
-              },
-              "type": "graph",
-              "xaxis": {
-                "buckets": null,
-                "mode": "time",
-                "name": null,
-                "show": true,
-                "values": []
-              },
-              "yaxes": [
-                {
-                  "format": "s",
-                  "label": null,
-                  "logBase": 1,
-                  "max": null,
-                  "min": 0,
-                  "show": true
-                },
-                {
-                  "format": "short",
-                  "label": null,
-                  "logBase": 1,
-                  "max": null,
-                  "min": null,
-                  "show": false
-                }
-              ]
-            },
-            {
-              "aliasColors": {},
-              "bars": false,
-              "dashLength": 10,
-              "dashes": false,
-              "datasource": "${DS_PROMETHEUS}",
-              "editable": true,
-              "error": false,
-              "fill": 1,
-              "grid": {},
-              "gridPos": {
-                "h": 7,
-                "w": 8,
-                "x": 16,
-                "y": 1
-              },
-              "id": 45,
-              "legend": {
-                "avg": false,
-                "current": false,
-                "max": false,
-                "min": false,
-                "show": true,
-                "total": false,
-                "values": false
-              },
-              "lines": true,
-              "linewidth": 1,
-              "links": [],
-              "nullPointMode": "null as zero",
-              "percentage": false,
-              "pointradius": 5,
-              "points": false,
-              "renderer": "flot",
-              "seriesOverrides": [],
-              "spaceLength": 10,
-              "stack": false,
-              "steppedLine": false,
-              "targets": [
-                {
-                  "expr": "histogram_quantile(0.99, sum(rate(SeaweedFS_filerStore_request_seconds_bucket[1m])) by (le))",
-                  "format": "time_series",
-                  "hide": false,
-                  "intervalFactor": 2,
-                  "legendFormat": "average",
-                  "refId": "A",
-                  "step": 60
-                },
-                {
-                  "expr": "histogram_quantile(0.99, sum(rate(SeaweedFS_filerStore_request_seconds_bucket[1m])) by (le, type))",
-                  "format": "time_series",
-                  "hide": false,
-                  "intervalFactor": 2,
-                  "legendFormat": "{{type}}",
-                  "refId": "B",
-                  "step": 60
-                },
-                {
-                  "expr": "",
-                  "format": "time_series",
-                  "intervalFactor": 2,
-                  "refId": "C"
-                }
-              ],
-              "thresholds": [],
-              "timeFrom": null,
-              "timeShift": null,
-              "title": "Filer Request Duration 99th percentile",
-              "tooltip": {
-                "msResolution": true,
-                "shared": true,
-                "sort": 0,
-                "value_type": "cumulative"
-              },
-              "type": "graph",
-              "xaxis": {
-                "buckets": null,
-                "mode": "time",
-                "name": null,
-                "show": true,
-                "values": []
-              },
-              "yaxes": [
-                {
-                  "format": "s",
-                  "label": null,
-                  "logBase": 1,
-                  "max": null,
-                  "min": 0,
-                  "show": true
-                },
-                {
-                  "format": "short",
-                  "label": null,
-                  "logBase": 1,
-                  "max": null,
-                  "min": null,
-                  "show": false
-                }
-              ]
-            },
-            {
-              "aliasColors": {},
-              "bars": false,
-              "dashLength": 10,
-              "dashes": false,
-              "datasource": "${DS_PROMETHEUS}",
-              "editable": true,
-              "error": false,
-              "fill": 0,
-              "grid": {},
-              "gridPos": {
-                "h": 7,
-                "w": 24,
-                "x": 0,
-                "y": 8
-              },
-              "id": 2,
-              "legend": {
-                "alignAsTable": true,
-                "avg": false,
-                "current": true,
-                "hideEmpty": true,
-                "hideZero": true,
-                "max": true,
-                "min": false,
-                "rightSide": true,
-                "show": true,
-                "sideWidth": 250,
-                "sort": "max",
-                "sortDesc": true,
-                "total": false,
-                "values": true
-              },
-              "lines": true,
-              "linewidth": 1,
-              "links": [],
-              "maxPerRow": 1,
-              "nullPointMode": "null as zero",
-              "percentage": false,
-              "pointradius": 5,
-              "points": false,
-              "renderer": "flot",
-              "seriesOverrides": [
-                {
-                  "alias": "total",
-                  "lines": false
-                }
-              ],
-              "spaceLength": 10,
-              "stack": false,
-              "steppedLine": false,
-              "targets": [
-                {
-                  "expr": "rate(SeaweedFS_filerStore_request_total[1m])",
-                  "format": "time_series",
-                  "intervalFactor": 2,
-                  "legendFormat": "{{type}}",
-                  "refId": "A",
-                  "step": 30
-                }
-              ],
-              "thresholds": [],
-              "timeFrom": null,
-              "timeShift": null,
-              "title": "Filer QPS",
-              "tooltip": {
-                "msResolution": true,
-                "shared": true,
-                "sort": 2,
-                "value_type": "individual"
-              },
-              "type": "graph",
-              "xaxis": {
-                "buckets": null,
-                "mode": "time",
-                "name": null,
-                "show": true,
-                "values": []
-              },
-              "yaxes": [
-                {
-                  "format": "short",
-                  "label": null,
-                  "logBase": 1,
-                  "max": null,
-                  "min": "0",
-                  "show": true
-                },
-                {
-                  "format": "short",
-                  "label": null,
-                  "logBase": 1,
-                  "max": null,
-                  "min": null,
-                  "show": true
-                }
-              ]
-            },
-            {
-              "aliasColors": {},
-              "bars": false,
-              "dashLength": 10,
-              "dashes": false,
-              "datasource": "Prometheus",
-              "fill": 1,
-              "gridPos": {
-                "h": 6,
-                "w": 12,
-                "x": 0,
-                "y": 25
-              },
-              "id": 86,
-              "legend": {
-                "avg": false,
-                "current": true,
-                "max": false,
-                "min": false,
-                "show": true,
-                "total": false,
-                "values": true
-              },
-              "lines": true,
-              "linewidth": 1,
-              "links": [],
-              "nullPointMode": "null",
-              "percentage": false,
-              "pointradius": 5,
-              "points": false,
-              "renderer": "flot",
-              "seriesOverrides": [],
-              "spaceLength": 10,
-              "stack": false,
-              "steppedLine": false,
-              "targets": [
-                {
-                  "expr": "SeaweedFS_filer_in_flight_upload_count",
-                  "format": "time_series",
-                  "intervalFactor": 2,
-                  "legendFormat": "uploads",
-                  "refId": "A",
-                  "step": 30
-                }
-              ],
-              "thresholds": [],
-              "timeFrom": null,
-              "timeShift": null,
-              "title": "Filer Concurrent Uploads",
-              "tooltip": {
-                "msResolution": true,
-                "shared": true,
-                "sort": 2,
-                "value_type": "individual"
-              },
-              "type": "graph",
-              "xaxis": {
-                "buckets": null,
-                "mode": "time",
-                "name": null,
-                "show": true,
-                "values": []
-              },
-              "yaxes": [
-                {
-                  "format": "short",
-                  "label": null,
-                  "logBase": 1,
-                  "max": null,
-                  "min": "0",
-                  "show": true
-                },
-                {
-                  "format": "short",
-                  "label": null,
-                  "logBase": 1,
-                  "max": null,
-                  "min": null,
-                  "show": true
-                }
-              ]
-            },
-            {
-              "aliasColors": {},
-              "bars": false,
-              "dashLength": 10,
-              "dashes": false,
-              "datasource": "Prometheus",
-              "fill": 1,
-              "gridPos": {
-                "h": 6,
-                "w": 12,
-                "x": 12,
-                "y": 25
-              },
-              "id": 87,
-              "legend": {
-                "avg": false,
-                "current": true,
-                "max": false,
-                "min": false,
-                "show": true,
-                "total": false,
-                "values": true
-              },
-              "lines": true,
-              "linewidth": 1,
-              "links": [],
-              "nullPointMode": "null",
-              "percentage": false,
-              "pointradius": 5,
-              "points": false,
-              "renderer": "flot",
-              "seriesOverrides": [],
-              "spaceLength": 10,
-              "stack": false,
-              "steppedLine": false,
-              "targets": [
-                {
-                  "expr": "SeaweedFS_filer_in_flight_upload_bytes",
-                  "format": "time_series",
-                  "intervalFactor": 2,
-                  "legendFormat": "bytes",
-                  "refId": "A",
-                  "step": 30
-                }
-              ],
-              "thresholds": [],
-              "timeFrom": null,
-              "timeShift": null,
-              "title": "Filer Concurrent Upload Bytes",
-              "tooltip": {
-                "msResolution": true,
-                "shared": true,
-                "sort": 2,
-                "value_type": "individual"
-              },
-              "type": "graph",
-              "xaxis": {
-                "buckets": null,
-                "mode": "time",
-                "name": null,
-                "show": true,
-                "values": []
-              },
-              "yaxes": [
-                {
-                  "format": "bytes",
-                  "label": null,
-                  "logBase": 1,
-                  "max": null,
-                  "min": "0",
-                  "show": true
-                },
-                {
-                  "format": "short",
-                  "label": null,
-                  "logBase": 1,
-                  "max": null,
-                  "min": null,
-                  "show": true
-                }
-              ]
-            }
-          ],
-          "repeat": null,
-          "title": "Filer",
-          "type": "row"
-        },
-        {
-          "collapsed": false,
-          "datasource": null,
-          "fieldConfig": {
-            "defaults": {},
-            "overrides": []
-          },
-          "gridPos": {
-            "h": 1,
-            "w": 24,
-            "x": 0,
-            "y": 1
-          },
-          "id": 70,
-          "panels": [
-            {
-              "aliasColors": {},
-              "bars": false,
-              "dashLength": 10,
-              "dashes": false,
-              "datasource": "Prometheus",
-              "fill": 1,
-              "gridPos": {
-                "h": 6,
-                "w": 12,
-                "x": 0,
-                "y": 31
-              },
-              "id": 88,
-              "legend": {
-                "avg": false,
-                "current": true,
-                "max": false,
-                "min": false,
-                "show": true,
-                "total": false,
-                "values": true
-              },
-              "lines": true,
-              "linewidth": 1,
-              "links": [],
-              "nullPointMode": "null",
-              "percentage": false,
-              "pointradius": 5,
-              "points": false,
-              "renderer": "flot",
-              "seriesOverrides": [],
-              "spaceLength": 10,
-              "stack": false,
-              "steppedLine": false,
-              "targets": [
-                {
-                  "expr": "SeaweedFS_s3_in_flight_upload_count",
-                  "format": "time_series",
-                  "intervalFactor": 2,
-                  "legendFormat": "uploads",
-                  "refId": "A",
-                  "step": 30
-                }
-              ],
-              "thresholds": [],
-              "timeFrom": null,
-              "timeShift": null,
-              "title": "S3 Concurrent Uploads",
-              "tooltip": {
-                "msResolution": true,
-                "shared": true,
-                "sort": 2,
-                "value_type": "individual"
-              },
-              "type": "graph",
-              "xaxis": {
-                "buckets": null,
-                "mode": "time",
-                "name": null,
-                "show": true,
-                "values": []
-              },
-              "yaxes": [
-                {
-                  "format": "short",
-                  "label": null,
-                  "logBase": 1,
-                  "max": null,
-                  "min": "0",
-                  "show": true
-                },
-                {
-                  "format": "short",
-                  "label": null,
-                  "logBase": 1,
-                  "max": null,
-                  "min": null,
-                  "show": true
-                }
-              ]
-            },
-            {
-              "aliasColors": {},
-              "bars": false,
-              "dashLength": 10,
-              "dashes": false,
-              "datasource": "Prometheus",
-              "fill": 1,
-              "gridPos": {
-                "h": 6,
-                "w": 12,
-                "x": 12,
-                "y": 31
-              },
-              "id": 89,
-              "legend": {
-                "avg": false,
-                "current": true,
-                "max": false,
-                "min": false,
-                "show": true,
-                "total": false,
-                "values": true
-              },
-              "lines": true,
-              "linewidth": 1,
-              "links": [],
-              "nullPointMode": "null",
-              "percentage": false,
-              "pointradius": 5,
-              "points": false,
-              "renderer": "flot",
-              "seriesOverrides": [],
-              "spaceLength": 10,
-              "stack": false,
-              "steppedLine": false,
-              "targets": [
-                {
-                  "expr": "SeaweedFS_s3_in_flight_upload_bytes",
-                  "format": "time_series",
-                  "intervalFactor": 2,
-                  "legendFormat": "bytes",
-                  "refId": "A",
-                  "step": 30
-                }
-              ],
-              "thresholds": [],
-              "timeFrom": null,
-              "timeShift": null,
-              "title": "S3 Concurrent Upload Bytes",
-              "tooltip": {
-                "msResolution": true,
-                "shared": true,
-                "sort": 2,
-                "value_type": "individual"
-              },
-              "type": "graph",
-              "xaxis": {
-                "buckets": null,
-                "mode": "time",
-                "name": null,
-                "show": true,
-                "values": []
-              },
-              "yaxes": [
-                {
-                  "format": "bytes",
-                  "label": null,
-                  "logBase": 1,
-                  "max": null,
-                  "min": "0",
-                  "show": true
-                },
-                {
-                  "format": "short",
-                  "label": null,
-                  "logBase": 1,
-                  "max": null,
-                  "min": null,
-                  "show": true
-                }
-              ]
-            }
-          ],
-          "repeat": null,
-          "title": "S3 Gateway",
+          "id": 60,
+          "panels": [],
+          "title": "S3 api",
           "type": "row"
         },
         {
@@ -829,20 +51,249 @@ spec:
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "${DS_PROMETHEUS}",
+          "datasource": "$DS_PROMETHEUS",
           "editable": true,
           "error": false,
-          "fill": 1,
+          "fieldConfig": {
+            "defaults": {
+              "custom": {}
+            },
+            "overrides": []
+          },
+          "fill": 0,
           "fillGradient": 0,
           "grid": {},
           "gridPos": {
             "h": 7,
-            "w": 8,
+            "w": 12,
             "x": 0,
-            "y": 2
+            "y": 1
           },
           "hiddenSeries": false,
-          "id": 56,
+          "id": 63,
+          "legend": {
+            "alignAsTable": false,
+            "avg": false,
+            "current": true,
+            "hideEmpty": true,
+            "hideZero": true,
+            "max": false,
+            "min": false,
+            "rightSide": false,
+            "show": true,
+            "sideWidth": 250,
+            "sort": "max",
+            "sortDesc": true,
+            "total": false,
+            "values": true
+          },
+          "lines": true,
+          "linewidth": 1,
+          "links": [],
+          "maxPerRow": 1,
+          "nullPointMode": "null as zero",
+          "percentage": false,
+          "pluginVersion": "7.1.0",
+          "pointradius": 5,
+          "points": false,
+          "renderer": "flot",
+          "seriesOverrides": [
+            {
+              "alias": "total",
+              "lines": false
+            }
+          ],
+          "spaceLength": 10,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "expr": "sum(rate(SeaweedFS_s3_request_total{namespace=\"$namespace\",service=~\"$service-api\",type=~\"$method\"}[1m])) by (code)",
+              "format": "time_series",
+              "interval": "",
+              "intervalFactor": 2,
+              "legendFormat": "{{code}}",
+              "refId": "A",
+              "step": 30
+            }
+          ],
+          "thresholds": [],
+          "timeFrom": null,
+          "timeRegions": [],
+          "timeShift": null,
+          "title": "S3 QPS by statusCode",
+          "tooltip": {
+            "msResolution": true,
+            "shared": true,
+            "sort": 2,
+            "value_type": "individual"
+          },
+          "type": "graph",
+          "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": []
+          },
+          "yaxes": [
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": "0",
+              "show": true
+            },
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            }
+          ],
+          "yaxis": {
+            "align": false,
+            "alignLevel": null
+          }
+        },
+        {
+          "aliasColors": {},
+          "bars": false,
+          "dashLength": 10,
+          "dashes": false,
+          "datasource": "$DS_PROMETHEUS",
+          "editable": true,
+          "error": false,
+          "fieldConfig": {
+            "defaults": {
+              "custom": {}
+            },
+            "overrides": []
+          },
+          "fill": 0,
+          "fillGradient": 0,
+          "grid": {},
+          "gridPos": {
+            "h": 7,
+            "w": 12,
+            "x": 12,
+            "y": 1
+          },
+          "hiddenSeries": false,
+          "id": 62,
+          "legend": {
+            "alignAsTable": false,
+            "avg": false,
+            "current": true,
+            "hideEmpty": true,
+            "hideZero": true,
+            "max": false,
+            "min": false,
+            "rightSide": false,
+            "show": true,
+            "sideWidth": 250,
+            "sort": "max",
+            "sortDesc": true,
+            "total": false,
+            "values": true
+          },
+          "lines": true,
+          "linewidth": 1,
+          "links": [],
+          "maxPerRow": 1,
+          "nullPointMode": "null as zero",
+          "percentage": false,
+          "pluginVersion": "7.1.0",
+          "pointradius": 5,
+          "points": false,
+          "renderer": "flot",
+          "seriesOverrides": [
+            {
+              "alias": "total",
+              "lines": false
+            }
+          ],
+          "spaceLength": 10,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "expr": "sum(rate(SeaweedFS_s3_request_total{namespace=\"$namespace\",service=~\"$service-api\"}[1m])) by (type)",
+              "format": "time_series",
+              "interval": "",
+              "intervalFactor": 2,
+              "legendFormat": "{{type}}",
+              "refId": "A",
+              "step": 30
+            }
+          ],
+          "thresholds": [],
+          "timeFrom": null,
+          "timeRegions": [],
+          "timeShift": null,
+          "title": "S3 QPS by  method",
+          "tooltip": {
+            "msResolution": true,
+            "shared": true,
+            "sort": 2,
+            "value_type": "individual"
+          },
+          "type": "graph",
+          "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": []
+          },
+          "yaxes": [
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": "0",
+              "show": true
+            },
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            }
+          ],
+          "yaxis": {
+            "align": false,
+            "alignLevel": null
+          }
+        },
+        {
+          "aliasColors": {},
+          "bars": false,
+          "dashLength": 10,
+          "dashes": false,
+          "datasource": "${DS_PROMETHEUS}",
+          "fill": 1,
+          "fieldConfig": {
+            "defaults": {
+              "unit": "decbytes"
+            },
+            "overrides": []
+          },
+          "fillGradient": 0,
+          "gridPos": {
+            "h": 7,
+            "w": 12,
+            "x": 0,
+            "y": 8
+          },
+          "hiddenSeries": false,
+          "id": 84,
           "legend": {
             "avg": false,
             "current": false,
@@ -855,7 +306,7 @@ spec:
           "lines": true,
           "linewidth": 1,
           "links": [],
-          "nullPointMode": "null as zero",
+          "nullPointMode": "null",
           "options": {
             "alertThreshold": true
           },
@@ -870,21 +321,301 @@ spec:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "histogram_quantile(0.90, sum(rate(SeaweedFS_s3_request_seconds_bucket[1m])) by (le))",
+              "expr": "sum(rate(SeaweedFS_s3_bucket_traffic_received_bytes_total{namespace=\"$namespace\",service=~\"$service-api\"}[$__interval])) by (bucket)",
               "format": "time_series",
               "hide": false,
+              "intervalFactor": 2,
+              "legendFormat": "{{bucket}}",
+              "refId": "A"
+            }
+          ],
+          "thresholds": [],
+          "timeFrom": null,
+          "timeRegions": [],
+          "timeShift": null,
+          "title": "S3 Bucket Traffic Received",
+          "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+          },
+          "type": "graph",
+          "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": []
+          },
+          "yaxes": [
+            {
+              "format": "decbytes",
+              "logBase": 1,
+              "min": 0,
+              "show": true
+            },
+            {
+              "format": "short",
+              "logBase": 1,
+              "show": false
+            }
+          ],
+          "yaxis": {
+            "align": false,
+            "alignLevel": null
+          }
+        },
+        {
+          "aliasColors": {},
+          "bars": false,
+          "dashLength": 10,
+          "dashes": false,
+          "datasource": "${DS_PROMETHEUS}",
+          "fill": 1,
+          "fieldConfig": {
+            "defaults": {
+              "unit": "decbytes"
+            },
+            "overrides": []
+          },
+          "fillGradient": 0,
+          "gridPos": {
+            "h": 7,
+            "w": 12,
+            "x": 12,
+            "y": 8
+          },
+          "hiddenSeries": false,
+          "id": 85,
+          "legend": {
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "show": true,
+            "total": false,
+            "values": false
+          },
+          "lines": true,
+          "linewidth": 1,
+          "links": [],
+          "nullPointMode": "null",
+          "options": {
+            "alertThreshold": true
+          },
+          "percentage": false,
+          "pluginVersion": "8.1.2",
+          "pointradius": 5,
+          "points": false,
+          "renderer": "flot",
+          "seriesOverrides": [],
+          "spaceLength": 10,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "expr": "sum(rate(SeaweedFS_s3_bucket_traffic_sent_bytes_total{namespace=\"$namespace\",service=~\"$service-api\"}[$__interval])) by (bucket)",
+              "format": "time_series",
+              "hide": false,
+              "intervalFactor": 2,
+              "legendFormat": "{{bucket}}",
+              "refId": "A"
+            }
+          ],
+          "thresholds": [],
+          "timeFrom": null,
+          "timeRegions": [],
+          "timeShift": null,
+          "title": "S3 Bucket Traffic Sent",
+          "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+          },
+          "type": "graph",
+          "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": []
+          },
+          "yaxes": [
+            {
+              "format": "decbytes",
+              "logBase": 1,
+              "min": 0,
+              "show": true
+            },
+            {
+              "format": "short",
+              "logBase": 1,
+              "show": false
+            }
+          ],
+          "yaxis": {
+            "align": false,
+            "alignLevel": null
+          }
+        },
+        {
+          "aliasColors": {},
+          "bars": false,
+          "dashLength": 10,
+          "dashes": false,
+          "datasource": "$DS_PROMETHEUS",
+          "fill": 1,
+          "fillGradient": 0,
+          "fieldConfig": {
+            "defaults": {
+              "unit": "reqps"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 6,
+            "x": 0,
+            "y": 15
+          },
+          "hiddenSeries": false,
+          "id": 86,
+          "legend": {
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "show": true,
+            "total": false,
+            "values": false
+          },
+          "lines": true,
+          "linewidth": 1,
+          "links": [],
+          "nullPointMode": "null",
+          "options": {
+            "alertThreshold": true
+          },
+          "percentage": false,
+          "pluginVersion": "8.1.2",
+          "pointradius": 5,
+          "points": false,
+          "renderer": "flot",
+          "seriesOverrides": [],
+          "spaceLength": 10,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "expr": "sum(rate(SeaweedFS_s3_request_total{namespace=\"$namespace\",service=~\"$service-api\"}[$__interval])) by (bucket)",
+              "format": "time_series",
+              "hide": false,
+              "intervalFactor": 2,
+              "legendFormat": "{{bucket}}",
+              "refId": "A"
+            }
+          ],
+          "thresholds": [],
+          "timeFrom": null,
+          "timeRegions": [],
+          "timeShift": null,
+          "title": "S3 API Calls per Bucket",
+          "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+          },
+          "type": "graph",
+          "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": []
+          },
+          "yaxes": [
+            {
+              "format": "reqps",
+              "logBase": 1,
+              "min": 0,
+              "show": true
+            },
+            {
+              "format": "short",
+              "logBase": 1,
+              "show": false
+            }
+          ],
+          "yaxis": {
+            "align": false,
+            "alignLevel": null
+          }
+        },
+        {
+          "aliasColors": {},
+          "bars": false,
+          "dashLength": 10,
+          "dashes": false,
+          "datasource": "$DS_PROMETHEUS",
+          "editable": true,
+          "error": false,
+          "fieldConfig": {
+            "defaults": {
+              "custom": {}
+            },
+            "overrides": []
+          },
+          "fill": 1,
+          "fillGradient": 0,
+          "grid": {},
+          "gridPos": {
+            "h": 7,
+            "w": 6,
+            "x": 12,
+            "y": 15
+          },
+          "hiddenSeries": false,
+          "id": 68,
+          "legend": {
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "show": true,
+            "total": false,
+            "values": false
+          },
+          "lines": true,
+          "linewidth": 1,
+          "links": [],
+          "nullPointMode": "null as zero",
+          "percentage": false,
+          "pluginVersion": "7.1.0",
+          "pointradius": 5,
+          "points": false,
+          "renderer": "flot",
+          "seriesOverrides": [],
+          "spaceLength": 10,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "expr": "histogram_quantile(0.80, sum(rate(SeaweedFS_s3_request_seconds_bucket{namespace=\"$namespace\",service=~\"$service-api\"}[1m])) by (le))",
+              "format": "time_series",
+              "hide": false,
+              "interval": "",
               "intervalFactor": 2,
               "legendFormat": "average",
               "refId": "A",
               "step": 60
             },
             {
-              "expr": "histogram_quantile(0.90, sum(rate(SeaweedFS_s3_request_seconds_bucket[1m])) by (le, type, bucket))",
+              "expr": "histogram_quantile(0.80, sum(rate(SeaweedFS_s3_request_seconds_bucket{namespace=\"$namespace\",service=~\"$service-api\",type=~\"$method\"}[1m])) by (le, type))",
               "format": "time_series",
               "hide": false,
               "interval": "",
               "intervalFactor": 2,
-              "legendFormat": "{{bucket}} {{type}}",
+              "legendFormat": "{{type}}",
               "refId": "B",
               "step": 60
             }
@@ -893,7 +624,7 @@ spec:
           "timeFrom": null,
           "timeRegions": [],
           "timeShift": null,
-          "title": "S3 Request Duration 90th percentile",
+          "title": "S3 Request Duration 80th percentile",
           "tooltip": {
             "msResolution": true,
             "shared": true,
@@ -936,20 +667,26 @@ spec:
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "${DS_PROMETHEUS}",
+          "datasource": "$DS_PROMETHEUS",
           "editable": true,
           "error": false,
+          "fieldConfig": {
+            "defaults": {
+              "custom": {}
+            },
+            "overrides": []
+          },
           "fill": 1,
           "fillGradient": 0,
           "grid": {},
           "gridPos": {
             "h": 7,
-            "w": 8,
-            "x": 8,
-            "y": 2
+            "w": 6,
+            "x": 6,
+            "y": 15
           },
           "hiddenSeries": false,
-          "id": 57,
+          "id": 67,
           "legend": {
             "avg": false,
             "current": false,
@@ -963,11 +700,8 @@ spec:
           "linewidth": 1,
           "links": [],
           "nullPointMode": "null as zero",
-          "options": {
-            "alertThreshold": true
-          },
           "percentage": false,
-          "pluginVersion": "8.1.2",
+          "pluginVersion": "7.1.0",
           "pointradius": 5,
           "points": false,
           "renderer": "flot",
@@ -977,21 +711,22 @@ spec:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "histogram_quantile(0.95, sum(rate(SeaweedFS_s3_request_seconds_bucket[1m])) by (le))",
+              "expr": "histogram_quantile(0.95, sum(rate(SeaweedFS_s3_request_seconds_bucket{namespace=\"$namespace\",service=~\"$service-api\"}[1m])) by (le))",
               "format": "time_series",
               "hide": false,
+              "interval": "",
               "intervalFactor": 2,
               "legendFormat": "average",
               "refId": "A",
               "step": 60
             },
             {
-              "expr": "histogram_quantile(0.95, sum(rate(SeaweedFS_s3_request_seconds_bucket[1m])) by (le, type, bucket))",
+              "expr": "histogram_quantile(0.95, sum(rate(SeaweedFS_s3_request_seconds_bucket{namespace=\"$namespace\",service=~\"$service-api\", type=~\"$method\"}[1m])) by (le, type))",
               "format": "time_series",
               "hide": false,
               "interval": "",
               "intervalFactor": 2,
-              "legendFormat": "{{bucket}} {{type}}",
+              "legendFormat": "{{type}}",
               "refId": "B",
               "step": 60
             }
@@ -1043,20 +778,26 @@ spec:
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "${DS_PROMETHEUS}",
+          "datasource": "$DS_PROMETHEUS",
           "editable": true,
           "error": false,
+          "fieldConfig": {
+            "defaults": {
+              "custom": {}
+            },
+            "overrides": []
+          },
           "fill": 1,
           "fillGradient": 0,
           "grid": {},
           "gridPos": {
             "h": 7,
-            "w": 8,
-            "x": 16,
-            "y": 2
+            "w": 6,
+            "x": 18,
+            "y": 15
           },
           "hiddenSeries": false,
-          "id": 58,
+          "id": 65,
           "legend": {
             "avg": false,
             "current": false,
@@ -1070,11 +811,8 @@ spec:
           "linewidth": 1,
           "links": [],
           "nullPointMode": "null as zero",
-          "options": {
-            "alertThreshold": true
-          },
           "percentage": false,
-          "pluginVersion": "8.1.2",
+          "pluginVersion": "7.1.0",
           "pointradius": 5,
           "points": false,
           "renderer": "flot",
@@ -1084,20 +822,22 @@ spec:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "histogram_quantile(0.99, sum(rate(SeaweedFS_s3_request_seconds_bucket[1m])) by (le))",
+              "expr": "histogram_quantile(0.99, sum(rate(SeaweedFS_s3_request_seconds_bucket{namespace=\"$namespace\",service=~\"$service-api\"}[1m])) by (le))",
               "format": "time_series",
               "hide": false,
+              "interval": "",
               "intervalFactor": 2,
               "legendFormat": "average",
               "refId": "A",
               "step": 60
             },
             {
-              "expr": "histogram_quantile(0.99, sum(rate(SeaweedFS_s3_request_seconds_bucket[1m])) by (le, type, bucket))",
+              "expr": "histogram_quantile(0.99, sum(rate(SeaweedFS_s3_request_seconds_bucket{namespace=\"$namespace\",service=~\"$service-api\", type=~\"$method\"}[1m])) by (le, type))",
               "format": "time_series",
               "hide": false,
+              "interval": "",
               "intervalFactor": 2,
-              "legendFormat": "{{bucket}} {{type}}",
+              "legendFormat": "{{type}}",
               "refId": "B",
               "step": 60
             }
@@ -1145,361 +885,99 @@ spec:
           }
         },
         {
-          "aliasColors": {},
-          "bars": false,
-          "dashLength": 10,
-          "dashes": false,
-          "datasource": "${DS_PROMETHEUS}",
-          "fill": 1,
-          "fillGradient": 0,
-          "fieldConfig": {
-            "defaults": {
-              "unit": "decbytes"
-            },
-            "overrides": []
-          },
+          "collapsed": false,
+          "datasource": null,
           "gridPos": {
-            "h": 7,
-            "w": 12,
+            "h": 1,
+            "w": 24,
             "x": 0,
-            "y": 9
+            "y": 22
           },
-          "hiddenSeries": false,
-          "id": 84,
-          "legend": {
-            "avg": false,
-            "current": false,
-            "max": false,
-            "min": false,
-            "show": true,
-            "total": false,
-            "values": false
-          },
-          "lines": true,
-          "linewidth": 1,
-          "links": [],
-          "nullPointMode": "null",
-          "options": {
-            "alertThreshold": true
-          },
-          "percentage": false,
-          "pluginVersion": "8.1.2",
-          "pointradius": 5,
-          "points": false,
-          "renderer": "flot",
-          "seriesOverrides": [],
-          "spaceLength": 10,
-          "stack": false,
-          "steppedLine": false,
-          "targets": [
-            {
-              "expr": "sum(rate(SeaweedFS_s3_bucket_traffic_received_bytes_total[$__interval])) by (bucket)",
-              "format": "time_series",
-              "hide": false,
-              "intervalFactor": 2,
-              "legendFormat": "{{bucket}}",
-              "refId": "A"
-            }
-          ],
-          "thresholds": [],
-          "timeFrom": null,
-          "timeRegions": [],
-          "timeShift": null,
-          "title": "S3 Bucket Traffic Received",
-          "tooltip": {
-            "shared": true,
-            "sort": 0,
-            "value_type": "individual"
-          },
-          "type": "graph",
-          "xaxis": {
-            "buckets": null,
-            "mode": "time",
-            "name": null,
-            "show": true,
-            "values": []
-          },
-          "yaxes": [
-            {
-              "format": "decbytes",
-              "logBase": 1,
-              "min": 0,
-              "show": true
-            },
-            {
-              "format": "short",
-              "logBase": 1,
-              "show": false
-            }
-          ],
-          "yaxis": {
-            "align": false,
-            "alignLevel": null
-          }
+          "id": 55,
+          "panels": [],
+          "repeat": null,
+          "title": "Filer",
+          "type": "row"
         },
         {
           "aliasColors": {},
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "${DS_PROMETHEUS}",
-          "fill": 1,
-          "fillGradient": 0,
-          "fieldConfig": {
-            "defaults": {
-              "unit": "decbytes"
-            },
-            "overrides": []
-          },
-          "gridPos": {
-            "h": 7,
-            "w": 12,
-            "x": 12,
-            "y": 9
-          },
-          "hiddenSeries": false,
-          "id": 85,
-          "legend": {
-            "avg": false,
-            "current": false,
-            "max": false,
-            "min": false,
-            "show": true,
-            "total": false,
-            "values": false
-          },
-          "lines": true,
-          "linewidth": 1,
-          "links": [],
-          "nullPointMode": "null",
-          "options": {
-            "alertThreshold": true
-          },
-          "percentage": false,
-          "pluginVersion": "8.1.2",
-          "pointradius": 5,
-          "points": false,
-          "renderer": "flot",
-          "seriesOverrides": [],
-          "spaceLength": 10,
-          "stack": false,
-          "steppedLine": false,
-          "targets": [
-            {
-              "expr": "sum(rate(SeaweedFS_s3_bucket_traffic_sent_bytes_total[$__interval])) by (bucket)",
-              "format": "time_series",
-              "hide": false,
-              "intervalFactor": 2,
-              "legendFormat": "{{bucket}}",
-              "refId": "A"
-            }
-          ],
-          "thresholds": [],
-          "timeFrom": null,
-          "timeRegions": [],
-          "timeShift": null,
-          "title": "S3 Bucket Traffic Sent",
-          "tooltip": {
-            "shared": true,
-            "sort": 0,
-            "value_type": "individual"
-          },
-          "type": "graph",
-          "xaxis": {
-            "buckets": null,
-            "mode": "time",
-            "name": null,
-            "show": true,
-            "values": []
-          },
-          "yaxes": [
-            {
-              "format": "decbytes",
-              "logBase": 1,
-              "min": 0,
-              "show": true
-            },
-            {
-              "format": "short",
-              "logBase": 1,
-              "show": false
-            }
-          ],
-          "yaxis": {
-            "align": false,
-            "alignLevel": null
-          }
-        },
-        {
-          "aliasColors": {},
-          "bars": false,
-          "dashLength": 10,
-          "dashes": false,
-          "datasource": "${DS_PROMETHEUS}",
-          "fill": 1,
-          "fillGradient": 0,
-          "fieldConfig": {
-            "defaults": {
-              "unit": "reqps"
-            },
-            "overrides": []
-          },
-          "gridPos": {
-            "h": 7,
-            "w": 12,
-            "x": 0,
-            "y": 16
-          },
-          "hiddenSeries": false,
-          "id": 90,
-          "legend": {
-            "avg": false,
-            "current": false,
-            "max": false,
-            "min": false,
-            "show": true,
-            "total": false,
-            "values": false
-          },
-          "lines": true,
-          "linewidth": 1,
-          "links": [],
-          "nullPointMode": "null",
-          "options": {
-            "alertThreshold": true
-          },
-          "percentage": false,
-          "pluginVersion": "8.1.2",
-          "pointradius": 5,
-          "points": false,
-          "renderer": "flot",
-          "seriesOverrides": [],
-          "spaceLength": 10,
-          "stack": false,
-          "steppedLine": false,
-          "targets": [
-            {
-              "expr": "sum(rate(SeaweedFS_s3_request_total[$__interval])) by (bucket)",
-              "format": "time_series",
-              "hide": false,
-              "intervalFactor": 2,
-              "legendFormat": "{{bucket}}",
-              "refId": "A"
-            }
-          ],
-          "thresholds": [],
-          "timeFrom": null,
-          "timeRegions": [],
-          "timeShift": null,
-          "title": "S3 API Calls per Bucket",
-          "tooltip": {
-            "shared": true,
-            "sort": 0,
-            "value_type": "individual"
-          },
-          "type": "graph",
-          "xaxis": {
-            "buckets": null,
-            "mode": "time",
-            "name": null,
-            "show": true,
-            "values": []
-          },
-          "yaxes": [
-            {
-              "format": "reqps",
-              "logBase": 1,
-              "min": 0,
-              "show": true
-            },
-            {
-              "format": "short",
-              "logBase": 1,
-              "show": false
-            }
-          ],
-          "yaxis": {
-            "align": false,
-            "alignLevel": null
-          }
-        },
-        {
-          "aliasColors": {},
-          "bars": false,
-          "dashLength": 10,
-          "dashes": false,
-          "datasource": "${DS_PROMETHEUS}",
+          "datasource": "$DS_PROMETHEUS",
           "editable": true,
           "error": false,
-          "fill": 0,
+          "fieldConfig": {
+            "defaults": {
+              "custom": {}
+            },
+            "overrides": []
+          },
+          "fill": 1,
           "fillGradient": 0,
           "grid": {},
           "gridPos": {
             "h": 7,
-            "w": 12,
-            "x": 12,
-            "y": 16
+            "w": 8,
+            "x": 0,
+            "y": 23
           },
           "hiddenSeries": false,
-          "id": 55,
+          "id": 46,
           "legend": {
-            "alignAsTable": true,
             "avg": false,
-            "current": true,
-            "hideEmpty": true,
-            "hideZero": true,
-            "max": true,
+            "current": false,
+            "max": false,
             "min": false,
-            "rightSide": true,
             "show": true,
-            "sideWidth": 250,
-            "sort": "max",
-            "sortDesc": true,
             "total": false,
-            "values": true
+            "values": false
           },
           "lines": true,
           "linewidth": 1,
           "links": [],
-          "maxPerRow": 1,
           "nullPointMode": "null as zero",
-          "options": {
-            "alertThreshold": true
-          },
           "percentage": false,
-          "pluginVersion": "8.1.2",
+          "pluginVersion": "7.1.0",
           "pointradius": 5,
           "points": false,
           "renderer": "flot",
-          "seriesOverrides": [
-            {
-              "alias": "total",
-              "lines": false
-            }
-          ],
+          "seriesOverrides": [],
           "spaceLength": 10,
           "stack": false,
           "steppedLine": false,
           "targets": [
             {
-              "expr": "rate(SeaweedFS_s3_request_total[1m])",
+              "expr": "histogram_quantile(0.80, sum(rate(SeaweedFS_filer_request_seconds_bucket{namespace=\"$namespace\",service=~\"$service-api\"}[1m])) by (le))",
               "format": "time_series",
+              "hide": false,
+              "interval": "",
               "intervalFactor": 2,
-              "legendFormat": "{{bucket}} {{type}}",
+              "legendFormat": "average",
               "refId": "A",
-              "step": 30
+              "step": 60
+            },
+            {
+              "expr": "histogram_quantile(0.80, sum(rate(SeaweedFS_filer_request_seconds_bucket{namespace=\"$namespace\",service=~\"$service-api\"}[1m])) by (le, type))",
+              "format": "time_series",
+              "hide": true,
+              "interval": "",
+              "intervalFactor": 2,
+              "legendFormat": "{{type}}",
+              "refId": "B",
+              "step": 60
             }
           ],
           "thresholds": [],
           "timeFrom": null,
           "timeRegions": [],
           "timeShift": null,
-          "title": "S3 API QPS",
+          "title": "Filer Request Duration 80th percentile",
           "tooltip": {
             "msResolution": true,
             "shared": true,
-            "sort": 2,
-            "value_type": "individual"
+            "sort": 0,
+            "value_type": "cumulative"
           },
           "type": "graph",
           "xaxis": {
@@ -1511,11 +989,11 @@ spec:
           },
           "yaxes": [
             {
-              "format": "short",
+              "format": "s",
               "label": null,
               "logBase": 1,
               "max": null,
-              "min": "0",
+              "min": 0,
               "show": true
             },
             {
@@ -1524,7 +1002,7 @@ spec:
               "logBase": 1,
               "max": null,
               "min": null,
-              "show": true
+              "show": false
             }
           ],
           "yaxis": {
@@ -1537,9 +1015,247 @@ spec:
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "${DS_PROMETHEUS}",
+          "datasource": "$DS_PROMETHEUS",
           "editable": true,
           "error": false,
+          "fieldConfig": {
+            "defaults": {
+              "custom": {}
+            },
+            "overrides": []
+          },
+          "fill": 1,
+          "fillGradient": 0,
+          "grid": {},
+          "gridPos": {
+            "h": 7,
+            "w": 8,
+            "x": 8,
+            "y": 23
+          },
+          "hiddenSeries": false,
+          "id": 49,
+          "legend": {
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "show": true,
+            "total": false,
+            "values": false
+          },
+          "lines": true,
+          "linewidth": 1,
+          "links": [],
+          "nullPointMode": "null as zero",
+          "percentage": false,
+          "pluginVersion": "7.1.0",
+          "pointradius": 5,
+          "points": false,
+          "renderer": "flot",
+          "seriesOverrides": [],
+          "spaceLength": 10,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "expr": "histogram_quantile(0.95, sum(rate(SeaweedFS_filer_request_seconds_bucket{namespace=\"$namespace\",service=~\"$service-api\"}[1m])) by (le))",
+              "format": "time_series",
+              "hide": false,
+              "intervalFactor": 2,
+              "legendFormat": "average",
+              "refId": "A",
+              "step": 60
+            },
+            {
+              "expr": "histogram_quantile(0.95, sum(rate(SeaweedFS_filer_request_seconds_bucket{namespace=\"$namespace\",service=~\"$service-api\"}[1m])) by (le, type))",
+              "format": "time_series",
+              "hide": false,
+              "interval": "",
+              "intervalFactor": 2,
+              "legendFormat": "{{type}}",
+              "refId": "B",
+              "step": 60
+            },
+            {
+              "expr": "",
+              "format": "time_series",
+              "intervalFactor": 2,
+              "refId": "C"
+            }
+          ],
+          "thresholds": [],
+          "timeFrom": null,
+          "timeRegions": [],
+          "timeShift": null,
+          "title": "Filer Request Duration 95th percentile",
+          "tooltip": {
+            "msResolution": true,
+            "shared": true,
+            "sort": 0,
+            "value_type": "cumulative"
+          },
+          "type": "graph",
+          "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": []
+          },
+          "yaxes": [
+            {
+              "format": "s",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": 0,
+              "show": true
+            },
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": false
+            }
+          ],
+          "yaxis": {
+            "align": false,
+            "alignLevel": null
+          }
+        },
+        {
+          "aliasColors": {},
+          "bars": false,
+          "dashLength": 10,
+          "dashes": false,
+          "datasource": "$DS_PROMETHEUS",
+          "editable": true,
+          "error": false,
+          "fieldConfig": {
+            "defaults": {
+              "custom": {}
+            },
+            "overrides": []
+          },
+          "fill": 1,
+          "fillGradient": 0,
+          "grid": {},
+          "gridPos": {
+            "h": 7,
+            "w": 8,
+            "x": 16,
+            "y": 23
+          },
+          "hiddenSeries": false,
+          "id": 66,
+          "legend": {
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "show": true,
+            "total": false,
+            "values": false
+          },
+          "lines": true,
+          "linewidth": 1,
+          "links": [],
+          "nullPointMode": "null as zero",
+          "percentage": false,
+          "pluginVersion": "7.1.0",
+          "pointradius": 5,
+          "points": false,
+          "renderer": "flot",
+          "seriesOverrides": [],
+          "spaceLength": 10,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "expr": "histogram_quantile(0.95, sum(rate(SeaweedFS_filer_request_seconds_bucket{namespace=\"$namespace\",service=~\"$service-api\"}[1m])) by (le))",
+              "format": "time_series",
+              "hide": false,
+              "intervalFactor": 2,
+              "legendFormat": "average",
+              "refId": "A",
+              "step": 60
+            },
+            {
+              "expr": "histogram_quantile(0.95, sum(rate(SeaweedFS_filer_request_seconds_bucket{namespace=\"$namespace\",service=~\"$service-api\"}[1m])) by (le, type))",
+              "format": "time_series",
+              "hide": false,
+              "interval": "",
+              "intervalFactor": 2,
+              "legendFormat": "{{type}}",
+              "refId": "B",
+              "step": 60
+            },
+            {
+              "expr": "",
+              "format": "time_series",
+              "intervalFactor": 2,
+              "refId": "C"
+            }
+          ],
+          "thresholds": [],
+          "timeFrom": null,
+          "timeRegions": [],
+          "timeShift": null,
+          "title": "Filer Request Duration 95th percentile",
+          "tooltip": {
+            "msResolution": true,
+            "shared": true,
+            "sort": 0,
+            "value_type": "cumulative"
+          },
+          "type": "graph",
+          "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": []
+          },
+          "yaxes": [
+            {
+              "format": "s",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": 0,
+              "show": true
+            },
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": false
+            }
+          ],
+          "yaxis": {
+            "align": false,
+            "alignLevel": null
+          }
+        },
+        {
+          "aliasColors": {},
+          "bars": false,
+          "dashLength": 10,
+          "dashes": false,
+          "datasource": "$DS_PROMETHEUS",
+          "editable": true,
+          "error": false,
+          "fieldConfig": {
+            "defaults": {
+              "custom": {}
+            },
+            "overrides": []
+          },
           "fill": 0,
           "fillGradient": 0,
           "grid": {},
@@ -1547,11 +1263,10 @@ spec:
             "h": 7,
             "w": 24,
             "x": 0,
-            "y": 23
+            "y": 30
           },
           "hiddenSeries": false,
-          "hideTimeOverride": false,
-          "id": 59,
+          "id": 2,
           "legend": {
             "alignAsTable": true,
             "avg": false,
@@ -1573,11 +1288,8 @@ spec:
           "links": [],
           "maxPerRow": 1,
           "nullPointMode": "null as zero",
-          "options": {
-            "alertThreshold": true
-          },
           "percentage": false,
-          "pluginVersion": "8.1.2",
+          "pluginVersion": "7.1.0",
           "pointradius": 5,
           "points": false,
           "renderer": "flot",
@@ -1592,53 +1304,20 @@ spec:
           "steppedLine": false,
           "targets": [
             {
-              "exemplar": true,
-              "expr": "sum by (type) (increase(SeaweedFS_s3_request_total{type=~'PUT|COPY|POST|LIST'}[$__range]))*0.000005",
+              "expr": "rate(SeaweedFS_filer_request_total{namespace=\"$namespace\",service=~\"$service-api\"}[1m])",
               "format": "time_series",
-              "hide": false,
               "interval": "",
               "intervalFactor": 2,
-              "legendFormat": "{{type}} requests",
+              "legendFormat": "{{type}}",
               "refId": "A",
               "step": 30
-            },
-            {
-              "exemplar": true,
-              "expr": "sum(increase(SeaweedFS_s3_request_total{type=~'PUT|COPY|POST|LIST'}[$__range]))*0.000005",
-              "format": "time_series",
-              "hide": false,
-              "interval": "",
-              "intervalFactor": 2,
-              "legendFormat": "All PUT, COPY, POST, LIST",
-              "refId": "C",
-              "step": 30
-            },
-            {
-              "exemplar": true,
-              "expr": "sum (increase(SeaweedFS_s3_request_total{type!~'PUT|COPY|POST|LIST'}[$__range]))*0.0000004",
-              "format": "time_series",
-              "hide": false,
-              "interval": "",
-              "intervalFactor": 2,
-              "legendFormat": "GET and all other",
-              "refId": "B"
-            },
-            {
-              "exemplar": true,
-              "expr": "sum by (type) (increase(SeaweedFS_s3_request_total{type!~'PUT|COPY|POST|LIST'}[$__range]))*0.0000004",
-              "format": "time_series",
-              "hide": false,
-              "interval": "",
-              "intervalFactor": 2,
-              "legendFormat": "{{type}} requests",
-              "refId": "D"
             }
           ],
           "thresholds": [],
-          "timeFrom": "1M",
+          "timeFrom": null,
           "timeRegions": [],
           "timeShift": null,
-          "title": "S3 API Monthly Cost if on AWS",
+          "title": "Filer QPS",
           "tooltip": {
             "msResolution": true,
             "shared": true,
@@ -1655,20 +1334,20 @@ spec:
           },
           "yaxes": [
             {
-              "format": "currencyUSD",
-              "label": "Cost in US$",
+              "format": "short",
+              "label": null,
               "logBase": 1,
               "max": null,
               "min": "0",
               "show": true
             },
             {
-              "format": "currencyUSD",
-              "label": "Write Cost",
+              "format": "short",
+              "label": null,
               "logBase": 1,
               "max": null,
               "min": null,
-              "show": false
+              "show": true
             }
           ],
           "yaxis": {
@@ -1679,17 +1358,13 @@ spec:
         {
           "collapsed": false,
           "datasource": null,
-          "fieldConfig": {
-            "defaults": {},
-            "overrides": []
-          },
           "gridPos": {
             "h": 1,
             "w": 24,
             "x": 0,
-            "y": 30
+            "y": 37
           },
-          "id": 71,
+          "id": 56,
           "panels": [],
           "repeat": null,
           "title": "Volume Server",
@@ -1700,9 +1375,15 @@ spec:
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "${DS_PROMETHEUS}",
+          "datasource": "$DS_PROMETHEUS",
           "editable": true,
           "error": false,
+          "fieldConfig": {
+            "defaults": {
+              "custom": {}
+            },
+            "overrides": []
+          },
           "fill": 1,
           "fillGradient": 0,
           "grid": {},
@@ -1710,7 +1391,7 @@ spec:
             "h": 7,
             "w": 12,
             "x": 0,
-            "y": 31
+            "y": 38
           },
           "hiddenSeries": false,
           "id": 47,
@@ -1728,11 +1409,8 @@ spec:
           "linewidth": 2,
           "links": [],
           "nullPointMode": "null as zero",
-          "options": {
-            "alertThreshold": true
-          },
           "percentage": false,
-          "pluginVersion": "8.1.2",
+          "pluginVersion": "7.1.0",
           "pointradius": 5,
           "points": false,
           "renderer": "flot",
@@ -1742,15 +1420,16 @@ spec:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "histogram_quantile(0.99, sum(rate(SeaweedFS_volumeServer_request_seconds_bucket[1m])) by (le, exported_instance))",
+              "expr": "histogram_quantile(0.99, sum(rate(SeaweedFS_volumeServer_request_seconds_bucket{namespace=\"$namespace\",service=~\"$service-volume\"}[1m])) by (le, exported_instance))",
               "format": "time_series",
               "hide": false,
+              "interval": "",
               "intervalFactor": 2,
               "legendFormat": "{{exported_instance}}",
               "refId": "B"
             },
             {
-              "expr": "histogram_quantile(0.99, sum(rate(SeaweedFS_volumeServer_request_seconds_bucket[1m])) by (le))",
+              "expr": "histogram_quantile(0.99, sum(rate(SeaweedFS_volumeServer_request_seconds_bucket{namespace=\"$namespace\",service=~\"$service-volume\"}[1m])) by (le))",
               "format": "time_series",
               "intervalFactor": 2,
               "legendFormat": "average",
@@ -1804,9 +1483,15 @@ spec:
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "${DS_PROMETHEUS}",
+          "datasource": "$DS_PROMETHEUS",
           "editable": true,
           "error": false,
+          "fieldConfig": {
+            "defaults": {
+              "custom": {}
+            },
+            "overrides": []
+          },
           "fill": 1,
           "fillGradient": 0,
           "grid": {},
@@ -1814,7 +1499,7 @@ spec:
             "h": 7,
             "w": 12,
             "x": 12,
-            "y": 31
+            "y": 38
           },
           "hiddenSeries": false,
           "id": 40,
@@ -1837,11 +1522,8 @@ spec:
           "linewidth": 2,
           "links": [],
           "nullPointMode": "null as zero",
-          "options": {
-            "alertThreshold": true
-          },
           "percentage": false,
-          "pluginVersion": "8.1.2",
+          "pluginVersion": "7.1.0",
           "pointradius": 5,
           "points": false,
           "renderer": "flot",
@@ -1851,8 +1533,9 @@ spec:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "sum(rate(SeaweedFS_volumeServer_request_total[1m])) by (type)",
+              "expr": "sum(rate(SeaweedFS_volumeServer_request_total{namespace=\"$namespace\",service=~\"$service-volume\"}[1m])) by (type)",
               "format": "time_series",
+              "interval": "",
               "intervalFactor": 2,
               "legendFormat": "{{type}}",
               "refId": "A",
@@ -1906,57 +1589,70 @@ spec:
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "${DS_PROMETHEUS}",
+          "datasource": "$DS_PROMETHEUS",
+          "fieldConfig": {
+            "defaults": {
+              "custom": {}
+            },
+            "overrides": []
+          },
           "fill": 1,
           "fillGradient": 0,
           "gridPos": {
             "h": 7,
             "w": 24,
             "x": 0,
-            "y": 38
+            "y": 45
           },
           "hiddenSeries": false,
           "id": 48,
           "legend": {
             "avg": false,
-            "current": false,
+            "current": true,
             "max": false,
             "min": false,
             "show": true,
             "total": false,
-            "values": false
+            "values": true
           },
           "lines": true,
           "linewidth": 1,
           "links": [],
-          "nullPointMode": "null",
-          "options": {
-            "alertThreshold": true
-          },
-          "percentage": false,
-          "pluginVersion": "8.1.2",
+          "nullPointMode": "null as zero",
+          "percentage": true,
+          "pluginVersion": "7.1.0",
           "pointradius": 5,
           "points": false,
           "renderer": "flot",
           "seriesOverrides": [],
           "spaceLength": 10,
-          "stack": false,
+          "stack": true,
           "steppedLine": false,
           "targets": [
             {
-              "expr": "sum(SeaweedFS_volumeServer_volumes) by (collection, type)",
+              "expr": "sum(SeaweedFS_volumeServer_volumes{namespace=\"$namespace\",service=~\"$service-volume\"}) by (collection, type)",
               "format": "time_series",
               "hide": false,
+              "interval": "",
               "intervalFactor": 2,
               "legendFormat": "{{collection}} {{type}}",
               "refId": "A"
             },
             {
-              "expr": "sum(SeaweedFS_volumeServer_max_volumes)",
+              "expr": "sum(max(SeaweedFS_volumeServer_max_volumes{namespace=\"$namespace\",service=~\"$service-volume\"}) by (pod))",
               "format": "time_series",
+              "hide": false,
+              "instant": false,
+              "interval": "",
               "intervalFactor": 2,
               "legendFormat": "Total",
               "refId": "B"
+            },
+            {
+              "expr": "sum(max(SeaweedFS_volumeServer_read_only_volumes{namespace=\"$namespace\",service=~\"$service-volume\"}) by (pod))",
+              "interval": "",
+              "legendFormat": "Read only",
+              "refId": "C"
             }
           ],
           "thresholds": [],
@@ -1969,6 +1665,7 @@ spec:
             "sort": 0,
             "value_type": "individual"
           },
+          "transformations": [],
           "type": "graph",
           "xaxis": {
             "buckets": null,
@@ -2005,14 +1702,20 @@ spec:
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "${DS_PROMETHEUS}",
+          "datasource": "$DS_PROMETHEUS",
+          "fieldConfig": {
+            "defaults": {
+              "custom": {}
+            },
+            "overrides": []
+          },
           "fill": 1,
           "fillGradient": 0,
           "gridPos": {
             "h": 7,
             "w": 24,
             "x": 0,
-            "y": 45
+            "y": 52
           },
           "hiddenSeries": false,
           "id": 50,
@@ -2029,11 +1732,8 @@ spec:
           "linewidth": 1,
           "links": [],
           "nullPointMode": "null",
-          "options": {
-            "alertThreshold": true
-          },
           "percentage": false,
-          "pluginVersion": "8.1.2",
+          "pluginVersion": "7.1.0",
           "pointradius": 5,
           "points": false,
           "renderer": "flot",
@@ -2043,16 +1743,19 @@ spec:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "sum(SeaweedFS_volumeServer_total_disk_size) by (collection, type)",
+              "expr": "sum(SeaweedFS_volumeServer_total_disk_size{namespace=\"$namespace\",service=~\"$service-volume\"}) by (collection, type)",
               "format": "time_series",
               "hide": false,
+              "interval": "",
               "intervalFactor": 2,
               "legendFormat": "{{collection}} {{type}}",
               "refId": "A"
             },
             {
-              "expr": "sum(SeaweedFS_volumeServer_total_disk_size)",
+              "expr": "sum(SeaweedFS_volumeServer_total_disk_size{namespace=\"$namespace\",service=~\"$service-volume\"})",
               "format": "time_series",
+              "hide": true,
+              "interval": "",
               "intervalFactor": 2,
               "legendFormat": "Total",
               "refId": "B"
@@ -2104,14 +1807,20 @@ spec:
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "${DS_PROMETHEUS}",
+          "datasource": "$DS_PROMETHEUS",
+          "fieldConfig": {
+            "defaults": {
+              "custom": {}
+            },
+            "overrides": []
+          },
           "fill": 1,
           "fillGradient": 0,
           "gridPos": {
             "h": 7,
             "w": 24,
             "x": 0,
-            "y": 52
+            "y": 59
           },
           "hiddenSeries": false,
           "id": 51,
@@ -2128,11 +1837,8 @@ spec:
           "linewidth": 1,
           "links": [],
           "nullPointMode": "null",
-          "options": {
-            "alertThreshold": true
-          },
           "percentage": false,
-          "pluginVersion": "8.1.2",
+          "pluginVersion": "7.1.0",
           "pointradius": 5,
           "points": false,
           "renderer": "flot",
@@ -2142,11 +1848,12 @@ spec:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "sum(SeaweedFS_volumeServer_total_disk_size) by (exported_instance)",
+              "expr": "sum(max(SeaweedFS_volumeServer_total_disk_size{namespace=\"$namespace\",service=~\"$service-volume\"}) by (collection,pod)) by (pod)",
               "format": "time_series",
               "hide": false,
+              "interval": "",
               "intervalFactor": 2,
-              "legendFormat": "{{exported_instance}}",
+              "legendFormat": "{{pod}}",
               "refId": "A"
             }
           ],
@@ -2194,17 +1901,13 @@ spec:
         {
           "collapsed": false,
           "datasource": null,
-          "fieldConfig": {
-            "defaults": {},
-            "overrides": []
-          },
           "gridPos": {
             "h": 1,
             "w": 24,
             "x": 0,
-            "y": 59
+            "y": 66
           },
-          "id": 72,
+          "id": 57,
           "panels": [],
           "repeat": null,
           "title": "Filer Store",
@@ -2215,9 +1918,15 @@ spec:
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "${DS_PROMETHEUS}",
+          "datasource": "$DS_PROMETHEUS",
           "editable": true,
           "error": false,
+          "fieldConfig": {
+            "defaults": {
+              "custom": {}
+            },
+            "overrides": []
+          },
           "fill": 1,
           "fillGradient": 0,
           "grid": {},
@@ -2225,7 +1934,7 @@ spec:
             "h": 7,
             "w": 12,
             "x": 0,
-            "y": 60
+            "y": 67
           },
           "hiddenSeries": false,
           "id": 12,
@@ -2243,11 +1952,8 @@ spec:
           "linewidth": 2,
           "links": [],
           "nullPointMode": "null as zero",
-          "options": {
-            "alertThreshold": true
-          },
           "percentage": false,
-          "pluginVersion": "8.1.2",
+          "pluginVersion": "7.1.0",
           "pointradius": 5,
           "points": false,
           "renderer": "flot",
@@ -2257,8 +1963,9 @@ spec:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "histogram_quantile(0.99, sum(rate(SeaweedFS_filerStore_request_seconds_bucket[1m])) by (le, type))",
+              "expr": "histogram_quantile(0.99, sum(rate(SeaweedFS_filerStore_request_seconds_bucket{namespace=\"$namespace\",service=~\"$service-api\"}[1m])) by (le, type))",
               "format": "time_series",
+              "interval": "",
               "intervalFactor": 2,
               "legendFormat": "{{type}}",
               "refId": "B"
@@ -2311,9 +2018,15 @@ spec:
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "${DS_PROMETHEUS}",
+          "datasource": "$DS_PROMETHEUS",
           "editable": true,
           "error": false,
+          "fieldConfig": {
+            "defaults": {
+              "custom": {}
+            },
+            "overrides": []
+          },
           "fill": 1,
           "fillGradient": 0,
           "grid": {},
@@ -2321,7 +2034,7 @@ spec:
             "h": 7,
             "w": 12,
             "x": 12,
-            "y": 60
+            "y": 67
           },
           "hiddenSeries": false,
           "id": 14,
@@ -2342,11 +2055,8 @@ spec:
           "linewidth": 2,
           "links": [],
           "nullPointMode": "null as zero",
-          "options": {
-            "alertThreshold": true
-          },
           "percentage": false,
-          "pluginVersion": "8.1.2",
+          "pluginVersion": "7.1.0",
           "pointradius": 5,
           "points": false,
           "renderer": "flot",
@@ -2356,8 +2066,9 @@ spec:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "sum(rate(SeaweedFS_filerStore_request_total [1m])) by (type)",
+              "expr": "sum(rate(SeaweedFS_filerStore_request_total{namespace=\"$namespace\",service=~\"$service-api\"}[1m])) by (type)",
               "format": "time_series",
+              "interval": "",
               "intervalFactor": 2,
               "legendFormat": "{{type}}",
               "refId": "B"
@@ -2408,17 +2119,13 @@ spec:
         {
           "collapsed": false,
           "datasource": null,
-          "fieldConfig": {
-            "defaults": {},
-            "overrides": []
-          },
           "gridPos": {
             "h": 1,
             "w": 24,
             "x": 0,
-            "y": 67
+            "y": 74
           },
-          "id": 73,
+          "id": 58,
           "panels": [],
           "repeat": null,
           "title": "Filer Instances",
@@ -2429,9 +2136,15 @@ spec:
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "${DS_PROMETHEUS}",
+          "datasource": "$DS_PROMETHEUS",
           "editable": true,
           "error": false,
+          "fieldConfig": {
+            "defaults": {
+              "custom": {}
+            },
+            "overrides": []
+          },
           "fill": 1,
           "fillGradient": 0,
           "grid": {},
@@ -2439,7 +2152,7 @@ spec:
             "h": 7,
             "w": 12,
             "x": 0,
-            "y": 68
+            "y": 75
           },
           "hiddenSeries": false,
           "id": 52,
@@ -2457,11 +2170,8 @@ spec:
           "linewidth": 2,
           "links": [],
           "nullPointMode": "null as zero",
-          "options": {
-            "alertThreshold": true
-          },
           "percentage": false,
-          "pluginVersion": "8.1.2",
+          "pluginVersion": "7.1.0",
           "pointradius": 5,
           "points": false,
           "renderer": "flot",
@@ -2471,33 +2181,37 @@ spec:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "go_memstats_alloc_bytes{exported_job=\"filer\"}",
+              "expr": "go_memstats_alloc_bytes{namespace=~\"$namespace\", endpoint=\"metrics\"}",
               "format": "time_series",
               "hide": false,
+              "interval": "",
               "intervalFactor": 2,
               "legendFormat": "bytes allocated",
               "refId": "B"
             },
             {
-              "expr": "rate(go_memstats_alloc_bytes_total{exported_job=\"filer\"}[30s])",
+              "expr": "rate(go_memstats_alloc_bytes_total{namespace=~\"$namespace\", endpoint=\"swfs-.*-metrics\"}[30s])",
               "format": "time_series",
               "hide": false,
+              "interval": "",
               "intervalFactor": 2,
               "legendFormat": "alloc rate",
               "refId": "A"
             },
             {
-              "expr": "go_memstats_stack_inuse_bytes{exported_job=\"filer\"}",
+              "expr": "go_memstats_stack_inuse_bytes{namespace=~\"$namespace\", endpoint=\"metrics\"}",
               "format": "time_series",
-              "hide": false,
+              "hide": true,
+              "interval": "",
               "intervalFactor": 2,
               "legendFormat": "stack inuse",
               "refId": "C"
             },
             {
-              "expr": "go_memstats_heap_inuse_bytes{exported_job=\"filer\"}",
+              "expr": "go_memstats_heap_inuse_bytes{namespace=~\"$namespace\", endpoint=\"metrics\"}",
               "format": "time_series",
-              "hide": false,
+              "hide": true,
+              "interval": "",
               "intervalFactor": 2,
               "legendFormat": "heap inuse",
               "refId": "D"
@@ -2550,9 +2264,15 @@ spec:
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "${DS_PROMETHEUS}",
+          "datasource": "$DS_PROMETHEUS",
           "editable": true,
           "error": false,
+          "fieldConfig": {
+            "defaults": {
+              "custom": {}
+            },
+            "overrides": []
+          },
           "fill": 1,
           "fillGradient": 0,
           "grid": {},
@@ -2560,7 +2280,7 @@ spec:
             "h": 7,
             "w": 12,
             "x": 12,
-            "y": 68
+            "y": 75
           },
           "hiddenSeries": false,
           "id": 54,
@@ -2578,11 +2298,8 @@ spec:
           "linewidth": 2,
           "links": [],
           "nullPointMode": "null as zero",
-          "options": {
-            "alertThreshold": true
-          },
           "percentage": false,
-          "pluginVersion": "8.1.2",
+          "pluginVersion": "7.1.0",
           "pointradius": 5,
           "points": false,
           "renderer": "flot",
@@ -2592,8 +2309,9 @@ spec:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "go_gc_duration_seconds{exported_job=\"filer\"}",
+              "expr": "go_gc_duration_seconds{namespace=~\"$namespace\", endpoint=\"metrics\"}",
               "format": "time_series",
+              "interval": "",
               "intervalFactor": 2,
               "legendFormat": "{{quantile}}",
               "refId": "B"
@@ -2646,9 +2364,15 @@ spec:
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "${DS_PROMETHEUS}",
+          "datasource": "$DS_PROMETHEUS",
           "editable": true,
           "error": false,
+          "fieldConfig": {
+            "defaults": {
+              "custom": {}
+            },
+            "overrides": []
+          },
           "fill": 1,
           "fillGradient": 0,
           "grid": {},
@@ -2656,7 +2380,7 @@ spec:
             "h": 7,
             "w": 24,
             "x": 0,
-            "y": 75
+            "y": 82
           },
           "hiddenSeries": false,
           "id": 53,
@@ -2674,11 +2398,8 @@ spec:
           "linewidth": 2,
           "links": [],
           "nullPointMode": "null as zero",
-          "options": {
-            "alertThreshold": true
-          },
           "percentage": false,
-          "pluginVersion": "8.1.2",
+          "pluginVersion": "7.1.0",
           "pointradius": 5,
           "points": false,
           "renderer": "flot",
@@ -2688,10 +2409,11 @@ spec:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "go_goroutines{exported_job=\"filer\"}",
+              "expr": "go_goroutines{namespace=~\"$namespace\", endpoint=\"metrics\"}",
               "format": "time_series",
+              "interval": "",
               "intervalFactor": 2,
-              "legendFormat": "{{exported_instance}}",
+              "legendFormat": "{{pod}}",
               "refId": "B"
             }
           ],
@@ -2738,343 +2460,61 @@ spec:
           }
         },
         {
-          "aliasColors": {},
-          "bars": false,
-          "dashLength": 10,
-          "dashes": false,
-          "datasource": "${DS_PROMETHEUS}",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
           "fieldConfig": {
             "defaults": {
-              "links": []
-            },
-            "overrides": []
-          },
-          "fill": 1,
-          "fillGradient": 0,
-          "gridPos": {
-            "h": 7,
-            "w": 8,
-            "x": 0,
-            "y": 82
-          },
-          "hiddenSeries": false,
-          "id": 66,
-          "legend": {
-            "avg": false,
-            "current": false,
-            "max": false,
-            "min": false,
-            "show": true,
-            "total": false,
-            "values": false
-          },
-          "lines": true,
-          "linewidth": 1,
-          "links": [],
-          "nullPointMode": "null",
-          "options": {
-            "alertThreshold": true
-          },
-          "paceLength": 10,
-          "percentage": false,
-          "pluginVersion": "8.1.2",
-          "pointradius": 5,
-          "points": false,
-          "renderer": "flot",
-          "seriesOverrides": [
-            {
-              "$$hashKey": "object:258",
-              "alias": "max limit",
-              "color": "#890f02"
-            }
-          ],
-          "spaceLength": 10,
-          "stack": false,
-          "steppedLine": false,
-          "targets": [
-            {
-              "expr": "process_resident_memory_bytes{exported_job=\"filer\"}",
-              "format": "time_series",
-              "groupBy": [
-                {
-                  "params": [
-                    "$__interval"
-                  ],
-                  "type": "time"
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "drawStyle": "line",
+                "fillOpacity": 10,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
                 },
-                {
-                  "params": [
-                    "null"
-                  ],
-                  "type": "fill"
+                "insertNulls": false,
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "never",
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
                 }
-              ],
-              "interval": "",
-              "intervalFactor": 2,
-              "legendFormat": "resident {{exported_instance}}",
-              "orderByTime": "ASC",
-              "policy": "default",
-              "refId": "A",
-              "resultFormat": "time_series",
-              "select": [
-                [
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
                   {
-                    "params": [
-                      "value"
-                    ],
-                    "type": "field"
+                    "color": "green",
+                    "value": null
                   },
                   {
-                    "params": [],
-                    "type": "mean"
+                    "color": "red",
+                    "value": 80
                   }
                 ]
-              ],
-              "step": 120,
-              "tags": []
-            },
-            {
-              "expr": "process_virtual_memory_bytes{exported_job=\"filer\"}",
-              "format": "time_series",
-              "interval": "",
-              "intervalFactor": 2,
-              "legendFormat": "virtual {{exported_instance}}",
-              "refId": "B",
-              "step": 120
-            }
-          ],
-          "thresholds": [],
-          "timeFrom": null,
-          "timeRegions": [],
-          "timeShift": null,
-          "title": "Process memory",
-          "tooltip": {
-            "shared": true,
-            "sort": 2,
-            "value_type": "individual"
-          },
-          "type": "graph",
-          "xaxis": {
-            "buckets": null,
-            "mode": "time",
-            "name": null,
-            "show": true,
-            "values": []
-          },
-          "yaxes": [
-            {
-              "$$hashKey": "object:265",
-              "format": "bytes",
-              "label": null,
-              "logBase": 1,
-              "max": null,
-              "min": null,
-              "show": true
-            },
-            {
-              "$$hashKey": "object:266",
-              "format": "short",
-              "label": null,
-              "logBase": 1,
-              "max": null,
-              "min": null,
-              "show": true
-            }
-          ],
-          "yaxis": {
-            "align": false,
-            "alignLevel": null
-          }
-        },
-        {
-          "aliasColors": {},
-          "bars": false,
-          "dashLength": 10,
-          "dashes": false,
-          "datasource": "${DS_PROMETHEUS}",
-          "editable": true,
-          "error": false,
-          "fieldConfig": {
-            "defaults": {
-              "links": []
-            },
-            "overrides": []
-          },
-          "fill": 1,
-          "fillGradient": 0,
-          "gridPos": {
-            "h": 7,
-            "w": 8,
-            "x": 8,
-            "y": 82
-          },
-          "hiddenSeries": false,
-          "id": 68,
-          "legend": {
-            "avg": false,
-            "current": false,
-            "max": false,
-            "min": false,
-            "show": true,
-            "total": false,
-            "values": false
-          },
-          "lines": true,
-          "linewidth": 1,
-          "links": [],
-          "nullPointMode": "connected",
-          "options": {
-            "alertThreshold": true
-          },
-          "paceLength": 10,
-          "percentage": false,
-          "pluginVersion": "8.1.2",
-          "pointradius": 5,
-          "points": false,
-          "renderer": "flot",
-          "seriesOverrides": [],
-          "spaceLength": 10,
-          "stack": false,
-          "steppedLine": false,
-          "targets": [
-            {
-              "expr": "process_open_fds{exported_job=\"filer\"}",
-              "format": "time_series",
-              "groupBy": [
-                {
-                  "params": [
-                    "$interval"
-                  ],
-                  "type": "time"
-                },
-                {
-                  "params": [
-                    "null"
-                  ],
-                  "type": "fill"
-                }
-              ],
-              "interval": "",
-              "intervalFactor": 2,
-              "legendFormat": "{{exported_instance}}",
-              "metric": "",
-              "policy": "default",
-              "refId": "A",
-              "resultFormat": "time_series",
-              "select": [
-                [
-                  {
-                    "params": [
-                      "value"
-                    ],
-                    "type": "field"
-                  },
-                  {
-                    "params": [],
-                    "type": "mean"
-                  }
-                ]
-              ],
-              "step": 240,
-              "tags": []
-            },
-            {
-              "expr": "process_max_fds{exported_job=\"filer\"}",
-              "format": "time_series",
-              "groupBy": [
-                {
-                  "params": [
-                    "$interval"
-                  ],
-                  "type": "time"
-                },
-                {
-                  "params": [
-                    "null"
-                  ],
-                  "type": "fill"
-                }
-              ],
-              "hide": false,
-              "interval": "",
-              "intervalFactor": 2,
-              "legendFormat": "{{exported_instance}}",
-              "metric": "",
-              "policy": "default",
-              "refId": "B",
-              "resultFormat": "time_series",
-              "select": [
-                [
-                  {
-                    "params": [
-                      "value"
-                    ],
-                    "type": "field"
-                  },
-                  {
-                    "params": [],
-                    "type": "mean"
-                  }
-                ]
-              ],
-              "step": 240,
-              "tags": []
-            }
-          ],
-          "thresholds": [],
-          "timeFrom": null,
-          "timeRegions": [],
-          "timeShift": null,
-          "title": "Open File Descriptor",
-          "tooltip": {
-            "msResolution": false,
-            "shared": true,
-            "sort": 0,
-            "value_type": "individual"
-          },
-          "type": "graph",
-          "xaxis": {
-            "buckets": null,
-            "mode": "time",
-            "name": null,
-            "show": true,
-            "values": []
-          },
-          "yaxes": [
-            {
-              "$$hashKey": "object:1087",
-              "format": "short",
-              "label": null,
-              "logBase": 1,
-              "max": null,
-              "min": null,
-              "show": true
-            },
-            {
-              "$$hashKey": "object:1088",
-              "format": "short",
-              "label": null,
-              "logBase": 1,
-              "max": null,
-              "min": null,
-              "show": true
-            }
-          ],
-          "yaxis": {
-            "align": false,
-            "alignLevel": null
-          }
-        },
-        {
-          "aliasColors": {},
-          "bars": false,
-          "dashLength": 10,
-          "dashes": false,
-          "datasource": "${DS_PROMETHEUS}",
-          "fill": 1,
-          "fillGradient": 0,
-          "fieldConfig": {
-            "defaults": {
+              },
               "unit": "decbytes"
             },
             "overrides": []
@@ -3083,99 +2523,105 @@ spec:
             "h": 7,
             "w": 12,
             "x": 0,
-            "y": 37
+            "y": 41
           },
-          "hiddenSeries": false,
-          "id": 87,
-          "legend": {
-            "avg": false,
-            "current": false,
-            "max": false,
-            "min": false,
-            "show": true,
-            "total": false,
-            "values": false
-          },
-          "lines": true,
-          "linewidth": 1,
-          "links": [],
-          "nullPointMode": "null as zero",
+          "id": 89,
           "options": {
-            "alertThreshold": true
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": true
+            },
+            "tooltip": {
+              "mode": "multi",
+              "sort": "none"
+            }
           },
-          "percentage": false,
-          "pluginVersion": "8.1.2",
-          "pointradius": 5,
-          "points": false,
-          "renderer": "flot",
-          "seriesOverrides": [],
-          "spaceLength": 10,
-          "stack": false,
-          "steppedLine": false,
+          "pluginVersion": "10.3.1",
           "targets": [
             {
-              "expr": "max(SeaweedFS_s3_bucket_size_bytes) by (bucket)",
-              "format": "time_series",
-              "hide": false,
-              "intervalFactor": 2,
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${DS_PROMETHEUS}"
+              },
+              "editorMode": "code",
+              "expr": "max(SeaweedFS_s3_bucket_size_bytes{namespace=\"$NAMESPACE\"}) by (bucket)",
               "legendFormat": "{{bucket}} (logical)",
+              "range": true,
               "refId": "A"
             },
             {
-              "expr": "max(SeaweedFS_s3_bucket_physical_size_bytes) by (bucket)",
-              "format": "time_series",
-              "hide": false,
-              "intervalFactor": 2,
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${DS_PROMETHEUS}"
+              },
+              "editorMode": "code",
+              "expr": "max(SeaweedFS_s3_bucket_physical_size_bytes{namespace=\"$NAMESPACE\"}) by (bucket)",
               "legendFormat": "{{bucket}} (physical)",
+              "range": true,
               "refId": "B"
             }
           ],
-          "thresholds": [],
-          "timeFrom": null,
-          "timeRegions": [],
-          "timeShift": null,
           "title": "S3 Bucket Size",
-          "tooltip": {
-            "shared": true,
-            "sort": 0,
-            "value_type": "individual"
-          },
-          "type": "graph",
-          "xaxis": {
-            "buckets": null,
-            "mode": "time",
-            "name": null,
-            "show": true,
-            "values": []
-          },
-          "yaxes": [
-            {
-              "format": "decbytes",
-              "logBase": 1,
-              "min": 0,
-              "show": true
-            },
-            {
-              "format": "short",
-              "logBase": 1,
-              "show": false
-            }
-          ],
-          "yaxis": {
-            "align": false,
-            "alignLevel": null
-          }
+          "type": "timeseries"
         },
         {
-          "aliasColors": {},
-          "bars": false,
-          "dashLength": 10,
-          "dashes": false,
-          "datasource": "${DS_PROMETHEUS}",
-          "fill": 1,
-          "fillGradient": 0,
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
           "fieldConfig": {
             "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "drawStyle": "line",
+                "fillOpacity": 10,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "insertNulls": false,
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "never",
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              },
               "unit": "short"
             },
             "overrides": []
@@ -3184,84 +2630,41 @@ spec:
             "h": 7,
             "w": 12,
             "x": 12,
-            "y": 37
+            "y": 41
           },
-          "hiddenSeries": false,
-          "id": 88,
-          "legend": {
-            "avg": false,
-            "current": false,
-            "max": false,
-            "min": false,
-            "show": true,
-            "total": false,
-            "values": false
-          },
-          "lines": true,
-          "linewidth": 1,
-          "links": [],
-          "nullPointMode": "null as zero",
+          "id": 90,
           "options": {
-            "alertThreshold": true
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": true
+            },
+            "tooltip": {
+              "mode": "multi",
+              "sort": "none"
+            }
           },
-          "percentage": false,
-          "pluginVersion": "8.1.2",
-          "pointradius": 5,
-          "points": false,
-          "renderer": "flot",
-          "seriesOverrides": [],
-          "spaceLength": 10,
-          "stack": false,
-          "steppedLine": false,
+          "pluginVersion": "10.3.1",
           "targets": [
             {
-              "expr": "max(SeaweedFS_s3_bucket_object_count) by (bucket)",
-              "format": "time_series",
-              "hide": false,
-              "intervalFactor": 2,
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${DS_PROMETHEUS}"
+              },
+              "editorMode": "code",
+              "expr": "max(SeaweedFS_s3_bucket_object_count{namespace=\"$NAMESPACE\"}) by (bucket)",
               "legendFormat": "{{bucket}}",
+              "range": true,
               "refId": "A"
             }
           ],
-          "thresholds": [],
-          "timeFrom": null,
-          "timeRegions": [],
-          "timeShift": null,
           "title": "S3 Bucket Object Count",
-          "tooltip": {
-            "shared": true,
-            "sort": 0,
-            "value_type": "individual"
-          },
-          "type": "graph",
-          "xaxis": {
-            "buckets": null,
-            "mode": "time",
-            "name": null,
-            "show": true,
-            "values": []
-          },
-          "yaxes": [
-            {
-              "format": "short",
-              "logBase": 1,
-              "min": 0,
-              "show": true
-            },
-            {
-              "format": "short",
-              "logBase": 1,
-              "show": false
-            }
-          ],
-          "yaxis": {
-            "align": false,
-            "alignLevel": null
-          }
+          "type": "timeseries"
         }
       ],
       "refresh": "30s",
-      "schemaVersion": 30,
+      "schemaVersion": 26,
       "style": "dark",
       "tags": [],
       "templating": {
@@ -3284,16 +2687,146 @@ spec:
             "regex": "",
             "skipUrlSync": false,
             "type": "datasource"
+          },
+          {
+            "allValue": null,
+            "current": {
+              "selected": false,
+              "text": "s3",
+              "value": "s3"
+            },
+            "datasource": "$DS_PROMETHEUS",
+            "definition": "label_values({endpoint=\"metrics\"}, namespace)",
+            "hide": 0,
+            "includeAll": false,
+            "label": "namespace",
+            "multi": false,
+            "name": "namespace",
+            "options": [
+              {
+                "selected": true,
+                "text": "s3",
+                "value": "s3"
+              }
+            ],
+            "query": "label_values({endpoint=\"metrics\"}, namespace)",
+            "refresh": 0,
+            "regex": "",
+            "skipUrlSync": false,
+            "sort": 1,
+            "tagValuesQuery": "",
+            "tags": [],
+            "tagsQuery": "",
+            "type": "query",
+            "useTags": false
+          },
+          {
+            "allValue": "",
+            "current": {
+              "selected": true,
+              "text": "fast",
+              "value": "fast"
+            },
+            "datasource": "$DS_PROMETHEUS",
+            "definition": "label_values({namespace=\"$namespace\"}, service)",
+            "hide": 0,
+            "includeAll": true,
+            "label": "service",
+            "multi": false,
+            "name": "service",
+            "options": [
+              {
+                "selected": false,
+                "text": "All",
+                "value": "$__all"
+              },
+              {
+                "selected": true,
+                "text": "fast",
+                "value": "fast"
+              },
+              {
+                "selected": false,
+                "text": "slow",
+                "value": "slow"
+              }
+            ],
+            "query": "label_values({namespace=\"$namespace\"}, service)",
+            "refresh": 0,
+            "regex": "/(\\w+)-master/",
+            "skipUrlSync": false,
+            "sort": 1,
+            "tagValuesQuery": "",
+            "tags": [],
+            "tagsQuery": "",
+            "type": "query",
+            "useTags": false
+          },
+          {
+            "allValue": "",
+            "current": {
+              "selected": false,
+              "text": "All",
+              "value": "$__all"
+            },
+            "datasource": "$DS_PROMETHEUS",
+            "definition": "label_values(SeaweedFS_s3_request_total{namespace=\"$namespace\"}, type)",
+            "hide": 0,
+            "includeAll": true,
+            "label": "method",
+            "multi": false,
+            "name": "method",
+            "options": [
+              {
+                "selected": true,
+                "text": "All",
+                "value": "$__all"
+              },
+              {
+                "selected": false,
+                "text": "DELETE",
+                "value": "DELETE"
+              },
+              {
+                "selected": false,
+                "text": "GET",
+                "value": "GET"
+              },
+              {
+                "selected": false,
+                "text": "LIST",
+                "value": "LIST"
+              },
+              {
+                "selected": false,
+                "text": "POST",
+                "value": "POST"
+              },
+              {
+                "selected": false,
+                "text": "PUT",
+                "value": "PUT"
+              }
+            ],
+            "query": "label_values(SeaweedFS_s3_request_total{namespace=\"$namespace\"}, type)",
+            "refresh": 0,
+            "regex": "",
+            "skipUrlSync": false,
+            "sort": 1,
+            "tagValuesQuery": "",
+            "tags": [],
+            "tagsQuery": "",
+            "type": "query",
+            "useTags": false
           }
         ]
       },
       "time": {
-        "from": "now-3h",
+        "from": "now-12h",
         "to": "now"
       },
       "timepicker": {
         "refresh_intervals": [
-          "5s",
           "10s",
           "30s",
           "1m",
@@ -3318,7 +2851,6 @@ spec:
       },
       "timezone": "browser",
       "title": "SeaweedFS",
-      "uid": "nh02dOVnz",
       "version": 2
     }
   datasources:
