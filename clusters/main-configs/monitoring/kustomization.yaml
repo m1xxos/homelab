@@ -3,6 +3,7 @@ kind: Kustomization
 resources:
 - authentik-pod-scraper.yaml
 - cnpg-auth-pod-scraper.yaml
+- cnpg-harbor-pod-scraper.yaml
 - cnpg-monitoring.yaml
 - longhorn-alert.yaml
 - longhorn-service-scraper.yaml

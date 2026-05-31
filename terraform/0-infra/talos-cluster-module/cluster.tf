@@ -42,6 +42,13 @@ locals {
           bind-address = "0.0.0.0",
         }
       },
+      # Expose an unauthenticated, metrics-only etcd endpoint on port 2381 so
+      # the VictoriaMetrics stack (kubeEtcd) can scrape etcd on Talos.
+      etcd = {
+        extraArgs = {
+          listen-metrics-urls = "http://0.0.0.0:2381"
+        }
+      },
       proxy = {
         disabled = true
       }

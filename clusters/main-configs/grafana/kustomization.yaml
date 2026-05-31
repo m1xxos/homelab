@@ -2,8 +2,11 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
 - grafana-sa.yaml
+- grafana-secret-store.yaml
 - grafana.yaml
 - grafana-datasources.yaml
 - grafana-dashboards.yaml
 - grafana-dashboard-k8s-top-pods.yaml
+- grafana-dashboard-dragonfly.yaml
+- grafana-dashboard-seaweedfs.yaml
 - grafana-route.yaml

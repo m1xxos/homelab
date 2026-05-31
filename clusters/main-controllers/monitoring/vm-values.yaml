@@ -11,6 +11,11 @@ data:
     nameOverride: "vm"
     fullnameOverride: "vm"
     vmagent:
+      spec:
+        # kube-apiserver /metrics exceeds the 16MiB default scrape limit on this
+        # cluster; raise the cap so the API server target can be scraped.
+        extraArgs:
+          promscrape.maxScrapeSize: "32MiB"
       route:
         enabled: true
         hostnames:
@@ -65,3 +70,20 @@ data:
               caFile: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
               serverName: kubernetes
               insecureSkipVerify: true
+    # Talos exposes etcd metrics on an unauthenticated metrics-only endpoint
+    # (port 2381, http) enabled via cluster.etcd.extraArgs.listen-metrics-urls
+    # in the Talos machine config. etcd is not a Kubernetes pod on Talos, so we
+    # point kubeEtcd at the control-plane node IP directly (manual endpoints).
+    kubeEtcd:
+      enabled: true
+      endpoints:
+      - 192.168.1.70
+      service:
+        enabled: true
+        port: 2381
+        targetPort: 2381
+      vmScrape:
+        spec:
+          endpoints:
+          - port: http-metrics
+            scheme: http

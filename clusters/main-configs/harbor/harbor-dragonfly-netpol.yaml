@@ -1,0 +1,30 @@
+# Additive NetworkPolicy: the Dragonfly operator creates an owner-managed
+# NetworkPolicy that only allows the operator and peer pods to reach the admin
+# port (9999), where Dragonfly serves Prometheus metrics
+# (--primary_port_http_enabled=false --admin_port=9999). This blocks vmagent.
+# NetworkPolicies are additive, so this extra policy unblocks scraping without
+# fighting the operator-owned policy.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: harbor-dragonfly-allow-scrape
+  namespace: harbor
+spec:
+  podSelector:
+    matchLabels:
+      app: harbor-dragonfly
+      app.kubernetes.io/name: dragonfly
+      app.kubernetes.io/part-of: dragonfly
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: monitoring
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/name: vmagent
+    ports:
+    - port: 9999
+      protocol: TCP
