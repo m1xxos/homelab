@@ -8,7 +8,7 @@ metadata:
 spec:
   interval: 1m0s
   ref:
-    branch: 407-more-dashboards
+    branch: 409-external-cluster-logging
   secretRef:
     name: flux-system
   url: https://github.com/m1xxos/homelab.git
