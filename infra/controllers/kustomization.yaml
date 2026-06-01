@@ -11,3 +11,4 @@ resources:
 - prom-crds/release.yaml
 - prom-crds/repository.yaml
 - traefik/
+- node-exporter/
