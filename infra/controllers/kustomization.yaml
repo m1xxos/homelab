@@ -12,3 +12,4 @@ resources:
 - prom-crds/repository.yaml
 - traefik/
 - node-exporter/
+- otel/
