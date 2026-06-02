@@ -13,3 +13,4 @@ resources:
 - seaweedfs/
 - traefik/
 - logging/
+- tracing/
