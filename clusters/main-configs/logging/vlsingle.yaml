@@ -1,18 +1,10 @@
 apiVersion: operator.victoriametrics.com/v1
 kind: VLSingle
 metadata:
-  name: example
+  name: main
 spec:
-  retentionPeriod: "12"
+  retentionPeriod: "3d"
   storage:
     resources:
       requests:
-        storage: 50Gi
-  resources:
-    requests:
-      memory: 500Mi
-      cpu: 500m
-    limits:
-      memory: 10Gi
-      cpu: 5
-∏
+        storage: 10Gi
