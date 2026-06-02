@@ -4,3 +4,4 @@ kind: Kustomization
 namespace: logging
 resources:
   - vlsingle.yaml
+  - route.yaml
