@@ -11,6 +11,10 @@ spec:
   - name: varlog
     mountPath: /var/log
     readOnly: true
+  tolerations:
+  - key: "node-role.kubernetes.io/control-plane"
+    operator: "Exists"
+    effect: "NoSchedule"
   config:
     exporters:
       debug: {}
