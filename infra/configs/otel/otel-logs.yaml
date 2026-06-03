@@ -1,0 +1,54 @@
+apiVersion: opentelemetry.io/v1beta1
+kind: OpenTelemetryCollector
+metadata:
+  name: logging
+spec:
+  mode: daemonset
+  volumes:
+  - name: varlog
+    hostPath: { path: /var/log }
+  volumeMounts:
+  - name: varlog
+    mountPath: /var/log
+    readOnly: true
+  config:
+    exporters:
+      debug: {}
+      otlphttp:
+        logs_endpoint: http://vlsingle-main.logging.svc.cluster.local:9428/insert/opentelemetry/v1/logs
+    extensions:
+      health_check:
+        endpoint: :13133
+    processors:
+      batch: {}
+      memory_limiter:
+        check_interval: 5s
+        limit_percentage: 80
+        spike_limit_percentage: 25
+    receivers:
+      filelog:
+        include: [ /var/log/pods/*/*/*.log ]
+        # Exclude collector container's logs.
+        exclude: [ /var/log/pods/*_logging-collector-*_*/otc-container/*.log ]
+        start_at: end
+        retry_on_failure:
+          enabled: true
+        include_file_path: true
+        include_file_name: false
+        operators:
+        # parse container logs
+        - type: container
+          id: container-parser
+          max_log_size: 102400
+    service:
+      extensions:
+      - health_check
+      pipelines:
+        logs:
+          receivers:
+          - filelog
+          processors:
+          - memory_limiter
+          - batch
+          exporters:
+          - otlphttp
