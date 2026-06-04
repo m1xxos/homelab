@@ -2,6 +2,8 @@ apiVersion: operator.victoriametrics.com/v1
 kind: VLSingle
 metadata:
   name: main
+  annotations:
+    service.cilium.io/global: "true"
 spec:
   retentionPeriod: "3d"
   storage:
