@@ -4,3 +4,4 @@ kind: Kustomization
 namespace: tracing
 resources:
 - otel.yaml
+- vtsingle.yaml
