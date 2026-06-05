@@ -12,7 +12,7 @@ spec:
         encoding: proto
         tls:
           insecure: true
-        traces_endpoint: http://vtsingle-vts.tracing.svc.cluster.local:10428/insert/opentelemetry/v1/traces
+        traces_endpoint: http://vtsingle-main.tracing.svc.cluster.local:10428/insert/opentelemetry/v1/traces
     extensions:
       health_check:
         endpoint: ${env:MY_POD_IP}:13133

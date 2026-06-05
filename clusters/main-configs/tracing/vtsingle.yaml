@@ -13,3 +13,4 @@ spec:
       annotations:
         service.cilium.io/global: "true"
     spec: {}
+    useAsDefault: true
