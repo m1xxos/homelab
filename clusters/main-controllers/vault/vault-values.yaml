@@ -1,4 +1,7 @@
 server:
+  resources:
+    requests:
+      memory: 512Mi
   extraEnvironmentVars:
     YANDEXCLOUD_KMS_KEY_ID: abjc7mkspu26rij5khdc
   readinessProbe:

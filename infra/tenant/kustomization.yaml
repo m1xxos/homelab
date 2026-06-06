@@ -9,6 +9,7 @@ resources:
 - monitoring-ns.yaml
 - role.yaml
 - traefik-ns.yaml
+- logging-ns.yaml
 - vault-rid.yaml
 - vault-sid.yaml
 - https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.5.1/standard-install.yaml

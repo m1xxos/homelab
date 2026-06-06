@@ -1,0 +1,16 @@
+apiVersion: operator.victoriametrics.com/v1
+kind: VLSingle
+metadata:
+  name: main
+spec:
+  retentionPeriod: "3d"
+  storage:
+    resources:
+      requests:
+        storage: 10Gi
+  serviceSpec:
+    metadata:
+      annotations:
+        service.cilium.io/global: "true"
+    spec: {}
+    useAsDefault: true

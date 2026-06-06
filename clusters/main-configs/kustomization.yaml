@@ -12,3 +12,5 @@ resources:
 - monitoring/
 - seaweedfs/
 - traefik/
+- logging/
+- tracing/

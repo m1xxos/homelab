@@ -11,3 +11,4 @@ resources:
 - external-secrets/dhi-secret.yaml
 - cilium/push-secret.yaml
 - traefik/
+- otel/

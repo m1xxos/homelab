@@ -16,6 +16,9 @@ data:
         password: file:///postgres-creds/password
     server:
       serviceAccountName: authentik-reader
+      resources:
+        requests:
+          memory: 512Mi
       route:
         main:
           enabled: true
@@ -40,6 +43,9 @@ data:
         readOnly: true
     worker:
       serviceAccountName: authentik-reader
+      resources:
+        requests:
+          memory: 768Mi
       volumes:
       - name: postgres-creds
         secret:
