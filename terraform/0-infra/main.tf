@@ -36,7 +36,7 @@ module "main-cluster" {
   cluster_name         = "main"
   cluster_dns          = "main.k8s.m1xxos.online"
   github_token         = local.github_token
-  branch               = "409-external-cluster-logging"
+  branch               = "411-k8s-rightsizing"
   cilium_version       = "1.18.6"
   clustermesh_endpoint = "192.168.1.81"
 }
