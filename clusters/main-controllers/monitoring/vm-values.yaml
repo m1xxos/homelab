@@ -16,6 +16,12 @@ data:
         # cluster; raise the cap so the API server target can be scraped.
         extraArgs:
           promscrape.maxScrapeSize: "32MiB"
+        resources:
+          requests:
+            cpu: 100m
+            memory: 192Mi
+          limits:
+            memory: 384Mi
       route:
         enabled: true
         hostnames:
@@ -26,6 +32,12 @@ data:
     vmsingle:
       spec:
         retentionPeriod: "1d"
+        resources:
+          requests:
+            cpu: 250m
+            memory: 900Mi
+          limits:
+            memory: 1800Mi
         extraArgs:
           opentelemetry.usePrometheusNaming: "true"
         storage:
@@ -43,6 +55,22 @@ data:
           useAsDefault: true
       route:
         enabled: false
+    vmalert:
+      spec:
+        resources:
+          requests:
+            cpu: 20m
+            memory: 128Mi
+          limits:
+            memory: 256Mi
+    alertmanager:
+      spec:
+        resources:
+          requests:
+            cpu: 20m
+            memory: 128Mi
+          limits:
+            memory: 256Mi
     prometheus-node-exporter:
       enabled: false
     kube-state-metrics:
