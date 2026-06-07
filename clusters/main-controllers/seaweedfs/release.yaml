@@ -49,12 +49,24 @@ spec:
       - name: tmp
         anonymousRead: false
     master:
+      resources:
+        requests:
+          cpu: 10m
+          memory: 128Mi
+        limits:
+          memory: 256Mi
       data:
         type: "persistentVolumeClaim"
         size: "1Gi"
       logs:
         type: "emptyDir"
     filer:
+      resources:
+        requests:
+          cpu: 10m
+          memory: 192Mi
+        limits:
+          memory: 384Mi
       s3:
         enabled: true
         enableAuth: true
@@ -66,6 +78,12 @@ spec:
         type: "emptyDir"
     volume:
       replicas: 2
+      resources:
+        requests:
+          cpu: 10m
+          memory: 150Mi
+        limits:
+          memory: 320Mi
       dataDirs:
       - name: data
         type: "persistentVolumeClaim"

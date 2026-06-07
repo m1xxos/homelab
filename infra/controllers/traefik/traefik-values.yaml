@@ -44,3 +44,10 @@ tracing:
       enabled: true
       endpoint: "otel-collector.monitoring.svc.cluster.local:4317"
       insecure: true
+
+resources:
+  requests:
+    cpu: 20m
+    memory: 192Mi
+  limits:
+    memory: 384Mi
