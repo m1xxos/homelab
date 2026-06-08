@@ -44,7 +44,8 @@ resource "proxmox_virtual_environment_vm" "talos_cp" {
     size         = var.cp_disk_size
     iothread     = true
     discard      = "on"
-    cache        = "writeback"
+    cache        = "none"
+    aio          = "native" 
   }
 
   operating_system {
@@ -106,7 +107,8 @@ resource "proxmox_virtual_environment_vm" "talos_worker" {
     size         = var.worker_disk_size
     iothread     = true
     discard      = "on"
-    cache        = "writeback"
+    cache        = "none"
+    aio          = "native" 
   }
 
   operating_system {

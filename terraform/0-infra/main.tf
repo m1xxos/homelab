@@ -24,7 +24,7 @@ module "main-cluster" {
       ip    = "192.168.1.12"
     }
   ]
-  worker_cpu_cores     = 6
+  worker_cpu_cores     = 4
   worker_memory        = 5120
   cp_memory            = 6144
   external_ip          = "192.168.1.80"
