@@ -4,6 +4,12 @@ metadata:
   name: logging
 spec:
   mode: daemonset
+  resources:
+    requests:
+      cpu: 170m
+      memory: 280Mi
+    limits:
+      memory: 512Mi
   volumes:
   - name: varlog
     hostPath: { path: /var/log }

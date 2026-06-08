@@ -16,3 +16,9 @@ spec:
       monitor:
         enabled: true
         jobLabel: "${CLUSTER_NAME}-cluster-node-exporter"
+    resources:
+      requests:
+        cpu: 10m
+        memory: 64Mi
+      limits:
+        memory: 128Mi
