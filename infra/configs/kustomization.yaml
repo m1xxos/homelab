@@ -10,5 +10,6 @@ resources:
 - external-secrets/cf-token.yaml
 - external-secrets/dhi-secret.yaml
 - cilium/push-secret.yaml
+- longhorn/storageclass-single.yaml
 - traefik/
 - otel/
