@@ -31,7 +31,7 @@ data:
           namespace: traefik
     vmsingle:
       spec:
-        retentionPeriod: "1d"
+        retentionPeriod: "3d"
         resources:
           requests:
             cpu: 250m
