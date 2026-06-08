@@ -22,3 +22,10 @@ spec:
     defaultSettings:
       storageReservedPercentageForDefaultDisk: "10"
       defaultReplicaCount: '{"v1":"2","v2":"2"}'
+      # Tolerate host NVMe stalls (single-disk Proxmox host) before dropping
+      # replicas: engine waits up to 30s instead of the default 8s, so a brief
+      # I/O saturation no longer errors the volume and aborts the guest EXT4 journal.
+      engineReplicaTimeout: '{"v1":"30","v2":"30"}'
+      # Rebuild one replica at a time so a replica flap doesn't add a rebuild
+      # storm on top of an already-saturated NVMe (was 5).
+      concurrentReplicaRebuildPerNodeLimit: "1"
