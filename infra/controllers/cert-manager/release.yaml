@@ -26,3 +26,23 @@ spec:
     - --enable-certificate-owner-ref=true
     - --dns01-recursive-nameservers-only
     - --dns01-recursive-nameservers=8.8.8.8:53,1.1.1.1:53
+    resources:
+      requests:
+        cpu: 10m
+        memory: 128Mi
+      limits:
+        memory: 256Mi
+    webhook:
+      resources:
+        requests:
+          cpu: 10m
+          memory: 128Mi
+        limits:
+          memory: 256Mi
+    cainjector:
+      resources:
+        requests:
+          cpu: 15m
+          memory: 160Mi
+        limits:
+          memory: 320Mi
