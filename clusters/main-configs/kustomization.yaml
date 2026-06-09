@@ -4,7 +4,6 @@ resources:
 - unified-configs/
 - authentik/
 - capi/
-- cilium/
 - etcd/
 - grafana/
 - harbor/
