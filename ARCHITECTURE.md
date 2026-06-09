@@ -137,7 +137,7 @@ namespace — see **Adding a New Cluster** section below.
 | OIDC | Authentik (`oidc_admin_group: harbor-admins`), config injected via ESO `harbor-oidc-values` ← Vault `main/harbor/harbor-auth` |
 | PostgreSQL | CNPG cluster `harbor-pg` (1 instance, 5 GiB), service `harbor-pg-rw.harbor` |
 | Redis | Dragonfly `harbor-dragonfly` (1 replica, no auth, NetworkPolicy allows scrape from monitoring) |
-| Persistence | registry 10 GiB + trivy 5 GiB on `longhorn` (2-replica) StorageClass |
+| Persistence | registry 10 GiB + trivy 5 GiB on `longhorn-single` (trivy = cache, registry covered by NFS recurring backup) |
 | Metrics | VMPodScrape (harbor-scraper, cnpg-harbor-pod-scraper) |
 
 Harbor SecretStore `harbor-store` uses Vault K8s auth (role `harbor-reader`, SA `harbor-reader`, mount `main`).
@@ -252,7 +252,7 @@ Harbor SecretStore `harbor-store` uses Vault K8s auth (role `harbor-reader`, SA 
 |----------|-------|
 | Chart | `victoria-metrics-k8s-stack` v0.72.2 |
 | Namespace | `monitoring` |
-| VMSingle | retention 3d, 5 GiB storage (RWX — legacy, single pod), Cilium global svc annotation, OTel prometheus naming |
+| VMSingle | retention 3d, 5 GiB RWO on `longhorn-single`, Cilium global svc annotation, OTel prometheus naming |
 | VMAgent | `promscrape.maxScrapeSize: 32MiB` (kube-apiserver target), route at `vmagent.local.m1xxos.online` |
 | Grafana | Disabled in VM stack (managed by Grafana Operator) |
 | node-exporter | Disabled in stack — separate DHI OCI chart (`infra/controllers/node-exporter`, `${CLUSTER_NAME}-node-exporter`) |
@@ -283,7 +283,7 @@ API Server (15761), Node Exporter Full (1860), Etcd (3070), Dragonfly, SeaweedFS
 | Operator | opentelemetry-operator v0.114.1 (namespace `logging`) |
 | Collector | `OpenTelemetryCollector` CR `logging`, mode DaemonSet (incl. control-plane toleration) |
 | Pipeline | filelog (`/var/log/pods/*/*/*.log`, container parser) → memory_limiter → batch → OTLP HTTP |
-| Sink | VLSingle `main` (`logging` ns): retention 3d, 10 GiB PVC, `vlsingle-main.logging:9428` |
+| Sink | VLSingle `main` (`logging` ns): retention 3d, 10 GiB PVC on `longhorn-single`, `vlsingle-main.logging:9428` |
 | UI | `vl.local.m1xxos.online` |
 | Cilium global svc | annotated (for shipping logs from future external clusters) |
 
@@ -293,7 +293,7 @@ API Server (15761), Node Exporter Full (1860), Etcd (3070), Dragonfly, SeaweedFS
 | Collector | `OpenTelemetryCollector` CR `tracing` (namespace `tracing`), mode Deployment |
 | Receivers | OTLP gRPC/HTTP (4317/4318), Jaeger (14250/6831/14268), Zipkin (9411) |
 | Processors | k8sattributes (rich pod metadata), memory_limiter, batch |
-| Sink | VTSingle `main` (`tracing` ns): retention 3d, 10 GiB PVC, OTLP HTTP `vtsingle-main.tracing:10428/insert/opentelemetry/v1/traces` |
+| Sink | VTSingle `main` (`tracing` ns): retention 3d, 10 GiB PVC on `longhorn-single`, OTLP HTTP `vtsingle-main.tracing:10428/insert/opentelemetry/v1/traces` |
 | Query | Jaeger API at `vtsingle-main.tracing:10428/select/jaeger` (Grafana datasource) |
 
 **Trace flow:**
@@ -308,9 +308,9 @@ Traefik → OTLP gRPC → tracing-collector (:4317) → OTLP HTTP → VTSingle
 | Chart | `longhorn` v1.10.0, namespace `longhorn-system` |
 | Default StorageClass | `longhorn`: 2 replicas, dataLocality best-effort |
 | Extra StorageClass | `longhorn-single`: 1 replica, best-effort locality, for reproducible/cache data (infra/configs) |
-| Stability | `engineReplicaTimeout: 30`, `concurrentReplicaRebuildPerNodeLimit: 1`, 10% disk reserved |
+| Stability | `engineReplicaTimeout: 30`, `concurrentReplicaRebuildPerNodeLimit: 1`, `autoCleanupSystemGeneratedSnapshot`, `backupConcurrentLimit: 1`, 10% disk reserved |
 | Backup target | NFS at `nfs://192.168.1.138:/mnt/main/lh-backup`, poll interval 300s |
-| Recurring jobs | `full-backup` (3h, retain 1), `snapshot-delete` (3h, retain 1), `snapshot-cleanup` (3h), `system-backup` (6h, retain 2), `full-trim` (3h) |
+| Recurring jobs | `full-backup` (3h @:00, retain 1, concurrency 1), `snapshot-cleanup` (3h @:15), `snapshot-delete` (3h @:30, retain 1), `system-backup` (6h @:30, retain 2), `full-trim` (6h @:45, concurrency 1) — staggered so backup and trim never fire in the same minute |
 | UI | HTTPRoute at `longhorn.local.m1xxos.online` |
 | VolumeSnapshotClass | `longhorn-backup-vsc` (full backup mode); snapshot `authentik-db-backup` of `authentik-2` PVC |
 
@@ -444,6 +444,8 @@ Proxmox VMs → Talos config → bootstrap → kubeconfig
 
 ### Talos machine config highlights (cluster.tf)
 - CNI `none` (Cilium installed by Terraform), kube-proxy disabled
+- sysctls: `vm.dirty_background_ratio=5`, `vm.dirty_ratio=10` — smaller writeback bursts towards the
+  fragile plusha disk (see Known Issues)
 - kubelet: `/var/lib/longhorn` bind mount, external cloud-provider, rotate-server-certificates
 - Control plane: bind-address 0.0.0.0 for scheduler/controller-manager, etcd metrics on :2381,
   VIP on physical interface, Talos API access for `os:reader` + `os:etcd:backup`
@@ -495,9 +497,11 @@ Harbor (harbor namespace)
 - **Proxmox host `plusha` I/O fragility**: a host-side I/O stall once crashed main-worker-1 (VM 911).
   VM disks use `cache=writeback` (deliberate trade-off). Host `vm.swappiness=30` was set manually and
   is not in IaC.
-- **VMSingle PVC is RWX** (Longhorn share-manager/NFS overhead) for a single-pod workload — migrating
-  to RWO requires PVC recreation, postponed.
-- **Harbor PVCs (registry/trivy) sit on the 2-replica StorageClass**; trivy's cache is fully
-  reproducible and could move to `longhorn-single`, but that requires PVC recreation via Helm.
+- **Pending PVC migrations** (manifests already target the new classes; PVCs must be recreated once
+  the cluster is up, since storageClass/accessModes are immutable): `vmsingle-vm` (RWX→RWO,
+  longhorn-single), `vlsingle-main`, `vtsingle-main`, `harbor-registry`, `data-harbor-trivy-0`.
+  Metrics/logs/traces/trivy data is disposable; registry content restores from the Longhorn NFS backup.
 - **Stale HelmRelease statuses** (e.g. node-exporter Failed after a one-off timeout) clear with
   `task flux` / `flux reconcile helmrelease ...`.
+- **SeaweedFS is kept deliberately** (decision 2026-06-09) for ad-hoc S3 use despite having no
+  in-cluster consumers.
