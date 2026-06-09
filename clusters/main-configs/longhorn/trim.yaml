@@ -4,9 +4,12 @@ metadata:
   name: full-trim
   namespace: longhorn-system
 spec:
-  cron: "0 */3 * * *"
+  # Offset from full-backup (0 */3) — both fired at the same minute before,
+  # stacking backup reads with trim discards into one I/O spike on the host.
+  # Trim only reclaims space, every 6h is plenty.
+  cron: "45 */6 * * *"
   task: "filesystem-trim"
   groups:
   - default
   retain: 1
-  concurrency: 2
+  concurrency: 1
