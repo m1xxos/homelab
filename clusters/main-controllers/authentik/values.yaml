@@ -18,7 +18,10 @@ data:
       serviceAccountName: authentik-reader
       resources:
         requests:
-          memory: 512Mi
+          cpu: 200m
+          memory: 800Mi
+        limits:
+          memory: 1600Mi
       route:
         main:
           enabled: true
@@ -45,7 +48,10 @@ data:
       serviceAccountName: authentik-reader
       resources:
         requests:
-          memory: 768Mi
+          cpu: 150m
+          memory: 1100Mi
+        limits:
+          memory: 2000Mi
       volumes:
       - name: postgres-creds
         secret:

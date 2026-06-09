@@ -38,6 +38,12 @@ spec:
           serviceAccountName: grafana-reader
           containers:
           - name: grafana
+            resources:
+              requests:
+                cpu: 50m
+                memory: 400Mi
+              limits:
+                memory: 800Mi
             env:
             # OIDC client credentials from Vault via ESO (grafana-oauth secret),
             # referenced in auth.generic_oauth config with $__env{}.

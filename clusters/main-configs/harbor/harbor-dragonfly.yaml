@@ -5,3 +5,10 @@ metadata:
   namespace: harbor
 spec:
   replicas: 1
+  resources:
+    requests:
+      cpu: 500m
+      memory: 400Mi
+    limits:
+      cpu: 600m
+      memory: 750Mi

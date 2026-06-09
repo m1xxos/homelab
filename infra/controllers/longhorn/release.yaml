@@ -19,6 +19,10 @@ spec:
     persistence:
       defaultClass: true
       defaultClassReplicaCount: 2
+      defaultDataLocality: best-effort
     defaultSettings:
       storageReservedPercentageForDefaultDisk: "10"
       defaultReplicaCount: '{"v1":"2","v2":"2"}'
+      defaultDataLocality: best-effort
+      engineReplicaTimeout: '{"v1":"30","v2":"30"}'
+      concurrentReplicaRebuildPerNodeLimit: "1"
