@@ -40,9 +40,13 @@ data:
             memory: 1800Mi
         extraArgs:
           opentelemetry.usePrometheusNaming: "true"
+        # RWO + single replica: metrics are disposable (3d retention) and a
+        # single-pod workload; RWX forced a Longhorn share-manager NFS hop.
+        # Changing this on a live cluster requires deleting the old PVC.
         storage:
+          storageClassName: longhorn-single
           accessModes:
-            - ReadWriteMany
+            - ReadWriteOnce
           resources:
             requests:
               storage: 5Gi

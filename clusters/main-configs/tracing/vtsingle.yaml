@@ -10,7 +10,10 @@ spec:
       memory: 128Mi
     limits:
       memory: 256Mi
+  # Traces are disposable (3d retention) — no need for a second Longhorn replica.
+  # Changing this on a live cluster requires deleting the old PVC.
   storage:
+    storageClassName: longhorn-single
     resources:
       requests:
         storage: 10Gi
