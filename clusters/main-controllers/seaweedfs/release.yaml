@@ -21,33 +21,8 @@ spec:
     s3:
       annotations:
         service.cilium.io/global: "true"
-      createBuckets:
-      - name: git-lfs
-        anonymousRead: false
-      - name: gitlab-artifacts
-        anonymousRead: false
-      - name: gitlab-backups
-        anonymousRead: false
-      - name: gitlab-ci-secure-files
-        anonymousRead: false
-      - name: gitlab-dependency-proxy
-        anonymousRead: false
-      - name: gitlab-mr-diffs
-        anonymousRead: false
-      - name: gitlab-packages
-        anonymousRead: false
-      - name: gitlab-pages
-        anonymousRead: false
-      - name: gitlab-terraform-state
-        anonymousRead: false
-      - name: gitlab-uploads
-        anonymousRead: false
-      - name: registry
-        anonymousRead: false
-      - name: runner-cache
-        anonymousRead: false
-      - name: tmp
-        anonymousRead: false
+      # GitLab (the only bucket consumer) was removed in May 2026; the old
+      # gitlab-* buckets still exist in the filer and can be purged via s3cmd.
     master:
       resources:
         requests:
