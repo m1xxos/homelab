@@ -16,6 +16,15 @@ data:
         # cluster; raise the cap so the API server target can be scraped.
         extraArgs:
           promscrape.maxScrapeSize: "32MiB"
+        # Drop high-cardinality histogram buckets that no installed dashboard
+        # or rule queries (~95k of 417k active series as of 2026-06-09).
+        # Only _bucket series are dropped — _sum/_count stay, so averages
+        # still work. The dotdc API-server dashboard uses the _sli_ metric,
+        # which is kept.
+        inlineRelabelConfig:
+        - action: drop
+          sourceLabels: [__name__]
+          regex: "(apiserver_request_duration_seconds_bucket|apiserver_request_body_size_bytes_bucket|apiserver_response_sizes_bucket|apiserver_watch_list_duration_seconds_bucket|apiserver_watch_cache_read_wait_seconds_bucket|etcd_request_duration_seconds_bucket|longhorn_rest_client_rate_limiter_latency_seconds_bucket|longhorn_rest_client_request_latency_seconds_bucket|longhorn_workqueue_queue_duration_seconds_bucket|longhorn_workqueue_work_duration_seconds_bucket|rest_client_request_duration_seconds_bucket)"
         resources:
           requests:
             cpu: 100m
