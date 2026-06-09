@@ -36,6 +36,15 @@ spec:
       template:
         spec:
           serviceAccountName: grafana-reader
+          # The operator creates the PVC from spec.persistentVolumeClaim but does
+          # not mount it by itself: without this override grafana-data stays an
+          # emptyDir and all state is lost on restart (the PVC sits detached).
+          securityContext:
+            fsGroup: 472
+          volumes:
+          - name: grafana-data
+            persistentVolumeClaim:
+              claimName: grafana-pvc
           containers:
           - name: grafana
             resources:
