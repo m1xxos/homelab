@@ -14,6 +14,14 @@ locals {
       },
     },
     machine = {
+      # Start flushing dirty pages earlier and in smaller portions: with the
+      # default 10/20% a node can buffer ~1 GiB and dump it onto the host's
+      # writeback cache in one burst — the pattern that stalled the plusha
+      # disk and crashed main-worker-1.
+      sysctls = {
+        "vm.dirty_background_ratio" = "5"
+        "vm.dirty_ratio"            = "10"
+      }
       kubelet = {
         extraMounts = [
           { destination = "/var/lib/longhorn",
