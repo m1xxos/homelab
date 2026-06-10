@@ -36,6 +36,12 @@ spec:
       template:
         spec:
           serviceAccountName: grafana-reader
+          securityContext:
+            fsGroup: 472
+          volumes:
+          - name: grafana-data
+            persistentVolumeClaim:
+              claimName: grafana-pvc
           containers:
           - name: grafana
             resources:

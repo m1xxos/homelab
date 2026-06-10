@@ -42,7 +42,7 @@ tracing:
     enabled: true
     grpc:
       enabled: true
-      endpoint: "otel-collector.monitoring.svc.cluster.local:4317"
+      endpoint: "tracing-collector.tracing.svc.cluster.local:4317"
       insecure: true
 
 resources:

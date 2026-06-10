@@ -14,22 +14,9 @@ resource "vault_kv_secret_v2" "cloudflare-secret-key" {
   )
 }
 
-resource "random_password" "dragonfly-gl-password" {
-  length      = 60
-  min_numeric = 10
-  min_special = 10
-  min_upper   = 10
-}
-
-resource "vault_kv_secret_v2" "dragonfly-gl-password" {
-  mount = vault_mount.general.path
-  name  = "dragonfly-gl-password"
-  data_json = jsonencode({
-    password = random_password.dragonfly-gl-password.result
-    }
-  )
-}
-
+# gitlab-object-storage credentials are kept after the GitLab removal:
+# they are still the IAM identity for the SeaweedFS S3 endpoint
+# (clusters/main-configs/seaweedfs/s3-config-secret.yaml).
 resource "random_string" "gitlab-s3-access-key" {
   length  = 20
   special = false

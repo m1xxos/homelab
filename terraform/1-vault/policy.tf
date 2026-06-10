@@ -22,18 +22,6 @@ path "main/metadata/harbor/*" {
 EOT
 }
 
-resource "vault_policy" "gitlab-reader" {
-  name   = "gitlab-reader"
-  policy = <<EOT
-path "main/data/gitlab/*" {
-  capabilities = ["read", "list"]
-}
-path "main/metadata/gitlab/*" {
-  capabilities = ["list"]
-}
-EOT
-}
-
 resource "vault_policy" "users-reader" {
   name   = "users-reader"
   policy = <<EOT

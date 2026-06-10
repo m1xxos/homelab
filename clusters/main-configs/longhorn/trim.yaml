@@ -4,9 +4,9 @@ metadata:
   name: full-trim
   namespace: longhorn-system
 spec:
-  cron: "0 */3 * * *"
+  cron: "45 */6 * * *"
   task: "filesystem-trim"
   groups:
   - default
   retain: 1
-  concurrency: 2
+  concurrency: 1

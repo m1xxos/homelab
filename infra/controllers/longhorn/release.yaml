@@ -26,3 +26,9 @@ spec:
       defaultDataLocality: best-effort
       engineReplicaTimeout: '{"v1":"30","v2":"30"}'
       concurrentReplicaRebuildPerNodeLimit: "1"
+      # Drop system snapshots left after rebuilds: long snapshot chains both
+      # waste space and amplify read I/O on the already fragile host disk.
+      autoCleanupSystemGeneratedSnapshot: "true"
+      # One upload worker thread per backup: slower but gentler NFS writes
+      # (recurring jobs additionally run with concurrency 1).
+      backupConcurrentLimit: "1"

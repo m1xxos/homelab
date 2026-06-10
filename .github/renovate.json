@@ -5,7 +5,8 @@
   ],
   "flux": {
     "managerFilePatterns": [
-      "/clusters/.+\\.yaml$/"
+      "/clusters/.+\\.yaml$/",
+      "/infra/.+\\.yaml$/"
     ]
   },
   "packageRules": [

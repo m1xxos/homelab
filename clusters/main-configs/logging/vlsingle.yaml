@@ -11,6 +11,7 @@ spec:
     limits:
       memory: 256Mi
   storage:
+    storageClassName: longhorn-single
     resources:
       requests:
         storage: 10Gi

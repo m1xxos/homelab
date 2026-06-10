@@ -83,8 +83,8 @@ data:
     persistence:
       persistentVolumeClaim:
         registry:
-          storageClass: longhorn
+          storageClass: longhorn-single
           size: 10Gi
         trivy:
-          storageClass: longhorn
+          storageClass: longhorn-single
           size: 5Gi
