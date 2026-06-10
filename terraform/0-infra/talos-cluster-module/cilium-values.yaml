@@ -40,13 +40,6 @@ hubble:
 l2announcements:
   enabled: true
 
-# All nodes share one L2 segment (192.168.1.0/24 on vmbr0): route pod CIDRs
-# directly between nodes instead of paying VXLAN encapsulation (CPU per
-# packet + 50 bytes of MTU).
-routingMode: native
-autoDirectNodeRoutes: true
-ipv4NativeRoutingCIDR: "10.244.0.0/16"
-
 cluster:
   name: ${cluster_name}
   id: ${cluster_id}

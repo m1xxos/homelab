@@ -49,12 +49,6 @@ data:
     l2announcements:
       enabled: true
 
-    # Same flat-L2 assumption as the main cluster (talos-cluster-module):
-    # direct node routes instead of VXLAN.
-    routingMode: native
-    autoDirectNodeRoutes: true
-    ipv4NativeRoutingCIDR: "10.244.0.0/16"
-
     cluster:
       name: ${CILIUM_CLUSTER_NAME}
       id: ${CILIUM_CLUSTER_ID}

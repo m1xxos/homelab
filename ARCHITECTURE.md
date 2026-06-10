@@ -33,14 +33,13 @@ single-replica StorageClass for reproducible data, `vm.swappiness=30` set manual
 
 - **OS**: Talos Linux (v1.12.2)
 - **Provisioning**: Terraform → Proxmox VMs → Talos config → bootstrap
-- **CNI**: Cilium v1.18.6 (kube-proxy disabled, kubeProxyReplacement: true, L2 announcements,
-  native routing + autoDirectNodeRoutes over the flat L2 — no VXLAN; ClusterMesh block commented
-  out in Terraform cilium-values template — no peer clusters exist)
+- **CNI**: Cilium v1.18.6 (kube-proxy disabled, kubeProxyReplacement: true, L2 announcements;
+  ClusterMesh block commented out in Terraform cilium-values template — no peer clusters exist)
 - **GitOps**: Flux CD (bootstrapped from Terraform, branch `main`, SOPS decryption via `sops-gpg`)
 - **Secrets**: HashiCorp Vault (HA Raft, 3 replicas, YC KMS auto-unseal) + ESO + SOPS
 - **DNS**: Cloudflare (managed via Terraform), domain: `local.m1xxos.online`
 - **Ingress**: Traefik v40.2.0 (Gateway API + experimental channel)
-- **Auth**: Authentik v2026.5.2 (OIDC; 2026.5 fixes the 2026.2 worker memory regression, goauthentik#20537)
+- **Auth**: Authentik v2026.2.0 (OIDC)
 - **Monitoring**: VictoriaMetrics k8s stack v0.72.2 + Grafana Operator (OCI, semver >=5.22.2) + node-exporter (DHI OCI chart >=4.55.0)
 - **Logging**: VictoriaLogs VLSingle (3d retention, 10 GiB) + OTel Collector DaemonSet (filelog)
 - **Tracing**: VictoriaTraces VTSingle (3d retention, 10 GiB) + OTel Collector Deployment (OTLP/Jaeger/Zipkin)
@@ -230,7 +229,7 @@ Harbor SecretStore `harbor-store` uses Vault K8s auth (role `harbor-reader`, SA 
 
 | Property | Value |
 |----------|-------|
-| Chart | `authentik` v2026.5.2 |
+| Chart | `authentik` v2026.2.0 |
 | Namespace | `authentik` |
 | PostgreSQL | CNPG cluster `authentik-new` (bootstrap: recovery from VolumeSnapshot `authentik-db-backup`), secret `authentik-new-app` |
 | Redis | Embedded (redis.enabled: true) |
