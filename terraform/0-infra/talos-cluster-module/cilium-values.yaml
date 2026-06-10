@@ -51,21 +51,17 @@ cluster:
   name: ${cluster_name}
   id: ${cluster_id}
 
-# ClusterMesh is disabled while main is the only cluster: the apiserver,
-# kvstoremesh and etcd sidecar pods would idle with no peers. Re-enable this
-# block (and the matching ExternalSecrets in clusters/<name>-configs/cilium/)
-# when a second cluster appears.
-# clustermesh:
-#   useAPIServer: true
-#   apiserver:
-#     kvstoremesh:
-#       enabled: true
-#     service:
-#       type: LoadBalancer
-#     tls:
-#       auto:
-#         enabled: true
-#         method: helm
-#       server:
-#         extraIpAddresses:
-#         - ${clustermesh_endpoint}
+clustermesh:
+  useAPIServer: true
+  apiserver:
+    kvstoremesh:
+      enabled: true
+    service:
+      type: LoadBalancer
+    tls:
+      auto:
+        enabled: true
+        method: helm
+      server:
+        extraIpAddresses:
+        - ${clustermesh_endpoint}
