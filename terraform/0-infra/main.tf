@@ -36,7 +36,7 @@ module "main-cluster" {
   cluster_name         = "main"
   cluster_dns          = "main.k8s.m1xxos.online"
   github_token         = local.github_token
-  branch               = "main"
+  branch               = "chore-optimizations-cleanup"
   cilium_version       = "1.18.6"
   clustermesh_endpoint = "192.168.1.81"
 }
