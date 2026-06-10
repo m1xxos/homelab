@@ -80,10 +80,6 @@ data:
       type: external
       external:
         addr: harbor-dragonfly.harbor:6379
-    # Single-replica class: trivy DB is a re-downloadable cache, registry
-    # content is covered by the Longhorn NFS recurring backup. Switching the
-    # class on a live cluster requires recreating the PVCs (helm cannot patch
-    # storageClass in place) — see migration notes in the PR.
     persistence:
       persistentVolumeClaim:
         registry:

@@ -9,5 +9,4 @@ spec:
   groups:
   - default
   retain: 1
-  # One volume at a time: parallel backups over NFS double the host I/O load.
   concurrency: 1
