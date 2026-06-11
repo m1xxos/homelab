@@ -10,3 +10,4 @@ resources:
 - seaweedfs.yaml
 - vault.yaml
 - tracing-ns.yaml
+- kro.yaml
