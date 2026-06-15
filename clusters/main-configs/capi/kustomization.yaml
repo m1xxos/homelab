@@ -3,3 +3,4 @@ kind: Kustomization
 resources:
 - ipam.yaml
 - proxmox-provider.yaml
+- cluster-rgd.yaml

@@ -1,0 +1,20 @@
+# Example Cluster instance for the KRO-generated API.
+# Keep this file out of the default kustomization until the RGD is established.
+apiVersion: homelab.m1xxos.online/v1alpha1
+kind: Cluster
+metadata:
+  name: staging
+spec:
+  controlPlane:
+    vip: 192.168.1.175
+  workers:
+    ipRange: 192.168.1.181-192.168.1.190
+  networking:
+    podCidr: 10.171.0.0/16
+    gateway: 192.168.1.1
+  proxmox:
+    node: plusha
+    templateID: 110
+  versions:
+    kubernetes: v1.35.0
+    talos: v1.12.2
