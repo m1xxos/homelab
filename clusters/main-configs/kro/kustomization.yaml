@@ -4,3 +4,4 @@ kind: Kustomization
 namespace: kro-system
 resources:
 - cluster-rgd.yaml
+- cluster-example.yaml
