@@ -36,29 +36,29 @@ spec:
       apiVersion: v1
       kind: Namespace
       metadata:
-        name: ${schema.metadata.name}-cluster
+        name: $${schema.metadata.name}-cluster
   - id: proxmoxCluster
     template:
       apiVersion: infrastructure.cluster.x-k8s.io/v1alpha1
       kind: ProxmoxCluster
       metadata:
-        name: proxmox-${schema.metadata.name}
-        namespace: ${clusterNamespace.metadata.name}
+        name: proxmox-$${schema.metadata.name}
+        namespace: $${clusterNamespace.metadata.name}
       spec:
         schedulerHints:
           memoryAdjustment: 0
         allowedNodes:
-        - ${schema.spec.proxmox.node}
+        - $${schema.spec.proxmox.node}
         controlPlaneEndpoint:
-          host: ${schema.spec.controlPlane.vip}
+          host: $${schema.spec.controlPlane.vip}
           port: 6443
         dnsServers:
         - 1.1.1.1
         - 1.1.0.0
         ipv4Config:
           addresses:
-          - ${schema.spec.workers.ipRange}
-          gateway: ${schema.spec.networking.gateway}
+          - $${schema.spec.workers.ipRange}
+          gateway: $${schema.spec.networking.gateway}
           prefix: 24
           metric: 100
   - id: controlPlaneMachineTemplate
@@ -66,26 +66,26 @@ spec:
       apiVersion: infrastructure.cluster.x-k8s.io/v1alpha1
       kind: ProxmoxMachineTemplate
       metadata:
-        name: proxmox-${schema.metadata.name}-control-plane
-        namespace: ${clusterNamespace.metadata.name}
+        name: proxmox-$${schema.metadata.name}-control-plane
+        namespace: $${clusterNamespace.metadata.name}
       spec:
         template:
           spec:
             disks:
               bootVolume:
                 disk: scsi0
-                sizeGb: ${schema.spec.controlPlane.diskGiB}
+                sizeGb: $${schema.spec.controlPlane.diskGiB}
             format: qcow2
             full: true
-            memoryMiB: ${schema.spec.controlPlane.ramMiB}
+            memoryMiB: $${schema.spec.controlPlane.ramMiB}
             network:
               default:
                 bridge: vmbr0
                 model: virtio
-            numCores: ${schema.spec.controlPlane.cpu}
+            numCores: $${schema.spec.controlPlane.cpu}
             numSockets: 1
-            sourceNode: ${schema.spec.proxmox.node}
-            templateID: ${schema.spec.proxmox.templateID}
+            sourceNode: $${schema.spec.proxmox.node}
+            templateID: $${schema.spec.proxmox.templateID}
             checks:
               skipCloudInitStatus: true
             metadataSettings:
@@ -95,13 +95,13 @@ spec:
       apiVersion: bootstrap.cluster.x-k8s.io/v1alpha3
       kind: TalosConfigTemplate
       metadata:
-        name: proxmox-${schema.metadata.name}-worker
-        namespace: ${clusterNamespace.metadata.name}
+        name: proxmox-$${schema.metadata.name}-worker
+        namespace: $${clusterNamespace.metadata.name}
       spec:
         template:
           spec:
             generateType: worker
-            talosVersion: ${schema.spec.versions.talos}
+            talosVersion: $${schema.spec.versions.talos}
             configPatches:
             - op: replace
               path: /machine/install
@@ -119,26 +119,26 @@ spec:
       apiVersion: infrastructure.cluster.x-k8s.io/v1alpha1
       kind: ProxmoxMachineTemplate
       metadata:
-        name: proxmox-${schema.metadata.name}-worker
-        namespace: ${clusterNamespace.metadata.name}
+        name: proxmox-$${schema.metadata.name}-worker
+        namespace: $${clusterNamespace.metadata.name}
       spec:
         template:
           spec:
             disks:
               bootVolume:
                 disk: scsi0
-                sizeGb: ${schema.spec.workers.diskGiB}
+                sizeGb: $${schema.spec.workers.diskGiB}
             format: qcow2
             full: true
-            memoryMiB: ${schema.spec.workers.ramMiB}
+            memoryMiB: $${schema.spec.workers.ramMiB}
             network:
               default:
                 bridge: vmbr0
                 model: virtio
-            numCores: ${schema.spec.workers.cpu}
+            numCores: $${schema.spec.workers.cpu}
             numSockets: 1
-            sourceNode: ${schema.spec.proxmox.node}
-            templateID: ${schema.spec.proxmox.templateID}
+            sourceNode: $${schema.spec.proxmox.node}
+            templateID: $${schema.spec.proxmox.templateID}
             checks:
               skipCloudInitStatus: true
             metadataSettings:
@@ -148,20 +148,20 @@ spec:
       apiVersion: controlplane.cluster.x-k8s.io/v1alpha3
       kind: TalosControlPlane
       metadata:
-        name: proxmox-${schema.metadata.name}-control-plane
-        namespace: ${clusterNamespace.metadata.name}
+        name: proxmox-$${schema.metadata.name}-control-plane
+        namespace: $${clusterNamespace.metadata.name}
       spec:
-        version: ${schema.spec.versions.kubernetes}
-        replicas: ${schema.spec.controlPlane.replicas}
+        version: $${schema.spec.versions.kubernetes}
+        replicas: $${schema.spec.controlPlane.replicas}
         infrastructureTemplate:
           kind: ProxmoxMachineTemplate
           apiVersion: infrastructure.cluster.x-k8s.io/v1alpha1
-          name: ${controlPlaneMachineTemplate.metadata.name}
-          namespace: ${clusterNamespace.metadata.name}
+          name: $${controlPlaneMachineTemplate.metadata.name}
+          namespace: $${clusterNamespace.metadata.name}
         controlPlaneConfig:
           controlplane:
             generateType: controlplane
-            talosVersion: ${schema.spec.versions.talos}
+            talosVersion: $${schema.spec.versions.talos}
             configPatches:
             - op: replace
               path: /machine/install
@@ -185,7 +185,7 @@ spec:
               - interface: eth0
                 dhcp: false
                 vip:
-                  ip: ${schema.spec.controlPlane.vip}
+                  ip: $${schema.spec.controlPlane.vip}
             - op: add
               path: /machine/kubelet/extraArgs
               value:
@@ -212,48 +212,48 @@ spec:
       apiVersion: cluster.x-k8s.io/v1beta1
       kind: Cluster
       metadata:
-        name: proxmox-${schema.metadata.name}
-        namespace: ${clusterNamespace.metadata.name}
+        name: proxmox-$${schema.metadata.name}
+        namespace: $${clusterNamespace.metadata.name}
       spec:
         clusterNetwork:
           pods:
             cidrBlocks:
-            - ${schema.spec.networking.podCidr}
+            - $${schema.spec.networking.podCidr}
         controlPlaneRef:
           apiVersion: controlplane.cluster.x-k8s.io/v1alpha3
           kind: TalosControlPlane
-          name: ${talosControlPlane.metadata.name}
+          name: $${talosControlPlane.metadata.name}
         infrastructureRef:
           apiVersion: infrastructure.cluster.x-k8s.io/v1alpha1
           kind: ProxmoxCluster
-          name: ${proxmoxCluster.metadata.name}
+          name: $${proxmoxCluster.metadata.name}
   - id: workerMachineDeployment
     template:
       apiVersion: cluster.x-k8s.io/v1beta1
       kind: MachineDeployment
       metadata:
-        name: proxmox-${schema.metadata.name}-workers
-        namespace: ${clusterNamespace.metadata.name}
+        name: proxmox-$${schema.metadata.name}-workers
+        namespace: $${clusterNamespace.metadata.name}
       spec:
-        clusterName: ${capiCluster.metadata.name}
-        replicas: ${schema.spec.workers.replicas}
+        clusterName: $${capiCluster.metadata.name}
+        replicas: $${schema.spec.workers.replicas}
         selector:
           matchLabels:
-            cluster.x-k8s.io/cluster-name: ${capiCluster.metadata.name}
+            cluster.x-k8s.io/cluster-name: $${capiCluster.metadata.name}
         template:
           metadata:
             labels:
               node-role.kubernetes.io/node: "worker"
-              cluster.x-k8s.io/cluster-name: ${capiCluster.metadata.name}
+              cluster.x-k8s.io/cluster-name: $${capiCluster.metadata.name}
           spec:
             bootstrap:
               configRef:
                 apiVersion: bootstrap.cluster.x-k8s.io/v1alpha3
                 kind: TalosConfigTemplate
-                name: ${workerConfigTemplate.metadata.name}
-            clusterName: ${capiCluster.metadata.name}
+                name: $${workerConfigTemplate.metadata.name}
+            clusterName: $${capiCluster.metadata.name}
             infrastructureRef:
               apiVersion: infrastructure.cluster.x-k8s.io/v1alpha1
               kind: ProxmoxMachineTemplate
-              name: ${workerMachineTemplate.metadata.name}
-            version: ${schema.spec.versions.kubernetes}
+              name: $${workerMachineTemplate.metadata.name}
+            version: $${schema.spec.versions.kubernetes}
