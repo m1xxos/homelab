@@ -14,3 +14,4 @@ resources:
 - traefik/
 - logging/
 - tracing/
+- kro/
