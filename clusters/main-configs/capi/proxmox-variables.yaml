@@ -1,0 +1,13 @@
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: proxmox-variables
+  namespace: proxmox-infrastructure-system
+spec:
+  refreshInterval: "1h0m0s"
+  secretStoreRef:
+    name: capi-store
+    kind: SecretStore
+  dataFrom:
+  - extract:
+      key: capi/proxmox-variables
