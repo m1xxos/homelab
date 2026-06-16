@@ -102,16 +102,15 @@ spec:
           spec:
             generateType: worker
             talosVersion: $${schema.spec.versions.talos}
-            configPatches:
-            - op: replace
-              path: /machine/install/disk
-              value: /dev/sda
-            - op: add
-              path: /machine/kubelet
-              value:
-                extraArgs:
-                  cloud-provider: external
-                  rotate-server-certificates: "true"
+            strategicPatches:
+            - |
+              machine:
+                install:
+                  disk: /dev/sda
+                kubelet:
+                  extraArgs:
+                    cloud-provider: external
+                    rotate-server-certificates: "true"
   - id: workerMachineTemplate
     template:
       apiVersion: infrastructure.cluster.x-k8s.io/v1alpha1
@@ -161,50 +160,42 @@ spec:
             generateType: controlplane
             talosVersion: $${schema.spec.versions.talos}
             configPatches:
-            - op: replace
-              path: /machine/install/disk
-              value: /dev/sda
-            - op: add
-              path: /machine/install/extraKernelArgs
-              value:
-              - net.ifnames=0
-            - op: add
-              path: /machine/network/interfaces
-              value:
-              - interface: eth0
-                dhcp: false
-                vip:
-                  ip: $${schema.spec.controlPlane.vip}
-            - op: add
-              path: /machine/kubelet
-              value:
-                extraArgs:
-                  rotate-server-certificates: "true"
-                  cloud-provider: external
-            - op: add
-              path: /machine/features/kubernetesTalosAPIAccess
-              value:
-                enabled: true
-                allowedRoles:
-                - os:reader
-                allowedKubernetesNamespaces:
-                - kube-system
-            - op: add
-              path: /cluster/network/cni
-              value:
-                name: none
-            - op: add
-              path: /cluster/proxy
-              value:
-                disabled: true
-            - op: add
-              path: /cluster/apiServer/extraArgs
-              value:
-                oidc-issuer-url: "https://authentik.local.m1xxos.online/application/o/k8s/"
-                oidc-client-id: "k8s"
-                oidc-username-claim: name
-                oidc-groups-claim: groups
-                oidc-signing-algs: "ES256,RS256"
+            - |
+              machine:
+                install:
+                  disk: /dev/sda
+                  extraKernelArgs:
+                    - net.ifnames=0
+                network:
+                  interfaces:
+                    - interface: eth0
+                      dhcp: false
+                      vip:
+                        ip: $${schema.spec.controlPlane.vip}
+                kubelet:
+                  extraArgs:
+                    rotate-server-certificates: "true"
+                    cloud-provider: external
+                features:
+                  kubernetesTalosAPIAccess:
+                    enabled: true
+                    allowedRoles:
+                      - os:reader
+                    allowedKubernetesNamespaces:
+                      - kube-system
+              cluster:
+                network:
+                  cni:
+                    name: none
+                proxy:
+                  disabled: true
+                apiServer:
+                  extraArgs:
+                    oidc-issuer-url: "https://authentik.local.m1xxos.online/application/o/k8s/"
+                    oidc-client-id: "k8s"
+                    oidc-username-claim: name
+                    oidc-groups-claim: groups
+                    oidc-signing-algs: "ES256,RS256"
   - id: capiCluster
     template:
       apiVersion: cluster.x-k8s.io/v1beta1
