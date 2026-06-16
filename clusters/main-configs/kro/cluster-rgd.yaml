@@ -107,6 +107,8 @@ spec:
               machine:
                 install:
                   disk: /dev/sda
+            - |
+              machine:
                 kubelet:
                   extraArgs:
                     cloud-provider: external
@@ -183,6 +185,7 @@ spec:
                       - os:reader
                     allowedKubernetesNamespaces:
                       - kube-system
+            - |
               cluster:
                 network:
                   cni:
