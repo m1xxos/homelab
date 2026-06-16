@@ -39,7 +39,7 @@ spec:
         name: $${schema.metadata.name}-cluster
   - id: proxmoxCluster
     template:
-      apiVersion: infrastructure.cluster.x-k8s.io/v1alpha1
+      apiVersion: infrastructure.cluster.x-k8s.io/v1alpha2
       kind: ProxmoxCluster
       metadata:
         name: proxmox-$${schema.metadata.name}
@@ -63,7 +63,7 @@ spec:
           metric: 100
   - id: controlPlaneMachineTemplate
     template:
-      apiVersion: infrastructure.cluster.x-k8s.io/v1alpha1
+      apiVersion: infrastructure.cluster.x-k8s.io/v1alpha2
       kind: ProxmoxMachineTemplate
       metadata:
         name: proxmox-$${schema.metadata.name}-control-plane
@@ -79,7 +79,8 @@ spec:
             full: true
             memoryMiB: $${schema.spec.controlPlane.ramMiB}
             network:
-              default:
+              networkDevices:
+              - name: net0
                 bridge: vmbr0
                 model: virtio
             numCores: $${schema.spec.controlPlane.cpu}
@@ -115,7 +116,7 @@ spec:
                     rotate-server-certificates: "true"
   - id: workerMachineTemplate
     template:
-      apiVersion: infrastructure.cluster.x-k8s.io/v1alpha1
+      apiVersion: infrastructure.cluster.x-k8s.io/v1alpha2
       kind: ProxmoxMachineTemplate
       metadata:
         name: proxmox-$${schema.metadata.name}-worker
@@ -131,7 +132,8 @@ spec:
             full: true
             memoryMiB: $${schema.spec.workers.ramMiB}
             network:
-              default:
+              networkDevices:
+              - name: net0
                 bridge: vmbr0
                 model: virtio
             numCores: $${schema.spec.workers.cpu}
@@ -154,7 +156,7 @@ spec:
         replicas: $${schema.spec.controlPlane.replicas}
         infrastructureTemplate:
           kind: ProxmoxMachineTemplate
-          apiVersion: infrastructure.cluster.x-k8s.io/v1alpha1
+          apiVersion: infrastructure.cluster.x-k8s.io/v1alpha2
           name: $${controlPlaneMachineTemplate.metadata.name}
           namespace: $${clusterNamespace.metadata.name}
         controlPlaneConfig:
@@ -201,7 +203,7 @@ spec:
                     oidc-signing-algs: "ES256,RS256"
   - id: capiCluster
     template:
-      apiVersion: cluster.x-k8s.io/v1beta1
+      apiVersion: cluster.x-k8s.io/v1beta2
       kind: Cluster
       metadata:
         name: proxmox-$${schema.metadata.name}
@@ -212,16 +214,16 @@ spec:
             cidrBlocks:
             - $${schema.spec.networking.podCidr}
         controlPlaneRef:
-          apiVersion: controlplane.cluster.x-k8s.io/v1alpha3
+          apiGroup: controlplane.cluster.x-k8s.io
           kind: TalosControlPlane
           name: $${talosControlPlane.metadata.name}
         infrastructureRef:
-          apiVersion: infrastructure.cluster.x-k8s.io/v1alpha1
+          apiGroup: infrastructure.cluster.x-k8s.io
           kind: ProxmoxCluster
           name: $${proxmoxCluster.metadata.name}
   - id: workerMachineDeployment
     template:
-      apiVersion: cluster.x-k8s.io/v1beta1
+      apiVersion: cluster.x-k8s.io/v1beta2
       kind: MachineDeployment
       metadata:
         name: proxmox-$${schema.metadata.name}-workers
@@ -240,12 +242,12 @@ spec:
           spec:
             bootstrap:
               configRef:
-                apiVersion: bootstrap.cluster.x-k8s.io/v1alpha3
+                apiGroup: bootstrap.cluster.x-k8s.io
                 kind: TalosConfigTemplate
                 name: $${workerConfigTemplate.metadata.name}
             clusterName: $${capiCluster.metadata.name}
             infrastructureRef:
-              apiVersion: infrastructure.cluster.x-k8s.io/v1alpha1
+              apiGroup: infrastructure.cluster.x-k8s.io
               kind: ProxmoxMachineTemplate
               name: $${workerMachineTemplate.metadata.name}
             version: $${schema.spec.versions.kubernetes}
