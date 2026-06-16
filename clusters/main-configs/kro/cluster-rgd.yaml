@@ -174,7 +174,7 @@ spec:
               - interface: eth0
                 dhcp: false
                 vip:
-                  ip: ${schema.spec.controlPlane.vip}
+                  ip: $${schema.spec.controlPlane.vip}
             - op: add
               path: /machine/kubelet
               value:
