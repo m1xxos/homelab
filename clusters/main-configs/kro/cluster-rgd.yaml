@@ -159,7 +159,7 @@ spec:
           controlplane:
             generateType: controlplane
             talosVersion: $${schema.spec.versions.talos}
-            configPatches:
+            strategicPatches:
             - |
               machine:
                 install:
