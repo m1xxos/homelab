@@ -105,15 +105,13 @@ spec:
             configPatches:
             - op: replace
               path: /machine/install/disk
-              value:
-                disk: /dev/sda
+              value: /dev/sda
             - op: add
-              path: /machine/kubelet/extraArgs
+              path: /machine/kubelet
               value:
-                cloud-provider: external
-            - op: add
-              path: /machine/kubelet/extraArgs/rotate-server-certificates
-              value: "true"
+                extraArgs:
+                  cloud-provider: external
+                  rotate-server-certificates: "true"
   - id: workerMachineTemplate
     template:
       apiVersion: infrastructure.cluster.x-k8s.io/v1alpha1
@@ -165,16 +163,7 @@ spec:
             configPatches:
             - op: replace
               path: /machine/install/disk
-              value:
-                disk: /dev/sda
-            - op: add
-              path: /cluster/network/cni
-              value:
-                name: none
-            - op: add
-              path: /cluster/proxy
-              value:
-                disabled: true
+              value: /dev/sda
             - op: add
               path: /machine/install/extraKernelArgs
               value:
@@ -185,12 +174,13 @@ spec:
               - interface: eth0
                 dhcp: false
                 vip:
-                  ip: $${schema.spec.controlPlane.vip}
+                  ip: ${schema.spec.controlPlane.vip}
             - op: add
-              path: /machine/kubelet/extraArgs
+              path: /machine/kubelet
               value:
-                rotate-server-certificates: true
-                cloud-provider: external
+                extraArgs:
+                  rotate-server-certificates: "true"
+                  cloud-provider: external
             - op: add
               path: /machine/features/kubernetesTalosAPIAccess
               value:
@@ -199,6 +189,14 @@ spec:
                 - os:reader
                 allowedKubernetesNamespaces:
                 - kube-system
+            - op: add
+              path: /cluster/network/cni
+              value:
+                name: none
+            - op: add
+              path: /cluster/proxy
+              value:
+                disabled: true
             - op: add
               path: /cluster/apiServer/extraArgs
               value:
