@@ -4,3 +4,4 @@ kind: Kustomization
 namespace: kro-system
 resources:
 - repo.yaml
+- release.yaml
