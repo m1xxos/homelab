@@ -1,6 +1,6 @@
 # Homelab Architecture Reference for coding agents
 
-_Last updated: 2026-06-09 (reflects repository changes through 2026-06-09)_
+_Last updated: 2026-06-16 (reflects repository changes through 2026-06-16)_
 
 ## Overview
 
@@ -348,6 +348,23 @@ if that never materializes, removing it frees ~4 pods and ~8 GiB of Longhorn spa
 | Providers | Bootstrap: Talos, ControlPlane: Talos, Infrastructure: Proxmox (+ in-cluster IPAM) |
 
 Installed on the management cluster; used only when a new workload cluster is provisioned with `task new-cluster`.
+
+### Proxmox CAPI provisioning
+
+Current CAPI Proxmox manifests are migrated to CAPMOX v0.8 / v1alpha2:
+
+- `ProxmoxCluster` and `ProxmoxMachineTemplate` use `infrastructure.cluster.x-k8s.io/v1alpha2`
+- `Cluster` and `MachineDeployment` use `cluster.x-k8s.io/v1beta2`
+- CAPI refs use `apiGroup` instead of `apiVersion`
+- Proxmox machine networking uses `network.networkDevices` with `net0`
+- Talos config remains on `controlplane.cluster.x-k8s.io/v1alpha3` / `bootstrap.cluster.x-k8s.io/v1alpha3`
+
+Provisioning uses the Proxmox API token `capmox@pve!capi` and requires ACLs on:
+
+- `/nodes/plusha` (`PVEAuditor`)
+- `/storage/local-lvm` (`PVEAdmin` or equivalent datastore write rights)
+- `/storage/pve-nvme` (`PVEAdmin` or equivalent datastore write rights)
+- `/sdn` (`PVEAdmin` or equivalent SDN use rights)
 
 ## Adding a New Cluster
 
