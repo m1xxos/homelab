@@ -31,13 +31,35 @@ spec:
         kubernetes: string | default="v1.35.0"
         talos: string | default="v1.12.2"
     status:
-      controlPlaneEndpoint: $${schema.spec.controlPlane.vip}
+      controlPlaneEndpoint: $${proxmoxCluster.spec.controlPlaneEndpoint.host}
       kubernetesVersion: $${talosControlPlane.status.version}
       phase: $${capiCluster.status.phase}
       controlPlaneReplicas: $${capiCluster.status.controlPlane.replicas}
       controlPlaneAvailableReplicas: $${capiCluster.status.controlPlane.availableReplicas}
       workerReplicas: $${capiCluster.status.workers.replicas}
       workerReadyReplicas: $${capiCluster.status.workers.readyReplicas}
+    additionalPrinterColumns:
+    - name: Phase
+      type: string
+      jsonPath: .status.phase
+    - name: Endpoint
+      type: string
+      jsonPath: .status.controlPlaneEndpoint
+    - name: CP-Ready
+      type: integer
+      jsonPath: .status.controlPlaneAvailableReplicas
+    - name: Workers-Ready
+      type: integer
+      jsonPath: .status.workerReadyReplicas
+    - name: K8s
+      type: string
+      jsonPath: .status.kubernetesVersion
+    - name: State
+      type: string
+      jsonPath: .status.state
+    - name: Age
+      type: date
+      jsonPath: .metadata.creationTimestamp
   resources:
   - id: clusterNamespace
     template:
