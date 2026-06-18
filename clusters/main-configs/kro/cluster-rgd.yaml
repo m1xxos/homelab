@@ -30,6 +30,14 @@ spec:
       versions:
         kubernetes: string | default="v1.35.0"
         talos: string | default="v1.12.2"
+    status:
+      controlPlaneEndpoint: $${schema.spec.controlPlane.vip}
+      kubernetesVersion: $${talosControlPlane.status.version}
+      phase: $${capiCluster.status.phase}
+      controlPlaneReplicas: $${capiCluster.status.controlPlane.replicas}
+      controlPlaneAvailableReplicas: $${capiCluster.status.controlPlane.availableReplicas}
+      workerReplicas: $${capiCluster.status.workers.replicas}
+      workerReadyReplicas: $${capiCluster.status.workers.readyReplicas}
   resources:
   - id: clusterNamespace
     template:

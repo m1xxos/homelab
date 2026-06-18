@@ -364,7 +364,17 @@ Provisioning uses the Proxmox API token `capmox@pve!capi` and requires ACLs on:
 - `/nodes/plusha` (`PVEAuditor`)
 - `/storage/local-lvm` (`PVEAdmin` or equivalent datastore write rights)
 - `/storage/pve-nvme` (`PVEAdmin` or equivalent datastore write rights)
+- `/storage/local` (`PVEDatastoreAdmin`) — **required for cloud-init**. CAPMOX (via go-proxmox
+  `findStorageByContent("iso")`) uploads the cloud-init ISO to the first storage advertising `iso`
+  content, which on `plusha` is only `local` (type `dir`; `lvmthin` cannot hold ISOs). Without
+  `Datastore.Audit` the token cannot see `local` in the storage list and `Datastore.AllocateTemplate`
+  is needed to upload — missing either makes VM provisioning fail with
+  `unable to inject CloudInit ISO: unable to find the item you are looking for`. Apply with:
+  `pveum acl modify /storage/local --user capmox@pve --role PVEDatastoreAdmin`
 - `/sdn` (`PVEAdmin` or equivalent SDN use rights)
+
+These ACLs are applied manually with `pveum` (not managed in Terraform). After a Proxmox host reinstall
+or token recreation, reapply all of them — the `/storage/local` grant in particular is easy to miss.
 
 ## Adding a New Cluster
 
