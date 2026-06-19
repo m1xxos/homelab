@@ -15,7 +15,7 @@ in May 2026; additional CAPI-managed clusters can still be provisioned on demand
 | Role | All workloads (management + apps) |
 | Control plane VIP | 192.168.1.75 |
 | External/L2 IP | 192.168.1.80 |
-| ClusterMesh IP | 192.168.1.81 (reserved, mesh currently disabled) |
+| ClusterMesh IP | 192.168.1.81 (clustermesh-apiserver LB; mesh enabled, no live peers) |
 | Cilium ID | 1 |
 | CP nodes | 1 × `main-cp-0` (192.168.1.70), 6 GiB RAM |
 | Worker nodes | 3 × `main-worker-{0,1,2}` (192.168.1.10–12), 4 cores / 5 GiB RAM / 70 GiB disk each |
@@ -34,7 +34,8 @@ single-replica StorageClass for reproducible data, `vm.swappiness=30` set manual
 - **OS**: Talos Linux (v1.12.2)
 - **Provisioning**: Terraform → Proxmox VMs → Talos config → bootstrap
 - **CNI**: Cilium v1.18.6 (kube-proxy disabled, kubeProxyReplacement: true, L2 announcements;
-  ClusterMesh block commented out in Terraform cilium-values template — no peer clusters exist)
+  ClusterMesh enabled in the Terraform cilium-values template — clustermesh-apiserver runs on `main`,
+  but no live peer clusters yet)
 - **GitOps**: Flux CD (bootstrapped from Terraform, branch `main`, SOPS decryption via `sops-gpg`)
 - **Secrets**: HashiCorp Vault (HA Raft, 3 replicas, YC KMS auto-unseal) + ESO + SOPS
 - **DNS**: Cloudflare (managed via Terraform), domain: `local.m1xxos.online`
@@ -182,7 +183,7 @@ Harbor SecretStore `harbor-store` uses Vault K8s auth (role `harbor-reader`, SA 
 ### Policies
 | Policy | Access |
 |--------|--------|
-| general-reader | Read general/data/* (+ write general/data/clustermesh/* — legacy, mesh disabled) |
+| general-reader | Read general/data/* (+ write general/data/clustermesh/* — used by the mesh PushSecret) |
 | authentik-reader | Read main/data/authentik/* |
 | harbor-reader | Read main/data/harbor/* |
 | minio-reader | Read main/data/minio/* |
@@ -404,26 +405,38 @@ After scaffolding:
 3. `task add-kubeconfig CLUSTER=<name>` to add OIDC kubeconfig locally
 4. Re-enable ClusterMesh (see below) if cross-cluster services are needed
 
-## Cilium ClusterMesh (disabled)
+## Cilium ClusterMesh (enabled on main, no live peers)
 
-Only the `main` cluster exists, so ClusterMesh is fully disabled:
+ClusterMesh is **enabled** on `main` — it is *not* disabled (this section was previously stale):
 
-- The `clustermesh` block in `terraform/0-infra/talos-cluster-module/cilium-values.yaml` is commented out
-  (no clustermesh-apiserver / kvstoremesh pods on main).
-- The legacy secret-flow manifests (PushSecret in `infra/configs/cilium/`, per-cluster ExternalSecrets in
-  `clusters/main-configs/cilium/`) were removed in June 2026 — recover them from git history if needed.
-- `infra/critical/cilium/values.yaml` (used by remote clusters) still carries the clustermesh block.
-- The LB IP 192.168.1.81 and the `clustermesh-pool` CiliumLoadBalancerIPPool remain reserved.
-- `service.cilium.io/global: "true"` annotations on vmsingle/vlsingle/seaweedfs-s3 services are inert
-  while the mesh is down and become useful again once it is re-enabled.
+- The `clustermesh` block in `terraform/0-infra/talos-cluster-module/cilium-values.yaml` is **active**
+  (not commented). `main` runs `clustermesh-apiserver` (3/3); `cilium-config` has `cluster-name=main`,
+  `cluster-id=1`.
+- `infra/configs/cilium/push-secret.yaml` is active and pushes `main`'s mesh cert to Vault
+  `general/clustermesh/main` (PushSecret `cilium-clustermesh-push` = Synced).
+- `infra/critical/cilium/values.yaml` (remote clusters) also enables clustermesh.
+- The LB IP 192.168.1.81 and the `clustermesh-pool` CiliumLoadBalancerIPPool are in use.
+- `service.cilium.io/global: "true"` annotations become effective once a real peer joins.
 
-### Re-enabling for a new cluster (e.g. dev, id=3, mesh IP=192.168.1.41)
-1. Uncomment the `clustermesh` block in the Terraform cilium-values template, `terraform apply`
-2. Restore PushSecret (git history: `infra/configs/cilium/push-secret.yaml`) — pushes local mesh certs
-   to Vault `general/clustermesh/${CILIUM_CLUSTER_NAME}`
-3. Restore per-cluster ExternalSecrets (`cilium-kvstoremesh` ← Vault `clustermesh/<remote>`,
-   static `cilium-clustermesh` secret)
-4. TLS method is `helm`; if certs have wrong SANs delete the hubble/clustermesh secrets and let Helm regenerate
+**Known stale data (cleanup pending):** `main`'s peer secrets still reference the removed `gitlab`/`app`
+clusters. `clusters/main-configs/cilium/external-secret-kvstoremesh.yaml` extracts Vault
+`clustermesh/gitlab` + `clustermesh/app` (dead), and `external-secret-clustermesh.yaml` has a stray
+`gitlab` self-entry. These sync without error (the dead Vault paths still exist) but point `main` at
+clusters that no longer run. De-stale them when the first real peer joins (so `cilium clustermesh status`
+can verify the live peer before the dead ones are dropped).
+
+### Peering model (hub-and-spoke: every cluster ↔ `main`)
+- Each cluster (incl. `main`) pushes its own mesh cert to Vault `clustermesh/<name>` via the
+  `infra/configs/cilium` PushSecret.
+- **Remote → main:** the per-cluster `clusters/<name>-configs/cilium/` (rendered by
+  `assets/scripts/scaffold-cluster.sh`) carries a `cilium-kvstoremesh` ExternalSecret pulling
+  `clustermesh/main` + a static `cilium-clustermesh` secret — so every new cluster peers with the hub.
+- **main → remote:** add the new peer to `main`'s side once the cluster is up and has pushed its cert:
+  append `- extract: { key: clustermesh/<name> }` to
+  `clusters/main-configs/cilium/external-secret-kvstoremesh.yaml`. (kro can't edit git; this is the one
+  manual hub-side touch — also printed by `scaffold-cluster.sh`.)
+- TLS method is `helm`; if certs have wrong SANs, delete the hubble/clustermesh secrets and let Helm
+  regenerate.
 
 ## Secret Summary
 
@@ -481,7 +494,7 @@ Proxmox VMs → Talos config → bootstrap → kubeconfig
 ### cilium-values.yaml
 Uses Terraform templatefile syntax: `${cluster_name}`, `${cluster_id}`, `${clustermesh_endpoint}`
 (vs Flux uses: `${CILIUM_CLUSTER_NAME}`, `${CILIUM_CLUSTER_ID}`, `${CILIUM_CLUSTERMESH_ENDPOINT}`).
-The `clustermesh` block is commented out.
+The `clustermesh` block is active (clustermesh-apiserver runs on `main`).
 
 ## Cross-Component Dependency Map
 ```

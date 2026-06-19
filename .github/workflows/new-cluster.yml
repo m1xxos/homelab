@@ -1,0 +1,72 @@
+---
+name: New Cluster
+
+# Instance-driven scaffolding. Drop a kro `Cluster` instance at
+# clusters/main-configs/clusters/<name>.yaml and push: this workflow scaffolds the per-cluster
+# folders (clusters/<name>{,-configs,-tenant}) + the tenant/controllers/configs Flux Kustomizations
+# and opens a PR. The kro RGD itself emits the CAPI objects + the critical (Cilium CNI) layer, so
+# the cluster comes up with networking without waiting on this scaffolding.
+#
+# Requires repo setting: Settings -> Actions -> General ->
+#   "Allow GitHub Actions to create and approve pull requests" = enabled
+# (so the default GITHUB_TOKEN can open the PR; no PAT needed).
+
+on:
+  push:
+    paths:
+      - clusters/main-configs/clusters/**
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  scaffold:
+    name: Scaffold cluster folders
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Scaffold folders + Flux wiring for each instance
+        run: |
+          set -euo pipefail
+          shopt -s nullglob
+          found=0
+          for f in clusters/main-configs/clusters/*.yaml; do
+            base="$(basename "$f")"
+            case "$base" in kustomization.yaml|*-flux.yaml) continue ;; esac
+            [ "$(yq '.kind' "$f")" = "Cluster" ] || continue
+            found=1
+            CLUSTER_NAME="$(yq -r '.metadata.name' "$f")" \
+            DNS_NAME="$(yq -r '.spec.networking.dnsName' "$f")" \
+            EXTERNAL_IP="$(yq -r '.spec.networking.externalIp' "$f")" \
+            CLUSTERMESH_IP="$(yq -r '.spec.cilium.clustermeshEndpoint' "$f")" \
+              ./assets/scripts/scaffold-cluster.sh
+          done
+          [ "$found" = 1 ] || echo "No Cluster instances under clusters/main-configs/clusters/ — nothing to scaffold."
+
+      - name: Open pull request
+        uses: peter-evans/create-pull-request@v6
+        with:
+          branch: auto/cluster-scaffold
+          delete-branch: true
+          commit-message: "cluster: scaffold per-cluster folders + Flux wiring"
+          title: "cluster: scaffold folders for new cluster instance(s)"
+          body: |
+            Auto-scaffolded by the **New Cluster** workflow for the kro `Cluster` instance(s) under
+            `clusters/main-configs/clusters/`.
+
+            Created (per cluster `<name>`):
+            - `clusters/<name>/`, `clusters/<name>-configs/`, `clusters/<name>-tenant/` — workload folders
+            - `clusters/main-configs/clusters/<name>-flux.yaml` — tenant/controllers/configs Kustomizations
+            - registered in `clusters/main-configs/clusters/kustomization.yaml`
+
+            (CAPI + the critical Cilium layer come from the kro RGD, not this PR.)
+
+            After merge, per cluster:
+            - [ ] Add Vault secret `clustermesh/<name>`.
+            - [ ] Add the peer on main: `- extract: { key: clustermesh/<name> }` in
+                  `clusters/main-configs/cilium/external-secret-kvstoremesh.yaml`.
+            - [ ] After CP is up: `task add-kubeconfig CLUSTER=<name>` and `task add-sops NAMESPACE=<name>-cluster`.

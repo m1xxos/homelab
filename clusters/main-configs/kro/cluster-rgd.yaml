@@ -24,6 +24,11 @@ spec:
       networking:
         podCidr: string | default="10.169.0.0/16"
         gateway: string | default="192.168.1.1"
+        dnsName: string | required=true
+        externalIp: string | required=true
+      cilium:
+        id: integer | required=true
+        clustermeshEndpoint: string | required=true
       proxmox:
         node: string | default="plusha"
         templateID: integer | default=110
@@ -281,3 +286,36 @@ spec:
               kind: ProxmoxMachineTemplate
               name: $${workerMachineTemplate.metadata.name}
             version: $${schema.spec.versions.kubernetes}
+  - id: criticalKustomization
+    template:
+      apiVersion: kustomize.toolkit.fluxcd.io/v1
+      kind: Kustomization
+      metadata:
+        name: $${schema.metadata.name}-critical
+        namespace: $${clusterNamespace.metadata.name}
+      spec:
+        interval: 1h
+        retryInterval: 3m
+        timeout: 5m
+        path: ./infra/critical
+        prune: true
+        wait: true
+        targetNamespace: $${clusterNamespace.metadata.name}
+        sourceRef:
+          kind: GitRepository
+          name: flux-system
+          namespace: flux-system
+        postBuild:
+          substitute:
+            CILIUM_CLUSTER_NAME: $${schema.metadata.name}
+            CILIUM_CLUSTER_ID: "$${schema.spec.cilium.id}"
+            CILIUM_CLUSTERMESH_ENDPOINT: "$${schema.spec.cilium.clustermeshEndpoint}"
+        patches:
+        - target:
+            kind: HelmRelease
+          patch: |
+            - op: add
+              path: /spec/kubeConfig
+              value:
+                secretRef:
+                  name: proxmox-$${schema.metadata.name}-kubeconfig

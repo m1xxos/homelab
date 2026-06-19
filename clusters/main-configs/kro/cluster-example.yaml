@@ -12,6 +12,11 @@ spec:
   networking:
     podCidr: 10.171.0.0/16
     gateway: 192.168.1.1
+    dnsName: staging.m1xxos.online
+    externalIp: 192.168.1.85       # TODO verify free on the LAN before pushing (Traefik LB IP)
+  cilium:
+    id: 2                          # must be unique per cluster (main=1)
+    clustermeshEndpoint: 192.168.1.86  # TODO verify free on the LAN before pushing (clustermesh-apiserver LB)
   proxmox:
     node: plusha
     templateID: 110
