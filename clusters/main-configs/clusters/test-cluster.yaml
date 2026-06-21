@@ -1,7 +1,7 @@
 apiVersion: homelab.m1xxos.online/v1alpha1
 kind: Cluster
 metadata:
-  name: staging
+  name: test
 spec:
   controlPlane:
     replicas: 1
@@ -12,11 +12,11 @@ spec:
   networking:
     podCidr: 10.171.0.0/16
     gateway: 192.168.1.1
-    dnsName: staging.m1xxos.online
-    externalIp: 192.168.1.85       # TODO verify free on the LAN before pushing (Traefik LB IP)
+    dnsName: test.m1xxos.online
+    externalIp: 192.168.1.85
   cilium:
-    id: 2                          # must be unique per cluster (main=1)
-    clustermeshEndpoint: 192.168.1.86  # TODO verify free on the LAN before pushing (clustermesh-apiserver LB)
+    id: 2
+    clustermeshEndpoint: 192.168.1.86
   proxmox:
     node: plusha
     templateID: 110
