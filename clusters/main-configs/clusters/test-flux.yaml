@@ -1,0 +1,88 @@
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: test-tenant
+  namespace: test-cluster
+spec:
+  dependsOn:
+  - name: flux-system
+    namespace: flux-system
+  interval: 10m0s
+  path: ./clusters/test-tenant
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+    namespace: flux-system
+  kubeConfig:
+    secretRef:
+      name: proxmox-test-kubeconfig
+  decryption:
+    provider: sops
+    secretRef:
+      name: sops-gpg
+  postBuild:
+    substitute:
+      CLUSTER_NAME: test-cluster
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: test-controllers
+  namespace: test-cluster
+spec:
+  dependsOn:
+  - name: test-tenant
+  - name: test-critical
+  targetNamespace: test-cluster
+  interval: 1h
+  retryInterval: 3m
+  timeout: 5m
+  path: ./clusters/test
+  prune: true
+  wait: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+    namespace: flux-system
+  postBuild:
+    substitute:
+      CLUSTER_NAME: test
+  patches:
+  - target:
+      kind: HelmRelease
+    patch: |
+      - op: add
+        path: /spec/kubeConfig
+        value:
+          secretRef:
+            name: proxmox-test-kubeconfig
+      - op: add
+        path: /spec/serviceAccountName
+        value: flux-cluster-admin
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: test-configs
+  namespace: test-cluster
+spec:
+  dependsOn:
+  - name: test-tenant
+  - name: test-critical
+  - name: test-controllers
+  interval: 10m0s
+  path: ./clusters/test-configs
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+    namespace: flux-system
+  kubeConfig:
+    secretRef:
+      name: proxmox-test-kubeconfig
+  postBuild:
+    substitute:
+      DNS_NAME: test.m1xxos.online
+      CILIUM_CLUSTER_NAME: test
+      CILIUM_CLUSTERMESH_ENDPOINT: "192.168.1.86"
