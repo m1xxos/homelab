@@ -15,4 +15,4 @@ resources:
 - logging/
 - tracing/
 - kro/
-- clusters/
+# - clusters/   # TEMP: removed to break RGD/instance dry-run deadlock; re-add after kro rebuilds the CRD
