@@ -308,7 +308,7 @@ spec:
         postBuild:
           substitute:
             CILIUM_CLUSTER_NAME: $${schema.metadata.name}
-            CILIUM_CLUSTER_ID: "$${schema.spec.cilium.id}"
+            CILIUM_CLUSTER_ID: "$${string(schema.spec.cilium.id)}"
             CILIUM_CLUSTERMESH_ENDPOINT: "$${schema.spec.cilium.clustermeshEndpoint}"
         patches:
         - target:
