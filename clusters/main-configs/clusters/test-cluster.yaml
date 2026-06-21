@@ -10,7 +10,7 @@ spec:
     replicas: 1
     ipRange: 192.168.1.181-192.168.1.190
   networking:
-    podCidr: 10.171.0.0/16
+    podCidr: 10.169.0.0/16
     gateway: 192.168.1.1
     dnsName: test.m1xxos.online
     externalIp: 192.168.1.85
