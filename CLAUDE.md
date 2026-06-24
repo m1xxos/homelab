@@ -74,12 +74,17 @@ Three mechanisms, in order of preference:
 
 ## Adding a new cluster
 
-`task new-cluster` scaffolds CAPI objects under `clusters/main-configs/<name>-cluster/` plus
-`<name>-tenant/`, `<name>/`, `<name>-configs/`. Then `terraform apply` in `0-infra` for VMs/DNS, commit +
-push so Flux applies the CAPI manifests, then `task add-kubeconfig`. CAPI Proxmox manifests are on
+`task new-cluster` scaffolds a kro `Cluster` CR + Flux wiring under
+`clusters/main-configs/clusters/<name>.yaml` & `<name>-flux.yaml`, plus the spoke layers
+`clusters/<name>-tenant/`, `<name>-controllers/`, `<name>-configs/` (mirrors `main`'s
+`-controllers`/`-configs` naming; the controllers layer carries a vmagent forwarder and the configs
+layer the cilium peer + stub global services). The kro RGD (`clusters/main-configs/kro/cluster-rgd.yaml`)
+expands the CR into the CAPI objects, the `dhi-registry` secret, the hub-side clustermesh peer, and the
+`<name>-critical` Kustomization — so you don't write raw CAPI. Then commit + push so Flux applies the
+CR, `task add-kubeconfig`, and `task add-sops NAMESPACE=<name>-cluster`. CAPI Proxmox manifests are on
 CAPMOX v0.8 / v1alpha2 (see the "CAPI Operator" section of `ARCHITECTURE.md` for the exact apiVersions
-and required Proxmox token ACLs). ClusterMesh is currently disabled (only `main` exists); re-enabling
-steps are documented in `ARCHITECTURE.md`.
+and required Proxmox token ACLs). ClusterMesh is live (`main` hub + `test` spoke); the peering model and
+the spoke observability forwarding are documented in `ARCHITECTURE.md`.
 
 ## Things that bite
 
