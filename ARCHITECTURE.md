@@ -15,7 +15,7 @@ in May 2026; additional CAPI-managed clusters can still be provisioned on demand
 | Role | All workloads (management + apps) |
 | Control plane VIP | 192.168.1.75 |
 | External/L2 IP | 192.168.1.80 |
-| ClusterMesh IP | 192.168.1.81 (clustermesh-apiserver LB; mesh enabled, no live peers) |
+| ClusterMesh IP | 192.168.1.81 (clustermesh-apiserver LB; mesh enabled, `test` is a live peer) |
 | Cilium ID | 1 |
 | CP nodes | 1 × `main-cp-0` (192.168.1.70), 6 GiB RAM |
 | Worker nodes | 3 × `main-worker-{0,1,2}` (192.168.1.10–12), 4 cores / 5 GiB RAM / 70 GiB disk each |
@@ -260,6 +260,18 @@ Harbor SecretStore `harbor-store` uses Vault K8s auth (role `harbor-reader`, SA 
 | kube-state-metrics | enabled |
 | kubeEtcd | Scraped via manual endpoint 192.168.1.70:2381 (Talos `listen-metrics-urls`, unauthenticated metrics-only port) |
 
+**Spoke clusters forward to `main` over ClusterMesh.** `main` is the only cluster with backing stores
+(VMSingle/VLSingle/VTSingle). Spokes (e.g. `test`) run only collectors and ship to `main`:
+- Metrics: a vmagent-only `victoria-metrics-k8s-stack` (`clusters/test/monitoring/`, operator +
+  vmagent, all stores disabled, admission webhooks disabled — the Talos apiserver can't reach the
+  webhook ClusterIP) scrapes the local node-exporter ServiceMonitor and `kube-state-metrics` and
+  `remoteWrite`s to `http://vmsingle-vm.monitoring.svc:8428/api/v1/write` with `externalLabels.cluster`.
+- Logs: the shared OTel daemonset (`infra/configs/otel`) exports to `vlsingle-main.logging.svc:9428`.
+- Both rely on **stub global Services** on the spoke (`clusters/test-configs/{monitoring,logging}/`):
+  selector-less `vmsingle-vm` / `vlsingle-main` Services annotated `service.cilium.io/global: "true"`
+  so CoreDNS resolves the name and Cilium attaches `main`'s remote backends. Without the stub, the
+  name doesn't resolve on the spoke.
+
 ### Grafana Operator
 | Property | Value |
 |----------|-------|
@@ -405,7 +417,7 @@ After scaffolding:
 3. `task add-kubeconfig CLUSTER=<name>` to add OIDC kubeconfig locally
 4. Re-enable ClusterMesh (see below) if cross-cluster services are needed
 
-## Cilium ClusterMesh (enabled on main, no live peers)
+## Cilium ClusterMesh (enabled on main; `test` is a live peer)
 
 ClusterMesh is **enabled** on `main` — it is *not* disabled (this section was previously stale):
 
@@ -416,12 +428,24 @@ ClusterMesh is **enabled** on `main` — it is *not* disabled (this section was 
   `general/clustermesh/main` (PushSecret `cilium-clustermesh-push` = Synced).
 - `infra/critical/cilium/values.yaml` (remote clusters) also enables clustermesh.
 - The LB IP 192.168.1.81 and the `clustermesh-pool` CiliumLoadBalancerIPPool are in use.
-- `service.cilium.io/global: "true"` annotations become effective once a real peer joins.
+- `service.cilium.io/global: "true"` annotations are effective: `test`↔`main` is live
+  (`cilium-dbg status --all-clusters` shows `1/1 remote clusters ready` on both).
 
 **Stale data removed:** the dead `gitlab`/`app` peers used to be listed in
 `clusters/main-configs/cilium/external-secret-kvstoremesh.yaml`. That file is now an **empty base
-`Secret`** (no peer list) — see the hub-side model below. (`external-secret-clustermesh.yaml` may still
-carry a stray `gitlab` self-entry; drop it when convenient.)
+`Secret`** (no peer list) — see the hub-side model below.
+
+### Agent peer naming (the bite)
+The agent-facing `cilium-clustermesh` secret has one `stringData` entry **per remote cluster**, and
+the **key name must be the remote cluster's name**. With kvstoremesh the local clustermesh-apiserver
+mirrors every peer's state, so each entry's `endpoints` point at the **local** apiserver
+(`https://clustermesh-apiserver.kube-system.svc:2379`) with the local etcd-client certs — only the
+key name differs. So on `test` the entry is `main:`, and on `main` it is `test:`. These were
+historically misnamed after the *local* cluster (`test` self-named `test`; `main` carried a stale
+`gitlab`), which made each agent report `0/0 remote clusters` and left global services with no
+backends → cross-cluster dials failed with `connect: operation not permitted`. Files:
+`clusters/test-configs/cilium/external-secret-clustermesh.yaml`,
+`clusters/main-configs/cilium/external-secret-clustermesh.yaml`.
 
 ### Peering model (hub-and-spoke: every cluster ↔ `main`)
 - Each cluster (incl. `main`) pushes its own mesh cert to Vault `clustermesh/<name>` via the
@@ -436,6 +460,9 @@ carry a stray `gitlab` self-entry; drop it when convenient.)
   (`clusters/main-configs/cilium/external-secret-kvstoremesh.yaml`) exists only to give Merge a target.
   Creating a `Cluster` CR now adds the hub-side peer with no git edit — this used to be the one manual
   hub-side touch. ESO retries until the new cluster's PushSecret has populated `clustermesh/<name>`.
+  Gotcha: if this `cilium-kvstoremesh-<name>` ExternalSecret reconciles before the empty base secret
+  exists (or before Vault `clustermesh/<name>` is populated), it sticks at `SecretMissing` ("secret
+  will not be created due to CreationPolicy=Merge") — kick it once with a `force-sync` annotation.
   (NB: the legacy `assets/scripts/new-cluster.sh` still *appends* a peer entry to that file; that path
   is incompatible with the base-secret model — use the kro `Cluster` CR.)
 - TLS method is `helm`; if certs have wrong SANs, delete the hubble/clustermesh secrets and let Helm
