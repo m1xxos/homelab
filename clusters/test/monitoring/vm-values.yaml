@@ -15,6 +15,12 @@ data:
     fullnameOverride: "vm"
     victoria-metrics-operator:
       enabled: true
+      # The Talos/Cilium apiserver can't reach the operator's webhook ClusterIP
+      # (EPERM dialing :9443), which deadlocks the Helm install. Webhooks are
+      # validation-only; the operator reconciles VMAgent/VMServiceScrape fine
+      # without them.
+      admissionWebhooks:
+        enabled: false
     vmsingle:
       enabled: false
     vmcluster:
