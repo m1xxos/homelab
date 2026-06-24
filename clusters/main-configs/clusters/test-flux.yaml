@@ -40,11 +40,6 @@ spec:
   timeout: 5m
   path: ./clusters/test
   prune: true
-  # No wait: true here on purpose. node-exporter (controllers layer) needs the
-  # dhi-registry imagePullSecret/chart-pull secret that ESO creates from the
-  # configs layer (infra/configs/external-secrets/dhi-secret.yaml). With wait:true
-  # this Kustomization would never go Ready (node-exporter unhealthy without the
-  # secret) while test-configs dependsOn it -> deadlock. Mirrors main-controllers.
   sourceRef:
     kind: GitRepository
     name: flux-system

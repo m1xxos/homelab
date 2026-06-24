@@ -7,7 +7,6 @@ set -euo pipefail
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
 TASKFILE="${REPO_ROOT}/Taskfile.yml"
-MAIN_KVSTOREMESH="${REPO_ROOT}/clusters/main-configs/cilium/external-secret-kvstoremesh.yaml"
 
 #######################################
 # Helpers
@@ -404,7 +403,10 @@ spec:
   timeout: 5m
   path: ./clusters/${CLUSTER_NAME}
   prune: true
-  wait: true
+  # No wait: true — this (controllers layer) holds node-exporter, which needs the
+  # dhi-registry secret created by the configs layer. With wait the Kustomization
+  # never goes Ready (node-exporter unhealthy) while ${CLUSTER_NAME}-cluster-configs
+  # dependsOn it -> deadlock. Mirrors main-controllers.
   sourceRef:
     kind: GitRepository
     name: flux-system
@@ -581,34 +583,53 @@ YAML
 info "clusters/${CLUSTER_NAME}-tenant/unified/kustomization.yaml"
 
 #######################################
-# 5. Update main kvstoremesh (add new cluster)
+# 5. Hub-side clustermesh peer (Merge ExternalSecret on main)
 #######################################
-header "Updating main-configs/cilium/external-secret-kvstoremesh.yaml"
+header "Adding hub-side clustermesh peer for ${CLUSTER_NAME}"
 
-# Check if cluster already present
-if grep -q "clustermesh/${CLUSTER_NAME}" "${MAIN_KVSTOREMESH}"; then
-  warn "Entry for ${CLUSTER_NAME} already present in kvstoremesh, skipping."
-else
-  # Append a new extract entry inside dataFrom
-  # We need to add before the end of file, after the last 'extract' block
-  python3 - << PYEOF
-import re, sys
+# main's central kvstoremesh is an empty base Secret; each peer is its own
+# Merge ExternalSecret, so adding a cluster never edits a shared file.
+# (The kro Cluster RGD generates the equivalent resource automatically; this
+# keeps the legacy script path consistent with that model.)
+CILIUM_DIR="${REPO_ROOT}/clusters/main-configs/cilium"
+PEER_FILE="${CILIUM_DIR}/kvstoremesh-${CLUSTER_NAME}.yaml"
+CILIUM_KUST="${CILIUM_DIR}/kustomization.yaml"
 
-path = "${MAIN_KVSTOREMESH}"
-with open(path, "r") as f:
-    content = f.read()
-
-new_entry = """  - extract:
+cat > "${PEER_FILE}" << YAML
+---
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: cilium-kvstoremesh-${CLUSTER_NAME}
+  namespace: kube-system
+spec:
+  refreshInterval: 1h
+  secretStoreRef:
+    name: vault-general
+    kind: ClusterSecretStore
+  target:
+    name: cilium-kvstoremesh
+    creationPolicy: Merge
+  dataFrom:
+  - extract:
       key: clustermesh/${CLUSTER_NAME}
-"""
+YAML
+info "cilium/kvstoremesh-${CLUSTER_NAME}.yaml"
 
-# Insert before the last blank line / EOF
-content = content.rstrip("\n") + "\n" + new_entry + "\n"
+# Register the peer file in the cilium kustomization
+if grep -q "kvstoremesh-${CLUSTER_NAME}.yaml" "${CILIUM_KUST}"; then
+  warn "kvstoremesh-${CLUSTER_NAME}.yaml already registered, skipping."
+else
+  python3 - << PYEOF
+path = "${CILIUM_KUST}"
+with open(path) as f:
+    content = f.read()
+content = content.rstrip("\n") + "\n- kvstoremesh-${CLUSTER_NAME}.yaml\n"
 with open(path, "w") as f:
     f.write(content)
-print("  updated")
+print("  registered")
 PYEOF
-  info "Added clustermesh/${CLUSTER_NAME} to kvstoremesh"
+  info "Registered kvstoremesh-${CLUSTER_NAME}.yaml in cilium kustomization"
 fi
 
 #######################################
@@ -659,12 +680,16 @@ echo "    ├── cilium/external-secret-kvstoremesh.yaml"
 echo "    └── unified-configs/kustomization.yaml"
 echo "  clusters/${CLUSTER_NAME}-tenant/"
 echo "    └── unified/kustomization.yaml"
+echo "  clusters/main-configs/cilium/"
+echo "    └── kvstoremesh-${CLUSTER_NAME}.yaml  (hub-side clustermesh peer, Merge)"
 echo ""
-echo "  Updated: ${MAIN_KVSTOREMESH}"
 echo "  Updated: ${TASKFILE}"
+echo "  Updated: clusters/main-configs/cilium/kustomization.yaml"
 echo ""
 warn "Next steps:"
-echo "  1. Add Vault secrets:  clustermesh/${CLUSTER_NAME}  (etcd client certs for new cluster)"
-echo "  2. Commit & push — Flux will create the cluster"
-echo "  3. Once cluster is up, run:  task add-kubeconfig CLUSTER=${CLUSTER_NAME}"
-echo "  4. Propagate SOPS key:       task add-sops NAMESPACE=${NS}"
+echo "  1. Commit & push — Flux will create the cluster"
+echo "  2. Once cluster is up, run:  task add-kubeconfig CLUSTER=${CLUSTER_NAME}"
+echo "  3. Propagate SOPS key:       task add-sops NAMESPACE=${NS}"
+echo ""
+echo "  (clustermesh/${CLUSTER_NAME} in Vault is populated automatically by the"
+echo "   cluster's own PushSecret once its configs layer reconciles.)"

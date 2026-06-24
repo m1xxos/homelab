@@ -286,6 +286,30 @@ spec:
               kind: ProxmoxMachineTemplate
               name: $${workerMachineTemplate.metadata.name}
             version: $${schema.spec.versions.kubernetes}
+  - id: clustermeshPeer
+    template:
+      # Created on main (kube-system). Merges this cluster's etcd client certs
+      # — published to Vault by the cluster's own clustermesh PushSecret
+      # (infra/configs/cilium/push-secret.yaml) — into the shared
+      # cilium-kvstoremesh secret. creationPolicy: Merge so multiple clusters
+      # can each contribute their keys without owning the whole secret.
+      # Target base secret: clusters/main-configs/cilium/external-secret-kvstoremesh.yaml
+      apiVersion: external-secrets.io/v1
+      kind: ExternalSecret
+      metadata:
+        name: cilium-kvstoremesh-$${schema.metadata.name}
+        namespace: kube-system
+      spec:
+        refreshInterval: 1h
+        secretStoreRef:
+          name: vault-general
+          kind: ClusterSecretStore
+        target:
+          name: cilium-kvstoremesh
+          creationPolicy: Merge
+        dataFrom:
+        - extract:
+            key: clustermesh/$${schema.metadata.name}
   - id: criticalKustomization
     template:
       apiVersion: kustomize.toolkit.fluxcd.io/v1

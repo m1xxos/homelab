@@ -418,23 +418,26 @@ ClusterMesh is **enabled** on `main` — it is *not* disabled (this section was 
 - The LB IP 192.168.1.81 and the `clustermesh-pool` CiliumLoadBalancerIPPool are in use.
 - `service.cilium.io/global: "true"` annotations become effective once a real peer joins.
 
-**Known stale data (cleanup pending):** `main`'s peer secrets still reference the removed `gitlab`/`app`
-clusters. `clusters/main-configs/cilium/external-secret-kvstoremesh.yaml` extracts Vault
-`clustermesh/gitlab` + `clustermesh/app` (dead), and `external-secret-clustermesh.yaml` has a stray
-`gitlab` self-entry. These sync without error (the dead Vault paths still exist) but point `main` at
-clusters that no longer run. De-stale them when the first real peer joins (so `cilium clustermesh status`
-can verify the live peer before the dead ones are dropped).
+**Stale data removed:** the dead `gitlab`/`app` peers used to be listed in
+`clusters/main-configs/cilium/external-secret-kvstoremesh.yaml`. That file is now an **empty base
+`Secret`** (no peer list) — see the hub-side model below. (`external-secret-clustermesh.yaml` may still
+carry a stray `gitlab` self-entry; drop it when convenient.)
 
 ### Peering model (hub-and-spoke: every cluster ↔ `main`)
 - Each cluster (incl. `main`) pushes its own mesh cert to Vault `clustermesh/<name>` via the
   `infra/configs/cilium` PushSecret.
-- **Remote → main:** the per-cluster `clusters/<name>-configs/cilium/` (rendered by
-  `assets/scripts/scaffold-cluster.sh`) carries a `cilium-kvstoremesh` ExternalSecret pulling
-  `clustermesh/main` + a static `cilium-clustermesh` secret — so every new cluster peers with the hub.
-- **main → remote:** add the new peer to `main`'s side once the cluster is up and has pushed its cert:
-  append `- extract: { key: clustermesh/<name> }` to
-  `clusters/main-configs/cilium/external-secret-kvstoremesh.yaml`. (kro can't edit git; this is the one
-  manual hub-side touch — also printed by `scaffold-cluster.sh`.)
+- **Remote → main:** the per-cluster `clusters/<name>-configs/cilium/` carries a `cilium-kvstoremesh`
+  ExternalSecret pulling `clustermesh/main` + a static `cilium-clustermesh` secret — so every new
+  cluster peers with the hub.
+- **main → remote (now automatic via kro):** the Cluster RGD
+  (`clusters/main-configs/kro/cluster-rgd.yaml`, resource `clustermeshPeer`) generates, on `main` in
+  `kube-system`, an `ExternalSecret cilium-kvstoremesh-<name>` with `target.creationPolicy: Merge` that
+  pulls `clustermesh/<name>` into the shared `cilium-kvstoremesh` secret. The empty base secret
+  (`clusters/main-configs/cilium/external-secret-kvstoremesh.yaml`) exists only to give Merge a target.
+  Creating a `Cluster` CR now adds the hub-side peer with no git edit — this used to be the one manual
+  hub-side touch. ESO retries until the new cluster's PushSecret has populated `clustermesh/<name>`.
+  (NB: the legacy `assets/scripts/new-cluster.sh` still *appends* a peer entry to that file; that path
+  is incompatible with the base-secret model — use the kro `Cluster` CR.)
 - TLS method is `helm`; if certs have wrong SANs, delete the hubble/clustermesh secrets and let Helm
   regenerate.
 
