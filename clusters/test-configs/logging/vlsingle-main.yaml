@@ -1,0 +1,18 @@
+---
+# Stub for main's VictoriaLogs sink. test has no local vlsingle, so this
+# selector-less, global service exists only to give CoreDNS a name to resolve
+# and Cilium ClusterMesh a service to attach main's remote backends to. The OTel
+# logs daemonset (infra/configs/otel/otel-logs.yaml) exports here.
+apiVersion: v1
+kind: Service
+metadata:
+  name: vlsingle-main
+  namespace: logging
+  annotations:
+    service.cilium.io/global: "true"
+spec:
+  ports:
+  - name: http
+    port: 9428
+    targetPort: 9428
+    protocol: TCP

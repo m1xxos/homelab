@@ -1,0 +1,42 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: vm-values
+  labels:
+    reconcile.fluxcd.io/watch: Enabled
+data:
+  values.yaml: |
+    # test cluster: scrape-and-forward only. No local TSDB — vmagent remote-writes
+    # to main's vmsingle over the Cilium ClusterMesh (vmsingle-vm stub global service
+    # in clusters/test-configs/monitoring/). Everything else in the k8s-stack is off
+    # to keep the memory footprint minimal (memory is the cluster bottleneck).
+    nameOverride: "vm"
+    fullnameOverride: "vm"
+    victoria-metrics-operator:
+      enabled: true
+    vmsingle:
+      enabled: false
+    vmcluster:
+      enabled: false
+    vmalert:
+      enabled: false
+    alertmanager:
+      enabled: false
+    grafana:
+      enabled: false
+    defaultDashboards:
+      enabled: false
+    # Standalone node-exporter (infra/controllers/node-exporter) already runs here.
+    prometheus-node-exporter:
+      enabled: false
+    kube-state-metrics:
+      enabled: true
+    vmagent:
+      enabled: true
+      spec:
+        selectAllByDefault: true
+        externalLabels:
+          cluster: test
+        remoteWrite:
+        - url: http://vmsingle-vm.monitoring.svc.cluster.local:8428/api/v1/write

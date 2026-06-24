@@ -3,4 +3,6 @@ kind: Kustomization
 resources:
 - unified-configs/
 - cilium/
+- logging/
+- monitoring/
 # Add cluster-specific configs for 'test' below.

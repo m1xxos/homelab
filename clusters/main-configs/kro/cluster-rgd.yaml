@@ -72,6 +72,46 @@ spec:
       kind: Namespace
       metadata:
         name: $${schema.metadata.name}-cluster
+  - id: dhiRegistrySecret
+    template:
+      # Created on main, in the per-cluster namespace. The cluster's controller
+      # HelmReleases install onto the workload cluster via kubeConfig, but their
+      # Flux *sources* (e.g. node-exporter's OCIRepository on dhi.io) are NOT
+      # patched and are pulled by main's source-controller from THIS namespace —
+      # so the DHI registry creds must exist here, not just on the workload
+      # cluster. Mirrors infra/configs/external-secrets/dhi-secret.yaml.
+      apiVersion: external-secrets.io/v1
+      kind: ExternalSecret
+      metadata:
+        name: dhi-registry
+        namespace: $${clusterNamespace.metadata.name}
+      spec:
+        refreshInterval: "1h0m0s"
+        secretStoreRef:
+          name: vault-general
+          kind: ClusterSecretStore
+        target:
+          template:
+            type: kubernetes.io/dockerconfigjson
+            data:
+              .dockerconfigjson: '{"auths":{"{{ .host }}":{"username":"{{ .username }}","password":"{{ .password }}","email":"{{ .email }}","auth":"{{ printf "%s:%s" .username .password | b64enc }}"}}}'
+        data:
+        - secretKey: host
+          remoteRef:
+            key: dhi
+            property: host
+        - secretKey: username
+          remoteRef:
+            key: dhi
+            property: username
+        - secretKey: password
+          remoteRef:
+            key: dhi
+            property: password
+        - secretKey: email
+          remoteRef:
+            key: dhi
+            property: email
   - id: proxmoxCluster
     template:
       apiVersion: infrastructure.cluster.x-k8s.io/v1alpha2

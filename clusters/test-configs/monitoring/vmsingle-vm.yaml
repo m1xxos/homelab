@@ -1,0 +1,18 @@
+---
+# Stub for main's VictoriaMetrics sink. test has no local vmsingle, so this
+# selector-less, global service exists only to give CoreDNS a name to resolve
+# and Cilium ClusterMesh a service to attach main's remote backends to. The test
+# vmagent (clusters/test/monitoring/) remote-writes here.
+apiVersion: v1
+kind: Service
+metadata:
+  name: vmsingle-vm
+  namespace: monitoring
+  annotations:
+    service.cilium.io/global: "true"
+spec:
+  ports:
+  - name: http
+    port: 8428
+    targetPort: 8428
+    protocol: TCP
