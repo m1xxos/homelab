@@ -3,9 +3,10 @@ name: New Cluster
 
 # Instance-driven scaffolding. Drop a kro `Cluster` instance at
 # clusters/main-configs/clusters/<name>.yaml and push: this workflow scaffolds the per-cluster
-# folders (clusters/<name>{,-configs,-tenant}) + the tenant/controllers/configs Flux Kustomizations
-# and opens a PR. The kro RGD itself emits the CAPI objects + the critical (Cilium CNI) layer, so
-# the cluster comes up with networking without waiting on this scaffolding.
+# folders (clusters/<name>-{tenant,controllers,configs}) + the tenant/controllers/configs Flux
+# Kustomizations and opens a PR. The kro RGD itself emits the CAPI objects, the dhi-registry secret,
+# the hub clustermesh peer, and the critical (Cilium CNI) layer, so the cluster comes up with
+# networking without waiting on this scaffolding.
 #
 # Requires repo setting: Settings -> Actions -> General ->
 #   "Allow GitHub Actions to create and approve pull requests" = enabled
@@ -61,14 +62,14 @@ jobs:
             `clusters/main-configs/clusters/`.
 
             Created (per cluster `<name>`):
-            - `clusters/<name>/`, `clusters/<name>-configs/`, `clusters/<name>-tenant/` — workload folders
+            - `clusters/<name>-tenant/`, `clusters/<name>-controllers/`, `clusters/<name>-configs/` — workload folders
+              (controllers carries the vmagent metrics forwarder; configs the cilium peer + stub global services)
             - `clusters/main-configs/clusters/<name>-flux.yaml` — tenant/controllers/configs Kustomizations
             - registered in `clusters/main-configs/clusters/kustomization.yaml`
 
-            (CAPI + the critical Cilium layer come from the kro RGD, not this PR.)
+            (CAPI, the dhi-registry secret, the hub clustermesh peer, and the critical Cilium layer
+            come from the kro RGD, not this PR.)
 
             After merge, per cluster:
-            - [ ] Add Vault secret `clustermesh/<name>`.
-            - [ ] Add the peer on main: `- extract: { key: clustermesh/<name> }` in
-                  `clusters/main-configs/cilium/external-secret-kvstoremesh.yaml`.
             - [ ] After CP is up: `task add-kubeconfig CLUSTER=<name>` and `task add-sops NAMESPACE=<name>-cluster`.
+            - [ ] Vault `clustermesh/<name>` + the hub peer are populated automatically — no manual edit.

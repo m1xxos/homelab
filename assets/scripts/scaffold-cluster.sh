@@ -11,8 +11,10 @@
 #     workloads + the tenant / controllers / configs Flux Kustomizations that deploy them.
 #
 # Renders (idempotent, scaffold-if-missing):
-#   clusters/<name>/                 controllers layer (unified-controllers -> infra/controllers + custom space)
-#   clusters/<name>-configs/         configs layer (unified-configs -> infra/configs + cilium/ + custom space)
+#   clusters/<name>-controllers/     controllers layer (unified-controllers -> infra/controllers
+#                                    + monitoring/ vmagent forwarder + custom space)
+#   clusters/<name>-configs/         configs layer (unified-configs -> infra/configs + cilium/
+#                                    + logging/ & monitoring/ stub global services + custom space)
 #   clusters/<name>-tenant/          tenant layer (unified -> infra/tenant)
 #   clusters/main-configs/clusters/<name>-flux.yaml   tenant/controllers/configs Flux Kustomizations
 #   + registers <name>.yaml and <name>-flux.yaml in clusters/main-configs/clusters/kustomization.yaml
@@ -66,21 +68,117 @@ resources:
 YAML
 
 #######################################
-# 2. Per-cluster CONTROLLERS folder (clusters/<name>/)
+# 2. Per-cluster CONTROLLERS folder (clusters/<name>-controllers/)
 #######################################
-write "clusters/${CLUSTER_NAME}/unified-controllers/kustomization.yaml" <<YAML
+write "clusters/${CLUSTER_NAME}-controllers/unified-controllers/kustomization.yaml" <<YAML
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
 - ../../../infra/controllers
 YAML
 
-write "clusters/${CLUSTER_NAME}/kustomization.yaml" <<YAML
+write "clusters/${CLUSTER_NAME}-controllers/kustomization.yaml" <<YAML
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
 - unified-controllers/
+- monitoring/
 # Add cluster-specific controllers for '${CLUSTER_NAME}' below (HelmReleases, operators, ...).
+YAML
+
+# Spoke metrics forwarder: vmagent-only victoria-metrics-k8s-stack that scrapes the
+# local node-exporter and remote-writes to main's vmsingle over ClusterMesh (via the
+# vmsingle-vm stub global service in the configs layer).
+write "clusters/${CLUSTER_NAME}-controllers/monitoring/repository.yaml" <<YAML
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: HelmRepository
+metadata:
+  name: vm
+spec:
+  interval: 1h
+  url: https://victoriametrics.github.io/helm-charts/
+YAML
+
+write "clusters/${CLUSTER_NAME}-controllers/monitoring/vm-release.yaml" <<YAML
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: vm-stack
+spec:
+  interval: 20m
+  chart:
+    spec:
+      chart: victoria-metrics-k8s-stack
+      version: 0.72.2
+      sourceRef:
+        kind: HelmRepository
+        name: vm
+  targetNamespace: monitoring
+  valuesFrom:
+  - kind: ConfigMap
+    name: vm-values
+    valuesKey: values.yaml
+YAML
+
+write "clusters/${CLUSTER_NAME}-controllers/monitoring/vm-values.yaml" <<YAML
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: vm-values
+  labels:
+    reconcile.fluxcd.io/watch: Enabled
+data:
+  values.yaml: |
+    # Scrape-and-forward only — no local TSDB. vmagent remote-writes to main's
+    # vmsingle over ClusterMesh. Everything else in the stack is off to keep the
+    # memory footprint minimal (memory is the cluster bottleneck).
+    nameOverride: "vm"
+    fullnameOverride: "vm"
+    victoria-metrics-operator:
+      enabled: true
+      # The Talos/Cilium apiserver can't reach the operator webhook ClusterIP
+      # (EPERM :9443), which deadlocks the Helm install. Webhooks are
+      # validation-only; the operator reconciles VMAgent/scrapes without them.
+      admissionWebhooks:
+        enabled: false
+    vmsingle:
+      enabled: false
+    vmcluster:
+      enabled: false
+    vmalert:
+      enabled: false
+    alertmanager:
+      enabled: false
+    grafana:
+      enabled: false
+    defaultDashboards:
+      enabled: false
+    # Standalone node-exporter (infra/controllers/node-exporter) already runs here.
+    prometheus-node-exporter:
+      enabled: false
+    kube-state-metrics:
+      enabled: true
+    vmagent:
+      enabled: true
+      spec:
+        selectAllByDefault: true
+        externalLabels:
+          cluster: ${CLUSTER_NAME}
+        remoteWrite:
+        - url: http://vmsingle-vm.monitoring.svc.cluster.local:8428/api/v1/write
+YAML
+
+write "clusters/${CLUSTER_NAME}-controllers/monitoring/kustomization.yaml" <<YAML
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: monitoring
+resources:
+- repository.yaml
+- vm-values.yaml
+- vm-release.yaml
 YAML
 
 #######################################
@@ -99,6 +197,8 @@ kind: Kustomization
 resources:
 - unified-configs/
 - cilium/
+- logging/
+- monitoring/
 # Add cluster-specific configs for '${CLUSTER_NAME}' below.
 YAML
 
@@ -144,6 +244,10 @@ spec:
 YAML
 
 # --- cilium per-cluster: ClusterMesh peering with the hub (main) ---
+# Agent-facing peer config: the entry is named after the REMOTE cluster (main),
+# NOT this one, but points at the LOCAL apiserver — kvstoremesh mirrors the hub's
+# state into the local etcd. A self-named entry makes the agent treat it as the
+# local cluster and report 0 remote clusters (no global-service backends).
 write "clusters/${CLUSTER_NAME}-configs/cilium/external-secret-clustermesh.yaml" <<YAML
 ---
 apiVersion: v1
@@ -152,7 +256,7 @@ metadata:
   name: cilium-clustermesh
   namespace: kube-system
 stringData:
-  ${CLUSTER_NAME}: |
+  main: |
     endpoints:
     - https://clustermesh-apiserver.kube-system.svc:2379
     trusted-ca-file: /var/lib/cilium/clustermesh/local-etcd-client-ca.crt
@@ -188,6 +292,61 @@ resources:
 - L2Announcement.yaml
 - external-secret-clustermesh.yaml
 - external-secret-kvstoremesh.yaml
+YAML
+
+# --- stub global services: let the spoke resolve + route to main's sinks over the mesh ---
+write "clusters/${CLUSTER_NAME}-configs/logging/vlsingle-main.yaml" <<'YAML'
+---
+# Stub for main's VictoriaLogs sink. Selector-less + global so CoreDNS resolves
+# the name and Cilium attaches main's remote backends. The OTel logs daemonset
+# (infra/configs/otel) exports here.
+apiVersion: v1
+kind: Service
+metadata:
+  name: vlsingle-main
+  namespace: logging
+  annotations:
+    service.cilium.io/global: "true"
+spec:
+  ports:
+  - name: http
+    port: 9428
+    targetPort: 9428
+    protocol: TCP
+YAML
+
+write "clusters/${CLUSTER_NAME}-configs/logging/kustomization.yaml" <<YAML
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+- vlsingle-main.yaml
+YAML
+
+write "clusters/${CLUSTER_NAME}-configs/monitoring/vmsingle-vm.yaml" <<'YAML'
+---
+# Stub for main's VictoriaMetrics sink. Selector-less + global so CoreDNS resolves
+# the name and Cilium attaches main's remote backends. The spoke vmagent
+# (clusters/<name>-controllers/monitoring) remote-writes here.
+apiVersion: v1
+kind: Service
+metadata:
+  name: vmsingle-vm
+  namespace: monitoring
+  annotations:
+    service.cilium.io/global: "true"
+spec:
+  ports:
+  - name: http
+    port: 8428
+    targetPort: 8428
+    protocol: TCP
+YAML
+
+write "clusters/${CLUSTER_NAME}-configs/monitoring/kustomization.yaml" <<YAML
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+- vmsingle-vm.yaml
 YAML
 
 #######################################
@@ -238,9 +397,10 @@ spec:
   interval: 1h
   retryInterval: 3m
   timeout: 5m
-  path: ./clusters/${CLUSTER_NAME}
+  path: ./clusters/${CLUSTER_NAME}-controllers
   prune: true
-  wait: true
+  # No wait: true — node-exporter here needs the dhi-registry pull secret created by
+  # the configs layer, which dependsOn this one; waiting would deadlock the chain.
   sourceRef:
     kind: GitRepository
     name: flux-system
@@ -316,10 +476,10 @@ fi
 
 cat <<EOF
 
-==> Scaffolded. The kro instance (clusters/main-configs/clusters/${CLUSTER_NAME}.yaml) drives CAPI +
-    the critical (CNI) layer; the folders above carry tenant/controllers/configs. After merge:
-  - Add Vault secret  clustermesh/${CLUSTER_NAME}  (mesh cert is pushed automatically once Cilium is up).
-  - Add this cluster as a peer on main: append  - extract: { key: clustermesh/${CLUSTER_NAME} }
-    to clusters/main-configs/cilium/external-secret-kvstoremesh.yaml
+==> Scaffolded. The kro instance (clusters/main-configs/clusters/${CLUSTER_NAME}.yaml) drives CAPI,
+    the critical (CNI) layer, the dhi-registry secret AND the hub-side clustermesh peer; the folders
+    above carry tenant/controllers/configs + the spoke metrics/logs forwarder. After merge:
+  - Vault secret clustermesh/${CLUSTER_NAME} is populated automatically by the cluster's own PushSecret
+    once Cilium is up; the hub peer is generated by the kro RGD (no manual edit needed).
   - task add-kubeconfig CLUSTER=${CLUSTER_NAME} ; task add-sops NAMESPACE=${NS}
 EOF
