@@ -38,8 +38,9 @@ spec:
   interval: 1h
   retryInterval: 3m
   timeout: 5m
-  path: ./clusters/test-controllers
+  path: ./clusters/test
   prune: true
+  wait: true
   sourceRef:
     kind: GitRepository
     name: flux-system
