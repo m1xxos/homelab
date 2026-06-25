@@ -26,6 +26,10 @@ spec:
       debug: {}
       otlphttp:
         logs_endpoint: http://vlsingle-main.logging.svc.cluster.local:9428/insert/opentelemetry/v1/logs
+        # Promote the cluster attribute to a VictoriaLogs stream field so logs
+        # can be filtered/grouped per cluster efficiently (_stream).
+        headers:
+          VL-Stream-Fields: cluster
     extensions:
       health_check:
         endpoint: :13133
@@ -35,6 +39,14 @@ spec:
         check_interval: 5s
         limit_percentage: 80
         spike_limit_percentage: 25
+      # Stamp the originating cluster on every log record. CILIUM_CLUSTER_NAME is
+      # substituted per cluster by the *-configs Flux Kustomization (main -> main,
+      # test -> test), so this single shared file tags all clusters.
+      resource:
+        attributes:
+        - key: cluster
+          value: ${CILIUM_CLUSTER_NAME}
+          action: upsert
     receivers:
       filelog:
         include: [ /var/log/pods/*/*/*.log ]
@@ -59,6 +71,7 @@ spec:
           - filelog
           processors:
           - memory_limiter
+          - resource
           - batch
           exporters:
           - otlphttp

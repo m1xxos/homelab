@@ -254,7 +254,7 @@ Harbor SecretStore `harbor-store` uses Vault K8s auth (role `harbor-reader`, SA 
 | Chart | `victoria-metrics-k8s-stack` v0.72.2 |
 | Namespace | `monitoring` |
 | VMSingle | retention 3d, 5 GiB RWO on `longhorn-single`, Cilium global svc annotation, OTel prometheus naming |
-| VMAgent | `promscrape.maxScrapeSize: 32MiB` (kube-apiserver target), route at `vmagent.local.m1xxos.online` |
+| VMAgent | `externalLabels.cluster: main` (tags hub-origin series in the shared VMSingle), `promscrape.maxScrapeSize: 32MiB` (kube-apiserver target), route at `vmagent.local.m1xxos.online` |
 | Grafana | Disabled in VM stack (managed by Grafana Operator) |
 | node-exporter | Disabled in stack — separate DHI OCI chart (`infra/controllers/node-exporter`, `${CLUSTER_NAME}-node-exporter`) |
 | kube-state-metrics | enabled |
@@ -267,6 +267,13 @@ Harbor SecretStore `harbor-store` uses Vault K8s auth (role `harbor-reader`, SA 
   webhook ClusterIP) scrapes the local node-exporter ServiceMonitor and `kube-state-metrics` and
   `remoteWrite`s to `http://vmsingle-vm.monitoring.svc:8428/api/v1/write` with `externalLabels.cluster`.
 - Logs: the shared OTel daemonset (`infra/configs/otel`) exports to `vlsingle-main.logging.svc:9428`.
+
+**Per-cluster tagging.** Every cluster's metrics and logs carry a `cluster` label so hub and spoke
+data are distinguishable in `main`'s shared stores. Metrics: vmagent `externalLabels.cluster`
+(`main` on the hub, `<name>` on spokes). Logs: the shared OTel collector
+(`infra/configs/otel/otel-logs.yaml`) runs a `resource` processor stamping
+`cluster: ${CILIUM_CLUSTER_NAME}` (substituted per cluster by the `*-configs` Flux Kustomization) and
+sets the `VL-Stream-Fields: cluster` header so VictoriaLogs treats it as a stream field.
 - Both rely on **stub global Services** on the spoke (`clusters/test-configs/{monitoring,logging}/`):
   selector-less `vmsingle-vm` / `vlsingle-main` Services annotated `service.cilium.io/global: "true"`
   so CoreDNS resolves the name and Cilium attaches `main`'s remote backends. Without the stub, the
@@ -295,7 +302,7 @@ API Server (15761), Node Exporter Full (1860), Etcd (3070), Dragonfly, SeaweedFS
 |----------|-------|
 | Operator | opentelemetry-operator v0.114.1 (namespace `logging`) |
 | Collector | `OpenTelemetryCollector` CR `logging`, mode DaemonSet (incl. control-plane toleration) |
-| Pipeline | filelog (`/var/log/pods/*/*/*.log`, container parser) → memory_limiter → batch → OTLP HTTP |
+| Pipeline | filelog (`/var/log/pods/*/*/*.log`, container parser) → memory_limiter → resource (`cluster=${CILIUM_CLUSTER_NAME}`) → batch → OTLP HTTP (`VL-Stream-Fields: cluster`) |
 | Sink | VLSingle `main` (`logging` ns): retention 3d, 10 GiB PVC on `longhorn-single`, `vlsingle-main.logging:9428` |
 | UI | `vl.local.m1xxos.online` |
 | Cilium global svc | annotated (for shipping logs from future external clusters) |
@@ -416,6 +423,26 @@ After scaffolding:
 2. Commit + push → Flux applies CAPI objects → cluster bootstraps
 3. `task add-kubeconfig CLUSTER=<name>` to add OIDC kubeconfig locally
 4. Re-enable ClusterMesh (see below) if cross-cluster services are needed
+
+### Consolidation opportunities (future work)
+
+The `unified-*` passthrough pattern already shares `infra/{tenant,controllers,configs}` cleanly across
+clusters. The remaining per-spoke copy-paste — candidates to factor out so a new spoke needs only a
+`vm-values.yaml` and a `*-flux.yaml`:
+
+- **Monitoring release/repo (highest value):** `monitoring/repository.yaml` + `monitoring/vm-release.yaml`
+  are near-identical in `clusters/main-controllers` and `clusters/test-controllers` (differ only by
+  namespace / extra repos). Move them into a shared `infra/controllers/monitoring/`; keep only the
+  genuinely-different `vm-values.yaml` per cluster (hub = full stack, spoke = vmagent forwarder).
+- **Spoke stub global services:** `clusters/test-configs/monitoring/vmsingle-vm.yaml` and
+  `clusters/test-configs/logging/vlsingle-main.yaml` are structurally identical selector-less global
+  Services (only name/port differ). Factor into a reusable **spoke-only** overlay — they must *not* go
+  in the unconditional `infra/configs`, since `main` hosts the real backends — or kro-generate them.
+- **Spoke cilium ExternalSecrets:** `external-secret-clustermesh.yaml` / `external-secret-kvstoremesh.yaml`
+  in the spoke configs are per-spoke boilerplate (the hub side is already kro-generated via the RGD's
+  `clustermeshPeer`). Candidate for the same spoke overlay or kro generation.
+- **Leave alone:** hub-only platform components (authentik, harbor, vault, kro, grafana, capi, etc.)
+  intentionally run only on `main` — not duplication.
 
 ## Cilium ClusterMesh (enabled on main; `test` is a live peer)
 
