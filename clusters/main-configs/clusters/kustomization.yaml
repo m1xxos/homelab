@@ -3,3 +3,5 @@ kind: Kustomization
 # No global `namespace:` here — each cluster's Cluster CR and Flux Kustomizations
 # carry their own `namespace: <name>-cluster` so multiple clusters can coexist.
 resources: []
+- test.yaml
+- test-flux.yaml
