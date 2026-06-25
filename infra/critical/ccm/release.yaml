@@ -13,6 +13,9 @@ spec:
         kind: GitRepository
         name: talos-ccm
   targetNamespace: kube-system
+  # See cilium/release.yaml: HR runs in the hub's <name>-cluster ns but installs
+  # onto the spoke via kubeConfig — pin Helm storage to kube-system (always exists).
+  storageNamespace: kube-system
   values:
     enabledControllers:
     - cloud-node
