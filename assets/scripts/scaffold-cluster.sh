@@ -456,6 +456,12 @@ if [[ ! -f "$KUST" ]]; then
   printf 'apiVersion: kustomize.config.k8s.io/v1beta1\nkind: Kustomization\nresources:\n' > "$KUST"
   info "${CLUSTERS_DIR}/kustomization.yaml (created)"
 fi
+# Normalize an inline-empty list (`resources: []`, left by tearing down the last
+# cluster) to block style so the appends below produce valid YAML.
+if grep -qE '^resources:[[:space:]]*\[\][[:space:]]*$' "$KUST"; then
+  sed -i.bak -E 's/^resources:[[:space:]]*\[\][[:space:]]*$/resources:/' "$KUST" && rm -f "${KUST}.bak"
+  info "${CLUSTERS_DIR}/kustomization.yaml (normalized empty resources list)"
+fi
 for entry in "${CLUSTER_NAME}.yaml" "${CLUSTER_NAME}-flux.yaml"; do
   if grep -qE "^- ${entry}$" "$KUST"; then
     info "${CLUSTERS_DIR}/kustomization.yaml (already lists ${entry})"
