@@ -1,0 +1,17 @@
+---
+# Stub for main's VictoriaMetrics sink. Selector-less + global so CoreDNS resolves
+# the name and Cilium attaches main's remote backends. The spoke vmagent
+# (clusters/<name>-controllers/monitoring) remote-writes here.
+apiVersion: v1
+kind: Service
+metadata:
+  name: vmsingle-vm
+  namespace: monitoring
+  annotations:
+    service.cilium.io/global: "true"
+spec:
+  ports:
+  - name: http
+    port: 8428
+    targetPort: 8428
+    protocol: TCP

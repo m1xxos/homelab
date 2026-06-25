@@ -2,7 +2,9 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 # No global `namespace:` here — each cluster's Cluster CR and Flux Kustomizations
 # carry their own `namespace: <name>-cluster` so multiple clusters can coexist.
-resources: []
+resources:
 
 # - test.yaml
 # - test-flux.yaml
+- test.yaml
+- test-flux.yaml

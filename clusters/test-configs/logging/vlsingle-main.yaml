@@ -1,0 +1,17 @@
+---
+# Stub for main's VictoriaLogs sink. Selector-less + global so CoreDNS resolves
+# the name and Cilium attaches main's remote backends. The OTel logs daemonset
+# (infra/configs/otel) exports here.
+apiVersion: v1
+kind: Service
+metadata:
+  name: vlsingle-main
+  namespace: logging
+  annotations:
+    service.cilium.io/global: "true"
+spec:
+  ports:
+  - name: http
+    port: 9428
+    targetPort: 9428
+    protocol: TCP
