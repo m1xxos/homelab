@@ -1,14 +1,13 @@
+---
 apiVersion: source.toolkit.fluxcd.io/v1
 kind: OCIRepository
 metadata:
-  name: node-exporter
+  name: kro
 spec:
   interval: 1h
   layerSelector:
     mediaType: "application/vnd.cncf.helm.chart.content.v1.tar+gzip"
     operation: copy
-  url: oci://dhi.io/node-exporter-chart
+  url: oci://registry.k8s.io/kro/charts/kro
   ref:
-    semver: ">= 4.55.0"
-  secretRef:
-    name: dhi-registry
+    semver: ">= 0.9.1"

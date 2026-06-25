@@ -12,6 +12,11 @@ data:
     fullnameOverride: "vm"
     vmagent:
       spec:
+        # Tag every series this hub scrapes with cluster="main" so hub-origin
+        # metrics are distinguishable from spoke series (which set their own
+        # externalLabels.cluster) in the shared VMSingle.
+        externalLabels:
+          cluster: main
         # kube-apiserver /metrics exceeds the 16MiB default scrape limit on this
         # cluster; raise the cap so the API server target can be scraped.
         extraArgs:

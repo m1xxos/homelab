@@ -17,6 +17,10 @@ spec:
   upgrade:
     disableWait: true
   targetNamespace: kube-system
+  # Pin release-storage to kube-system: this HR lives in the <name>-cluster ns on
+  # the hub but installs onto the spoke via kubeConfig, where <name>-cluster does
+  # not exist — without this, Helm storage defaults to the HR ns and install fails.
+  storageNamespace: kube-system
   valuesFrom:
   - kind: ConfigMap
     name: cilium-values

@@ -1,0 +1,385 @@
+apiVersion: kro.run/v1alpha1
+kind: ResourceGraphDefinition
+metadata:
+  name: clusters.homelab.m1xxos.online
+spec:
+  schema:
+    apiVersion: v1alpha1
+    kind: Cluster
+    group: homelab.m1xxos.online
+    scope: Namespaced
+    spec:
+      controlPlane:
+        vip: string | required=true
+        replicas: integer | default=1 minimum=1
+        cpu: integer | default=4
+        ramMiB: integer | default=4096
+        diskGiB: integer | default=30
+      workers:
+        replicas: integer | default=2 minimum=1
+        cpu: integer | default=4
+        ramMiB: integer | default=6144
+        diskGiB: integer | default=30
+        ipRange: string | required=true
+      networking:
+        podCidr: string | default="10.169.0.0/16"
+        gateway: string | default="192.168.1.1"
+        dnsName: string | required=true
+        externalIp: string | required=true
+      cilium:
+        id: integer | required=true
+        clustermeshEndpoint: string | required=true
+      proxmox:
+        node: string | default="plusha"
+        templateID: integer | default=110
+      versions:
+        kubernetes: string | default="v1.35.0"
+        talos: string | default="v1.12.2"
+    status:
+      controlPlaneEndpoint: $${proxmoxCluster.spec.controlPlaneEndpoint.host}
+      kubernetesVersion: $${talosControlPlane.status.version}
+      phase: $${capiCluster.status.phase}
+      controlPlaneReplicas: $${capiCluster.status.controlPlane.replicas}
+      controlPlaneAvailableReplicas: $${capiCluster.status.controlPlane.availableReplicas}
+      workerReplicas: $${capiCluster.status.workers.replicas}
+      workerReadyReplicas: $${capiCluster.status.workers.readyReplicas}
+    additionalPrinterColumns:
+    - name: Phase
+      type: string
+      jsonPath: .status.phase
+    - name: Endpoint
+      type: string
+      jsonPath: .status.controlPlaneEndpoint
+    - name: CP-Ready
+      type: integer
+      jsonPath: .status.controlPlaneAvailableReplicas
+    - name: Workers-Ready
+      type: integer
+      jsonPath: .status.workerReadyReplicas
+    - name: K8s
+      type: string
+      jsonPath: .status.kubernetesVersion
+    - name: State
+      type: string
+      jsonPath: .status.state
+    - name: Age
+      type: date
+      jsonPath: .metadata.creationTimestamp
+  resources:
+  - id: clusterNamespace
+    template:
+      apiVersion: v1
+      kind: Namespace
+      metadata:
+        name: $${schema.metadata.name}-cluster
+  - id: dhiRegistrySecret
+    template:
+      # Created on main, in the per-cluster namespace. The cluster's controller
+      # HelmReleases install onto the workload cluster via kubeConfig, but their
+      # Flux *sources* (e.g. node-exporter's OCIRepository on dhi.io) are NOT
+      # patched and are pulled by main's source-controller from THIS namespace —
+      # so the DHI registry creds must exist here, not just on the workload
+      # cluster. Mirrors infra/configs/external-secrets/dhi-secret.yaml.
+      apiVersion: external-secrets.io/v1
+      kind: ExternalSecret
+      metadata:
+        name: dhi-registry
+        namespace: $${clusterNamespace.metadata.name}
+      spec:
+        refreshInterval: "1h0m0s"
+        secretStoreRef:
+          name: vault-general
+          kind: ClusterSecretStore
+        target:
+          template:
+            type: kubernetes.io/dockerconfigjson
+            data:
+              .dockerconfigjson: '{"auths":{"{{ .host }}":{"username":"{{ .username }}","password":"{{ .password }}","email":"{{ .email }}","auth":"{{ printf "%s:%s" .username .password | b64enc }}"}}}'
+        data:
+        - secretKey: host
+          remoteRef:
+            key: dhi
+            property: host
+        - secretKey: username
+          remoteRef:
+            key: dhi
+            property: username
+        - secretKey: password
+          remoteRef:
+            key: dhi
+            property: password
+        - secretKey: email
+          remoteRef:
+            key: dhi
+            property: email
+  - id: proxmoxCluster
+    template:
+      apiVersion: infrastructure.cluster.x-k8s.io/v1alpha2
+      kind: ProxmoxCluster
+      metadata:
+        name: proxmox-$${schema.metadata.name}
+        namespace: $${clusterNamespace.metadata.name}
+      spec:
+        schedulerHints:
+          memoryAdjustment: 0
+        allowedNodes:
+        - $${schema.spec.proxmox.node}
+        controlPlaneEndpoint:
+          host: $${schema.spec.controlPlane.vip}
+          port: 6443
+        dnsServers:
+        - 1.1.1.1
+        - 1.1.0.0
+        ipv4Config:
+          addresses:
+          - $${schema.spec.workers.ipRange}
+          gateway: $${schema.spec.networking.gateway}
+          prefix: 24
+          metric: 100
+  - id: controlPlaneMachineTemplate
+    template:
+      apiVersion: infrastructure.cluster.x-k8s.io/v1alpha2
+      kind: ProxmoxMachineTemplate
+      metadata:
+        name: proxmox-$${schema.metadata.name}-control-plane
+        namespace: $${clusterNamespace.metadata.name}
+      spec:
+        template:
+          spec:
+            disks:
+              bootVolume:
+                disk: scsi0
+                sizeGb: $${schema.spec.controlPlane.diskGiB}
+            format: qcow2
+            full: true
+            memoryMiB: $${schema.spec.controlPlane.ramMiB}
+            network:
+              networkDevices:
+              - name: net0
+                bridge: vmbr0
+                model: virtio
+            numCores: $${schema.spec.controlPlane.cpu}
+            numSockets: 1
+            sourceNode: $${schema.spec.proxmox.node}
+            templateID: $${schema.spec.proxmox.templateID}
+            checks:
+              skipCloudInitStatus: true
+            metadataSettings:
+              providerIDInjection: true
+  - id: workerConfigTemplate
+    template:
+      apiVersion: bootstrap.cluster.x-k8s.io/v1alpha3
+      kind: TalosConfigTemplate
+      metadata:
+        name: proxmox-$${schema.metadata.name}-worker
+        namespace: $${clusterNamespace.metadata.name}
+      spec:
+        template:
+          spec:
+            generateType: worker
+            talosVersion: $${schema.spec.versions.talos}
+            strategicPatches:
+            - |
+              machine:
+                install:
+                  disk: /dev/sda
+            - |
+              machine:
+                kubelet:
+                  extraArgs:
+                    cloud-provider: external
+                    rotate-server-certificates: "true"
+  - id: workerMachineTemplate
+    template:
+      apiVersion: infrastructure.cluster.x-k8s.io/v1alpha2
+      kind: ProxmoxMachineTemplate
+      metadata:
+        name: proxmox-$${schema.metadata.name}-worker
+        namespace: $${clusterNamespace.metadata.name}
+      spec:
+        template:
+          spec:
+            disks:
+              bootVolume:
+                disk: scsi0
+                sizeGb: $${schema.spec.workers.diskGiB}
+            format: qcow2
+            full: true
+            memoryMiB: $${schema.spec.workers.ramMiB}
+            network:
+              networkDevices:
+              - name: net0
+                bridge: vmbr0
+                model: virtio
+            numCores: $${schema.spec.workers.cpu}
+            numSockets: 1
+            sourceNode: $${schema.spec.proxmox.node}
+            templateID: $${schema.spec.proxmox.templateID}
+            checks:
+              skipCloudInitStatus: true
+            metadataSettings:
+              providerIDInjection: true
+  - id: talosControlPlane
+    template:
+      apiVersion: controlplane.cluster.x-k8s.io/v1alpha3
+      kind: TalosControlPlane
+      metadata:
+        name: proxmox-$${schema.metadata.name}-control-plane
+        namespace: $${clusterNamespace.metadata.name}
+      spec:
+        version: $${schema.spec.versions.kubernetes}
+        replicas: $${schema.spec.controlPlane.replicas}
+        infrastructureTemplate:
+          kind: ProxmoxMachineTemplate
+          apiVersion: infrastructure.cluster.x-k8s.io/v1alpha2
+          name: $${controlPlaneMachineTemplate.metadata.name}
+          namespace: $${clusterNamespace.metadata.name}
+        controlPlaneConfig:
+          controlplane:
+            generateType: controlplane
+            talosVersion: $${schema.spec.versions.talos}
+            strategicPatches:
+            - |
+              machine:
+                install:
+                  disk: /dev/sda
+                  extraKernelArgs:
+                    - net.ifnames=0
+                network:
+                  interfaces:
+                    - interface: eth0
+                      dhcp: false
+                      vip:
+                        ip: $${schema.spec.controlPlane.vip}
+                kubelet:
+                  extraArgs:
+                    rotate-server-certificates: "true"
+                    cloud-provider: external
+                features:
+                  kubernetesTalosAPIAccess:
+                    enabled: true
+                    allowedRoles:
+                      - os:reader
+                    allowedKubernetesNamespaces:
+                      - kube-system
+            - |
+              cluster:
+                network:
+                  cni:
+                    name: none
+                proxy:
+                  disabled: true
+                apiServer:
+                  extraArgs:
+                    oidc-issuer-url: "https://authentik.local.m1xxos.online/application/o/k8s/"
+                    oidc-client-id: "k8s"
+                    oidc-username-claim: name
+                    oidc-groups-claim: groups
+                    oidc-signing-algs: "ES256,RS256"
+  - id: capiCluster
+    template:
+      apiVersion: cluster.x-k8s.io/v1beta2
+      kind: Cluster
+      metadata:
+        name: proxmox-$${schema.metadata.name}
+        namespace: $${clusterNamespace.metadata.name}
+      spec:
+        clusterNetwork:
+          pods:
+            cidrBlocks:
+            - $${schema.spec.networking.podCidr}
+        controlPlaneRef:
+          apiGroup: controlplane.cluster.x-k8s.io
+          kind: TalosControlPlane
+          name: $${talosControlPlane.metadata.name}
+        infrastructureRef:
+          apiGroup: infrastructure.cluster.x-k8s.io
+          kind: ProxmoxCluster
+          name: $${proxmoxCluster.metadata.name}
+  - id: workerMachineDeployment
+    template:
+      apiVersion: cluster.x-k8s.io/v1beta2
+      kind: MachineDeployment
+      metadata:
+        name: proxmox-$${schema.metadata.name}-workers
+        namespace: $${clusterNamespace.metadata.name}
+      spec:
+        clusterName: $${capiCluster.metadata.name}
+        replicas: $${schema.spec.workers.replicas}
+        selector:
+          matchLabels:
+            cluster.x-k8s.io/cluster-name: $${capiCluster.metadata.name}
+        template:
+          metadata:
+            labels:
+              node-role.kubernetes.io/node: "worker"
+              cluster.x-k8s.io/cluster-name: $${capiCluster.metadata.name}
+          spec:
+            bootstrap:
+              configRef:
+                apiGroup: bootstrap.cluster.x-k8s.io
+                kind: TalosConfigTemplate
+                name: $${workerConfigTemplate.metadata.name}
+            clusterName: $${capiCluster.metadata.name}
+            infrastructureRef:
+              apiGroup: infrastructure.cluster.x-k8s.io
+              kind: ProxmoxMachineTemplate
+              name: $${workerMachineTemplate.metadata.name}
+            version: $${schema.spec.versions.kubernetes}
+  - id: clustermeshPeer
+    template:
+      # Created on main (kube-system). Merges this cluster's etcd client certs
+      # — published to Vault by the cluster's own clustermesh PushSecret
+      # (infra/configs/cilium/push-secret.yaml) — into the shared
+      # cilium-kvstoremesh secret. creationPolicy: Merge so multiple clusters
+      # can each contribute their keys without owning the whole secret.
+      # Target base secret: clusters/main-configs/cilium/external-secret-kvstoremesh.yaml
+      apiVersion: external-secrets.io/v1
+      kind: ExternalSecret
+      metadata:
+        name: cilium-kvstoremesh-$${schema.metadata.name}
+        namespace: kube-system
+      spec:
+        refreshInterval: 1h
+        secretStoreRef:
+          name: vault-general
+          kind: ClusterSecretStore
+        target:
+          name: cilium-kvstoremesh
+          creationPolicy: Merge
+        dataFrom:
+        - extract:
+            key: clustermesh/$${schema.metadata.name}
+  - id: criticalKustomization
+    template:
+      apiVersion: kustomize.toolkit.fluxcd.io/v1
+      kind: Kustomization
+      metadata:
+        name: $${schema.metadata.name}-critical
+        namespace: $${clusterNamespace.metadata.name}
+      spec:
+        interval: 1h
+        retryInterval: 3m
+        timeout: 5m
+        path: ./infra/critical
+        prune: true
+        wait: true
+        targetNamespace: $${clusterNamespace.metadata.name}
+        sourceRef:
+          kind: GitRepository
+          name: flux-system
+          namespace: flux-system
+        postBuild:
+          substitute:
+            CILIUM_CLUSTER_NAME: $${schema.metadata.name}
+            CILIUM_CLUSTER_ID: "$${string(schema.spec.cilium.id)}"
+            CILIUM_CLUSTERMESH_ENDPOINT: "$${schema.spec.cilium.clustermeshEndpoint}"
+        patches:
+        - target:
+            kind: HelmRelease
+          patch: |
+            - op: add
+              path: /spec/kubeConfig
+              value:
+                secretRef:
+                  name: proxmox-$${schema.metadata.name}-kubeconfig

@@ -32,6 +32,11 @@ variable "minio-sa-name" {
   default = "minio-reader"
 }
 
+variable "capi-sa-name" {
+  type    = string
+  default = "capi-reader"
+}
+
 variable "vault_address" {
   type    = string
   default = "https://vault.local.m1xxos.online"

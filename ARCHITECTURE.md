@@ -1,6 +1,6 @@
 # Homelab Architecture Reference for coding agents
 
-_Last updated: 2026-06-09 (reflects repository changes through 2026-06-09)_
+_Last updated: 2026-06-16 (reflects repository changes through 2026-06-16)_
 
 ## Overview
 
@@ -15,7 +15,7 @@ in May 2026; additional CAPI-managed clusters can still be provisioned on demand
 | Role | All workloads (management + apps) |
 | Control plane VIP | 192.168.1.75 |
 | External/L2 IP | 192.168.1.80 |
-| ClusterMesh IP | 192.168.1.81 (reserved, mesh currently disabled) |
+| ClusterMesh IP | 192.168.1.81 (clustermesh-apiserver LB; mesh enabled, `test` is a live peer) |
 | Cilium ID | 1 |
 | CP nodes | 1 × `main-cp-0` (192.168.1.70), 6 GiB RAM |
 | Worker nodes | 3 × `main-worker-{0,1,2}` (192.168.1.10–12), 4 cores / 5 GiB RAM / 70 GiB disk each |
@@ -34,7 +34,8 @@ single-replica StorageClass for reproducible data, `vm.swappiness=30` set manual
 - **OS**: Talos Linux (v1.12.2)
 - **Provisioning**: Terraform → Proxmox VMs → Talos config → bootstrap
 - **CNI**: Cilium v1.18.6 (kube-proxy disabled, kubeProxyReplacement: true, L2 announcements;
-  ClusterMesh block commented out in Terraform cilium-values template — no peer clusters exist)
+  ClusterMesh enabled in the Terraform cilium-values template — clustermesh-apiserver runs on `main`,
+  but no live peer clusters yet)
 - **GitOps**: Flux CD (bootstrapped from Terraform, branch `main`, SOPS decryption via `sops-gpg`)
 - **Secrets**: HashiCorp Vault (HA Raft, 3 replicas, YC KMS auto-unseal) + ESO + SOPS
 - **DNS**: Cloudflare (managed via Terraform), domain: `local.m1xxos.online`
@@ -182,7 +183,7 @@ Harbor SecretStore `harbor-store` uses Vault K8s auth (role `harbor-reader`, SA 
 ### Policies
 | Policy | Access |
 |--------|--------|
-| general-reader | Read general/data/* (+ write general/data/clustermesh/* — legacy, mesh disabled) |
+| general-reader | Read general/data/* (+ write general/data/clustermesh/* — used by the mesh PushSecret) |
 | authentik-reader | Read main/data/authentik/* |
 | harbor-reader | Read main/data/harbor/* |
 | minio-reader | Read main/data/minio/* |
@@ -253,11 +254,30 @@ Harbor SecretStore `harbor-store` uses Vault K8s auth (role `harbor-reader`, SA 
 | Chart | `victoria-metrics-k8s-stack` v0.72.2 |
 | Namespace | `monitoring` |
 | VMSingle | retention 3d, 5 GiB RWO on `longhorn-single`, Cilium global svc annotation, OTel prometheus naming |
-| VMAgent | `promscrape.maxScrapeSize: 32MiB` (kube-apiserver target), route at `vmagent.local.m1xxos.online` |
+| VMAgent | `externalLabels.cluster: main` (tags hub-origin series in the shared VMSingle), `promscrape.maxScrapeSize: 32MiB` (kube-apiserver target), route at `vmagent.local.m1xxos.online` |
 | Grafana | Disabled in VM stack (managed by Grafana Operator) |
 | node-exporter | Disabled in stack — separate DHI OCI chart (`infra/controllers/node-exporter`, `${CLUSTER_NAME}-node-exporter`) |
 | kube-state-metrics | enabled |
 | kubeEtcd | Scraped via manual endpoint 192.168.1.70:2381 (Talos `listen-metrics-urls`, unauthenticated metrics-only port) |
+
+**Spoke clusters forward to `main` over ClusterMesh.** `main` is the only cluster with backing stores
+(VMSingle/VLSingle/VTSingle). Spokes (e.g. `test`) run only collectors and ship to `main`:
+- Metrics: a vmagent-only `victoria-metrics-k8s-stack` (`clusters/test/monitoring/`, operator +
+  vmagent, all stores disabled, admission webhooks disabled — the Talos apiserver can't reach the
+  webhook ClusterIP) scrapes the local node-exporter ServiceMonitor and `kube-state-metrics` and
+  `remoteWrite`s to `http://vmsingle-vm.monitoring.svc:8428/api/v1/write` with `externalLabels.cluster`.
+- Logs: the shared OTel daemonset (`infra/configs/otel`) exports to `vlsingle-main.logging.svc:9428`.
+
+**Per-cluster tagging.** Every cluster's metrics and logs carry a `cluster` label so hub and spoke
+data are distinguishable in `main`'s shared stores. Metrics: vmagent `externalLabels.cluster`
+(`main` on the hub, `<name>` on spokes). Logs: the shared OTel collector
+(`infra/configs/otel/otel-logs.yaml`) runs a `resource` processor stamping
+`cluster: ${CILIUM_CLUSTER_NAME}` (substituted per cluster by the `*-configs` Flux Kustomization) and
+sets the `VL-Stream-Fields: cluster` header so VictoriaLogs treats it as a stream field.
+- Both rely on **stub global Services** on the spoke (`clusters/test-configs/{monitoring,logging}/`):
+  selector-less `vmsingle-vm` / `vlsingle-main` Services annotated `service.cilium.io/global: "true"`
+  so CoreDNS resolves the name and Cilium attaches `main`'s remote backends. Without the stub, the
+  name doesn't resolve on the spoke.
 
 ### Grafana Operator
 | Property | Value |
@@ -282,7 +302,7 @@ API Server (15761), Node Exporter Full (1860), Etcd (3070), Dragonfly, SeaweedFS
 |----------|-------|
 | Operator | opentelemetry-operator v0.114.1 (namespace `logging`) |
 | Collector | `OpenTelemetryCollector` CR `logging`, mode DaemonSet (incl. control-plane toleration) |
-| Pipeline | filelog (`/var/log/pods/*/*/*.log`, container parser) → memory_limiter → batch → OTLP HTTP |
+| Pipeline | filelog (`/var/log/pods/*/*/*.log`, container parser) → memory_limiter → resource (`cluster=${CILIUM_CLUSTER_NAME}`) → batch → OTLP HTTP (`VL-Stream-Fields: cluster`) |
 | Sink | VLSingle `main` (`logging` ns): retention 3d, 10 GiB PVC on `longhorn-single`, `vlsingle-main.logging:9428` |
 | UI | `vl.local.m1xxos.online` |
 | Cilium global svc | annotated (for shipping logs from future external clusters) |
@@ -349,6 +369,33 @@ if that never materializes, removing it frees ~4 pods and ~8 GiB of Longhorn spa
 
 Installed on the management cluster; used only when a new workload cluster is provisioned with `task new-cluster`.
 
+### Proxmox CAPI provisioning
+
+Current CAPI Proxmox manifests are migrated to CAPMOX v0.8 / v1alpha2:
+
+- `ProxmoxCluster` and `ProxmoxMachineTemplate` use `infrastructure.cluster.x-k8s.io/v1alpha2`
+- `Cluster` and `MachineDeployment` use `cluster.x-k8s.io/v1beta2`
+- CAPI refs use `apiGroup` instead of `apiVersion`
+- Proxmox machine networking uses `network.networkDevices` with `net0`
+- Talos config remains on `controlplane.cluster.x-k8s.io/v1alpha3` / `bootstrap.cluster.x-k8s.io/v1alpha3`
+
+Provisioning uses the Proxmox API token `capmox@pve!capi` and requires ACLs on:
+
+- `/nodes/plusha` (`PVEAuditor`)
+- `/storage/local-lvm` (`PVEAdmin` or equivalent datastore write rights)
+- `/storage/pve-nvme` (`PVEAdmin` or equivalent datastore write rights)
+- `/storage/local` (`PVEDatastoreAdmin`) — **required for cloud-init**. CAPMOX (via go-proxmox
+  `findStorageByContent("iso")`) uploads the cloud-init ISO to the first storage advertising `iso`
+  content, which on `plusha` is only `local` (type `dir`; `lvmthin` cannot hold ISOs). Without
+  `Datastore.Audit` the token cannot see `local` in the storage list and `Datastore.AllocateTemplate`
+  is needed to upload — missing either makes VM provisioning fail with
+  `unable to inject CloudInit ISO: unable to find the item you are looking for`. Apply with:
+  `pveum acl modify /storage/local --user capmox@pve --role PVEDatastoreAdmin`
+- `/sdn` (`PVEAdmin` or equivalent SDN use rights)
+
+These ACLs are applied manually with `pveum` (not managed in Terraform). After a Proxmox host reinstall
+or token recreation, reapply all of them — the `/storage/local` grant in particular is easy to miss.
+
 ## Adding a New Cluster
 
 ```
@@ -377,26 +424,76 @@ After scaffolding:
 3. `task add-kubeconfig CLUSTER=<name>` to add OIDC kubeconfig locally
 4. Re-enable ClusterMesh (see below) if cross-cluster services are needed
 
-## Cilium ClusterMesh (disabled)
+### Consolidation opportunities (future work)
 
-Only the `main` cluster exists, so ClusterMesh is fully disabled:
+The `unified-*` passthrough pattern already shares `infra/{tenant,controllers,configs}` cleanly across
+clusters. The remaining per-spoke copy-paste — candidates to factor out so a new spoke needs only a
+`vm-values.yaml` and a `*-flux.yaml`:
 
-- The `clustermesh` block in `terraform/0-infra/talos-cluster-module/cilium-values.yaml` is commented out
-  (no clustermesh-apiserver / kvstoremesh pods on main).
-- The legacy secret-flow manifests (PushSecret in `infra/configs/cilium/`, per-cluster ExternalSecrets in
-  `clusters/main-configs/cilium/`) were removed in June 2026 — recover them from git history if needed.
-- `infra/critical/cilium/values.yaml` (used by remote clusters) still carries the clustermesh block.
-- The LB IP 192.168.1.81 and the `clustermesh-pool` CiliumLoadBalancerIPPool remain reserved.
-- `service.cilium.io/global: "true"` annotations on vmsingle/vlsingle/seaweedfs-s3 services are inert
-  while the mesh is down and become useful again once it is re-enabled.
+- **Monitoring release/repo (highest value):** `monitoring/repository.yaml` + `monitoring/vm-release.yaml`
+  are near-identical in `clusters/main-controllers` and `clusters/test-controllers` (differ only by
+  namespace / extra repos). Move them into a shared `infra/controllers/monitoring/`; keep only the
+  genuinely-different `vm-values.yaml` per cluster (hub = full stack, spoke = vmagent forwarder).
+- **Spoke stub global services:** `clusters/test-configs/monitoring/vmsingle-vm.yaml` and
+  `clusters/test-configs/logging/vlsingle-main.yaml` are structurally identical selector-less global
+  Services (only name/port differ). Factor into a reusable **spoke-only** overlay — they must *not* go
+  in the unconditional `infra/configs`, since `main` hosts the real backends — or kro-generate them.
+- **Spoke cilium ExternalSecrets:** `external-secret-clustermesh.yaml` / `external-secret-kvstoremesh.yaml`
+  in the spoke configs are per-spoke boilerplate (the hub side is already kro-generated via the RGD's
+  `clustermeshPeer`). Candidate for the same spoke overlay or kro generation.
+- **Leave alone:** hub-only platform components (authentik, harbor, vault, kro, grafana, capi, etc.)
+  intentionally run only on `main` — not duplication.
 
-### Re-enabling for a new cluster (e.g. dev, id=3, mesh IP=192.168.1.41)
-1. Uncomment the `clustermesh` block in the Terraform cilium-values template, `terraform apply`
-2. Restore PushSecret (git history: `infra/configs/cilium/push-secret.yaml`) — pushes local mesh certs
-   to Vault `general/clustermesh/${CILIUM_CLUSTER_NAME}`
-3. Restore per-cluster ExternalSecrets (`cilium-kvstoremesh` ← Vault `clustermesh/<remote>`,
-   static `cilium-clustermesh` secret)
-4. TLS method is `helm`; if certs have wrong SANs delete the hubble/clustermesh secrets and let Helm regenerate
+## Cilium ClusterMesh (enabled on main; `test` is a live peer)
+
+ClusterMesh is **enabled** on `main` — it is *not* disabled (this section was previously stale):
+
+- The `clustermesh` block in `terraform/0-infra/talos-cluster-module/cilium-values.yaml` is **active**
+  (not commented). `main` runs `clustermesh-apiserver` (3/3); `cilium-config` has `cluster-name=main`,
+  `cluster-id=1`.
+- `infra/configs/cilium/push-secret.yaml` is active and pushes `main`'s mesh cert to Vault
+  `general/clustermesh/main` (PushSecret `cilium-clustermesh-push` = Synced).
+- `infra/critical/cilium/values.yaml` (remote clusters) also enables clustermesh.
+- The LB IP 192.168.1.81 and the `clustermesh-pool` CiliumLoadBalancerIPPool are in use.
+- `service.cilium.io/global: "true"` annotations are effective: `test`↔`main` is live
+  (`cilium-dbg status --all-clusters` shows `1/1 remote clusters ready` on both).
+
+**Stale data removed:** the dead `gitlab`/`app` peers used to be listed in
+`clusters/main-configs/cilium/external-secret-kvstoremesh.yaml`. That file is now an **empty base
+`Secret`** (no peer list) — see the hub-side model below.
+
+### Agent peer naming (the bite)
+The agent-facing `cilium-clustermesh` secret has one `stringData` entry **per remote cluster**, and
+the **key name must be the remote cluster's name**. With kvstoremesh the local clustermesh-apiserver
+mirrors every peer's state, so each entry's `endpoints` point at the **local** apiserver
+(`https://clustermesh-apiserver.kube-system.svc:2379`) with the local etcd-client certs — only the
+key name differs. So on `test` the entry is `main:`, and on `main` it is `test:`. These were
+historically misnamed after the *local* cluster (`test` self-named `test`; `main` carried a stale
+`gitlab`), which made each agent report `0/0 remote clusters` and left global services with no
+backends → cross-cluster dials failed with `connect: operation not permitted`. Files:
+`clusters/test-configs/cilium/external-secret-clustermesh.yaml`,
+`clusters/main-configs/cilium/external-secret-clustermesh.yaml`.
+
+### Peering model (hub-and-spoke: every cluster ↔ `main`)
+- Each cluster (incl. `main`) pushes its own mesh cert to Vault `clustermesh/<name>` via the
+  `infra/configs/cilium` PushSecret.
+- **Remote → main:** the per-cluster `clusters/<name>-configs/cilium/` carries a `cilium-kvstoremesh`
+  ExternalSecret pulling `clustermesh/main` + a static `cilium-clustermesh` secret — so every new
+  cluster peers with the hub.
+- **main → remote (now automatic via kro):** the Cluster RGD
+  (`clusters/main-configs/kro/cluster-rgd.yaml`, resource `clustermeshPeer`) generates, on `main` in
+  `kube-system`, an `ExternalSecret cilium-kvstoremesh-<name>` with `target.creationPolicy: Merge` that
+  pulls `clustermesh/<name>` into the shared `cilium-kvstoremesh` secret. The empty base secret
+  (`clusters/main-configs/cilium/external-secret-kvstoremesh.yaml`) exists only to give Merge a target.
+  Creating a `Cluster` CR now adds the hub-side peer with no git edit — this used to be the one manual
+  hub-side touch. ESO retries until the new cluster's PushSecret has populated `clustermesh/<name>`.
+  Gotcha: if this `cilium-kvstoremesh-<name>` ExternalSecret reconciles before the empty base secret
+  exists (or before Vault `clustermesh/<name>` is populated), it sticks at `SecretMissing` ("secret
+  will not be created due to CreationPolicy=Merge") — kick it once with a `force-sync` annotation.
+  (NB: the legacy `assets/scripts/new-cluster.sh` still *appends* a peer entry to that file; that path
+  is incompatible with the base-secret model — use the kro `Cluster` CR.)
+- TLS method is `helm`; if certs have wrong SANs, delete the hubble/clustermesh secrets and let Helm
+  regenerate.
 
 ## Secret Summary
 
@@ -454,7 +551,7 @@ Proxmox VMs → Talos config → bootstrap → kubeconfig
 ### cilium-values.yaml
 Uses Terraform templatefile syntax: `${cluster_name}`, `${cluster_id}`, `${clustermesh_endpoint}`
 (vs Flux uses: `${CILIUM_CLUSTER_NAME}`, `${CILIUM_CLUSTER_ID}`, `${CILIUM_CLUSTERMESH_ENDPOINT}`).
-The `clustermesh` block is commented out.
+The `clustermesh` block is active (clustermesh-apiserver runs on `main`).
 
 ## Cross-Component Dependency Map
 ```

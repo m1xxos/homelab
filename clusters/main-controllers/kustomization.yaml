@@ -10,3 +10,4 @@ resources:
 - seaweedfs/
 - vault/
 - unified-controllers/
+- kro/
