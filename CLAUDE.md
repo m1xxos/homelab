@@ -80,7 +80,10 @@ Three mechanisms, in order of preference:
 `-controllers`/`-configs` naming; the controllers layer carries a vmagent forwarder and the configs
 layer the cilium peer + stub global services). The kro RGD (`clusters/main-configs/kro/cluster-rgd.yaml`)
 expands the CR into the CAPI objects, the `dhi-registry` secret, the hub-side clustermesh peer, and the
-`<name>-critical` Kustomization — so you don't write raw CAPI. Then commit + push so Flux applies the
+`<name>-critical` Kustomization — so you don't write raw CAPI. The RGD's Talos `strategicPatches` also
+set `machine.registries.mirrors` so every new cluster pulls all upstream registries (docker.io, ghcr.io,
+quay.io, registry.k8s.io, gcr.io, mcr) through Harbor's public proxy-cache projects — see the Harbor
+section of `ARCHITECTURE.md`. Then commit + push so Flux applies the
 CR, `task add-kubeconfig`, and `task add-sops NAMESPACE=<name>-cluster`. CAPI Proxmox manifests are on
 CAPMOX v0.8 / v1alpha2 (see the "CAPI Operator" section of `ARCHITECTURE.md` for the exact apiVersions
 and required Proxmox token ACLs). ClusterMesh is live (`main` hub + `test` spoke); the peering model and
