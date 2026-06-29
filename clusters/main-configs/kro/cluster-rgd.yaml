@@ -189,6 +189,34 @@ spec:
                   extraArgs:
                     cloud-provider: external
                     rotate-server-certificates: "true"
+            - |
+              machine:
+                registries:
+                  mirrors:
+                    docker.io:
+                      endpoints:
+                        - https://harbor.local.m1xxos.online/v2/dockerhub
+                      overridePath: true
+                    ghcr.io:
+                      endpoints:
+                        - https://harbor.local.m1xxos.online/v2/ghcr
+                      overridePath: true
+                    quay.io:
+                      endpoints:
+                        - https://harbor.local.m1xxos.online/v2/quay
+                      overridePath: true
+                    registry.k8s.io:
+                      endpoints:
+                        - https://harbor.local.m1xxos.online/v2/k8s-gcr
+                      overridePath: true
+                    gcr.io:
+                      endpoints:
+                        - https://harbor.local.m1xxos.online/v2/gcr
+                      overridePath: true
+                    mcr.microsoft.com:
+                      endpoints:
+                        - https://harbor.local.m1xxos.online/v2/mcr
+                      overridePath: true
   - id: workerMachineTemplate
     template:
       apiVersion: infrastructure.cluster.x-k8s.io/v1alpha2
@@ -276,6 +304,34 @@ spec:
                     oidc-username-claim: name
                     oidc-groups-claim: groups
                     oidc-signing-algs: "ES256,RS256"
+            - |
+              machine:
+                registries:
+                  mirrors:
+                    docker.io:
+                      endpoints:
+                        - https://harbor.local.m1xxos.online/v2/dockerhub
+                      overridePath: true
+                    ghcr.io:
+                      endpoints:
+                        - https://harbor.local.m1xxos.online/v2/ghcr
+                      overridePath: true
+                    quay.io:
+                      endpoints:
+                        - https://harbor.local.m1xxos.online/v2/quay
+                      overridePath: true
+                    registry.k8s.io:
+                      endpoints:
+                        - https://harbor.local.m1xxos.online/v2/k8s-gcr
+                      overridePath: true
+                    gcr.io:
+                      endpoints:
+                        - https://harbor.local.m1xxos.online/v2/gcr
+                      overridePath: true
+                    mcr.microsoft.com:
+                      endpoints:
+                        - https://harbor.local.m1xxos.online/v2/mcr
+                      overridePath: true
   - id: capiCluster
     template:
       apiVersion: cluster.x-k8s.io/v1beta2

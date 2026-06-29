@@ -143,6 +143,18 @@ namespace — see **Adding a New Cluster** section below.
 
 Harbor SecretStore `harbor-store` uses Vault K8s auth (role `harbor-reader`, SA `harbor-reader`, mount `main`).
 
+### Proxy-cache mirrors
+
+`terraform/3-harbor` provisions six **public** pull-through proxy-cache projects (one per upstream):
+`dockerhub` (docker.io), `ghcr` (ghcr.io), `quay` (quay.io), `k8s-gcr` (registry.k8s.io), `gcr`
+(gcr.io), `mcr` (mcr.microsoft.com). New kro-scaffolded spoke clusters auto-rewrite all of these
+upstreams through Harbor via Talos `machine.registries.mirrors` in the RGD `strategicPatches`
+(`clusters/main-configs/kro/cluster-rgd.yaml`, both control-plane and worker) — endpoints are
+`https://harbor.local.m1xxos.online/v2/<project>` with `overridePath: true`, no auth (projects are
+public). The `main` hub is intentionally **not** mirrored (it hosts Harbor itself → bootstrap
+circular dependency). Because the mirror is the only configured endpoint, Harbor must be reachable
+when a new cluster bootstraps.
+
 ## Vault Configuration
 
 ### Deployment
