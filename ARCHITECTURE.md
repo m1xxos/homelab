@@ -36,7 +36,8 @@ single-replica StorageClass for reproducible data, `vm.swappiness=30` set manual
 - **CNI**: Cilium v1.18.6 (kube-proxy disabled, kubeProxyReplacement: true, L2 announcements;
   ClusterMesh enabled in the Terraform cilium-values template — clustermesh-apiserver runs on `main`,
   but no live peer clusters yet)
-- **GitOps**: Flux CD (bootstrapped from Terraform, branch `main`, SOPS decryption via `sops-gpg`)
+- **GitOps**: Flux CD (bootstrapped from Terraform, branch `main`, SOPS decryption via `sops-gpg`,
+  which the emberstack reflector auto-mirrors into spoke `*-cluster` namespaces)
 - **Secrets**: HashiCorp Vault (HA Raft, 3 replicas, YC KMS auto-unseal) + ESO + SOPS
 - **DNS**: Cloudflare (managed via Terraform), domain: `local.m1xxos.online`
 - **Ingress**: Traefik v40.2.0 (Gateway API + experimental channel)
@@ -94,7 +95,8 @@ clusters/
     configs/            — CiliumL2AnnouncementPolicy, CiliumLoadBalancerIPPool (192.168.1.81, clustermesh — reserved)
   main-controllers/     — Main cluster controllers:
                           Authentik, CNPG operator, Cluster API Operator v0.25.0, Dragonfly operator,
-                          Harbor, VictoriaMetrics stack + Grafana Operator, SeaweedFS, Vault
+                          Harbor, VictoriaMetrics stack + Grafana Operator, SeaweedFS, Vault,
+                          kro, reflector (mirrors sops-gpg into *-cluster namespaces)
     unified-controllers/ — References ../../../infra/controllers (shared controllers layer)
   main-configs/         — Main cluster configs
     authentik/          — Authentik SecretStore + ExternalSecret + CNPG cluster (authentik-new)
@@ -435,6 +437,15 @@ After scaffolding:
 2. Commit + push → Flux applies CAPI objects → cluster bootstraps
 3. `task add-kubeconfig CLUSTER=<name>` to add OIDC kubeconfig locally
 4. Re-enable ClusterMesh (see below) if cross-cluster services are needed
+
+The `sops-gpg` key is no longer copied per namespace by hand. The reflector controller
+(`clusters/main-controllers/reflector/`) auto-mirrors `flux-system/sops-gpg` into every `*-cluster`
+namespace; the source secret carries the reflection annotations applied once via
+`task enable-sops-reflection` (rerun only after a Flux re-bootstrap). The RGD's `<name>-critical`
+Kustomization is gated on the mirrored secret appearing in `<name>-cluster` — kro declares it as an
+`externalRef` Secret (`id: sopsSecret`) and `criticalKustomization` references it
+(`homelab.m1xxos.online/sops-ready` annotation), so kro parks it in `WAITING_FOR_EXTERNAL_RESOURCE`
+until the key is present in the namespace.
 
 ### Consolidation opportunities (future work)
 

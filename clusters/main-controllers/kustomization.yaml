@@ -11,3 +11,4 @@ resources:
 - vault/
 - unified-controllers/
 - kro/
+- reflector/

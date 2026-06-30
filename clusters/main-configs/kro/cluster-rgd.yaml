@@ -406,6 +406,15 @@ spec:
         dataFrom:
         - extract:
             key: clustermesh/$${schema.metadata.name}
+  - id: sopsSecret
+    # Reflected by emberstack reflector from flux-system/sops-gpg. kro waits for it
+    # to exist before creating dependents (criticalKustomization references it below).
+    externalRef:
+      apiVersion: v1
+      kind: Secret
+      metadata:
+        name: sops-gpg
+        namespace: $${clusterNamespace.metadata.name}
   - id: criticalKustomization
     template:
       apiVersion: kustomize.toolkit.fluxcd.io/v1
@@ -413,6 +422,8 @@ spec:
       metadata:
         name: $${schema.metadata.name}-critical
         namespace: $${clusterNamespace.metadata.name}
+        annotations:
+          homelab.m1xxos.online/sops-ready: $${sopsSecret.metadata.name}
       spec:
         interval: 1h
         retryInterval: 3m

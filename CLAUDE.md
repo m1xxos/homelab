@@ -22,7 +22,7 @@ task flux                    # reconcile the full Flux chain (source → flux-sy
 task tfplan                  # terraform plan across 0-infra, 1-vault, 2-authentik
 task new-cluster             # interactive scaffold of a new CAPI-managed Talos cluster (assets/scripts/new-cluster.sh)
 task add-kubeconfig CLUSTER=<name>   # add OIDC kubeconfig context for a cluster
-task add-sops NAMESPACE=<ns>         # copy sops-gpg secret into a namespace
+task enable-sops-reflection          # annotate flux-system/sops-gpg so reflector mirrors it into *-cluster namespaces (run once after bootstrap)
 ```
 
 - Terraform stages are ordered and run per-directory: `terraform -chdir=terraform/0-infra plan|apply`
@@ -65,8 +65,12 @@ flux-system → main-tenant (infra/tenant) → main-controllers (clusters/main-c
 
 Three mechanisms, in order of preference:
 - **SOPS** (PGP, key fingerprint in `.sops.yaml`) for secrets committed to git — only `data`/`stringData`
-  fields are encrypted. Flux decrypts via the `sops-gpg` secret. New namespaces needing SOPS secrets must
-  receive the key (`task add-sops`).
+  fields are encrypted. Flux decrypts via the `sops-gpg` secret. The emberstack **reflector**
+  (`clusters/main-controllers/reflector/`) auto-mirrors `flux-system/sops-gpg` into every `*-cluster`
+  namespace, so spoke management namespaces get the key automatically — no per-namespace copy. The
+  source secret carries the reflection annotations (applied out-of-band by `task enable-sops-reflection`,
+  rerun after any re-bootstrap; the secret itself is seeded in `flux-system` at bootstrap and is never
+  in git or pulled from Vault).
 - **ESO + Vault** for runtime secrets. Default `ClusterSecretStore vault-general` (Vault mount `general`,
   AppRole auth). App-specific secrets use namespace `SecretStore`s with Vault Kubernetes auth and per-app
   reader roles. Vault paths and which secret each one feeds are tabulated in `ARCHITECTURE.md`.
@@ -80,11 +84,15 @@ Three mechanisms, in order of preference:
 `-controllers`/`-configs` naming; the controllers layer carries a vmagent forwarder and the configs
 layer the cilium peer + stub global services). The kro RGD (`clusters/main-configs/kro/cluster-rgd.yaml`)
 expands the CR into the CAPI objects, the `dhi-registry` secret, the hub-side clustermesh peer, and the
-`<name>-critical` Kustomization — so you don't write raw CAPI. The RGD's Talos `strategicPatches` also
-set `machine.registries.mirrors` so every new cluster pulls all upstream registries (docker.io, ghcr.io,
-quay.io, registry.k8s.io, gcr.io, mcr) through Harbor's public proxy-cache projects — see the Harbor
-section of `ARCHITECTURE.md`. Then commit + push so Flux applies the
-CR, `task add-kubeconfig`, and `task add-sops NAMESPACE=<name>-cluster`. CAPI Proxmox manifests are on
+`<name>-critical` Kustomization — so you don't write raw CAPI. The `<name>-critical` Kustomization is
+gated (via a kro `externalRef` + `readyWhen`) on the reflected `sops-gpg` secret landing in the
+`<name>-cluster` namespace, so it only applies once the spoke's SOPS key is present. The RGD's Talos
+`strategicPatches` also set `machine.registries.mirrors` so every new cluster pulls all upstream
+registries (docker.io, ghcr.io, quay.io, registry.k8s.io, gcr.io, mcr) through Harbor's public
+proxy-cache projects — see the Harbor section of `ARCHITECTURE.md`. Then commit + push so Flux applies
+the CR and `task add-kubeconfig`. The `sops-gpg` key is mirrored into `<name>-cluster` automatically by
+reflector (no `task add-sops` step) — just ensure reflection was enabled once via
+`task enable-sops-reflection`. CAPI Proxmox manifests are on
 CAPMOX v0.8 / v1alpha2 (see the "CAPI Operator" section of `ARCHITECTURE.md` for the exact apiVersions
 and required Proxmox token ACLs). ClusterMesh is live (`main` hub + `test` spoke); the peering model and
 the spoke observability forwarding are documented in `ARCHITECTURE.md`.
