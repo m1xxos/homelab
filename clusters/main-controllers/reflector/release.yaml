@@ -18,9 +18,11 @@ spec:
         namespace: flux-system
   values:
     replicaCount: 1
+    # 64Mi OOMKilled the .NET runtime at startup (found on first real
+    # deploy — #425 merged while flux tracked a stale branch).
     resources:
       requests:
         cpu: 10m
-        memory: 32Mi
+        memory: 96Mi
       limits:
-        memory: 64Mi
+        memory: 256Mi
