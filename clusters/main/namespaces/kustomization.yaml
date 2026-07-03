@@ -11,4 +11,5 @@ resources:
 - vault.yaml
 - tracing-ns.yaml
 - kro.yaml
+- reflector.yaml
 - test-cluster.yaml

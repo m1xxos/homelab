@@ -20,10 +20,10 @@ tasks:
     cmds:
     - ./assets/scripts/add-kubeconfig.sh {{.CLUSTER}}
 
-  add-sops:
-    desc: "Copy sops-gpg secret from flux-system to a target namespace. Usage: task add-sops NAMESPACE=<ns>"
+  enable-sops-reflection:
+    desc: "Annotate flux-system/sops-gpg so reflector auto-copies it into *-cluster namespaces. Run once after (re)bootstrap."
     cmds:
-    - ./assets/scripts/add-sops.sh {{.NAMESPACE}}
+    - ./assets/scripts/enable-sops-reflection.sh
 
   tfplan:
     cmds:
