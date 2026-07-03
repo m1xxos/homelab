@@ -3,7 +3,7 @@
 # add an OIDC context to the local kubeconfig.
 #
 # Usage:  ./scripts/add-kubeconfig.sh <cluster-name>
-#   or:   task add-kubeconfig CLUSTER=gitlab
+#   or:   task add-kubeconfig CLUSTER=<name>
 #
 # The CAPI kubeconfig secret (proxmox-<name>-kubeconfig) is created automatically
 # by Cluster API in namespace <name>-cluster on the main cluster.

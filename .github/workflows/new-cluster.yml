@@ -71,5 +71,5 @@ jobs:
             come from the kro RGD, not this PR.)
 
             After merge, per cluster:
-            - [ ] After CP is up: `task add-kubeconfig CLUSTER=<name>` and `task add-sops NAMESPACE=<name>-cluster`.
+            - [ ] After CP is up: `task add-kubeconfig CLUSTER=<name>` (the sops-gpg key is mirrored into `<name>-cluster` automatically by reflector).
             - [ ] Vault `clustermesh/<name>` + the hub peer are populated automatically — no manual edit.

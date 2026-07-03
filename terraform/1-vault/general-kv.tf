@@ -50,11 +50,5 @@ path "general/data/*" {
 path "general/metadata/*" {
   capabilities = ["create", "update", "read", "list", "delete"]
 }
-path "general/data/clustermesh/*" {
-  capabilities = ["create", "update", "read", "list", "delete"]
-}
-path "general/metadata/clustermesh/*" {
-  capabilities = ["create", "update", "read", "list", "delete"]
-}
 EOT
 }
