@@ -84,7 +84,7 @@ infra/
                           volume-snapshotter CRD + controller, Traefik dashboard/hubble/longhorn routes
                           Uses ${DNS_NAME}
   critical/             — Critical infra deployed to remote clusters (none active now):
-                          cilium v1.18.6, talos-ccm v0.5.2, metrics-server v3.13.0
+                          cilium v1.18.6, talos-ccm v0.5.4, metrics-server v3.13.0
                           Uses ${CILIUM_CLUSTER_NAME}, ${CILIUM_CLUSTER_ID}, ${CILIUM_CLUSTERMESH_ENDPOINT}
 
 clusters/

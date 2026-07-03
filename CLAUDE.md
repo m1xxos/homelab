@@ -19,7 +19,7 @@ This repo has no build or test step; "running" means applying Terraform or recon
 
 ```
 task flux                    # reconcile the full Flux chain (source → flux-system → tenant → controllers → configs)
-task tfplan                  # terraform plan across 0-infra, 1-vault, 2-authentik
+task tfplan                  # terraform plan across 0-infra, 1-vault, 2-authentik, 3-harbor
 task new-cluster             # interactive scaffold of a new CAPI-managed Talos cluster (assets/scripts/new-cluster.sh)
 task add-kubeconfig CLUSTER=<name>   # add OIDC kubeconfig context for a cluster
 task enable-sops-reflection          # annotate flux-system/sops-gpg so reflector mirrors it into *-cluster namespaces (run once after bootstrap)
