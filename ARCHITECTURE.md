@@ -251,7 +251,7 @@ when a new cluster bootstraps.
 | Secret key | From Secret `authentik-secret-key` mounted at `/secret-key/secret-key` |
 | UI | HTTPRoute at `authentik.local.m1xxos.online` |
 | SA | `authentik-reader` |
-| Resources | server 800Mi req / 1600Mi lim, worker 1100Mi req / 2000Mi lim (largest app on the cluster) |
+| Resources | server 600Mi req / 1200Mi lim, worker 512Mi req / 1024Mi lim (rightsized 2026-07 from ~430/~320Mi observed) |
 
 **OIDC consumers (Terraform `terraform/2-authentik/`):**
 - Grafana (generic_oauth, group mapping: `Grafana Admins`→Admin, `Grafana Editors`→Editor)
