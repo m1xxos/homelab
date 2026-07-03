@@ -6,7 +6,6 @@ resources:
 - cnpg-system.yaml
 - dragonfly-operator-system.yaml
 - harbor.yaml
-- monitoring.yaml
 - seaweedfs.yaml
 - vault.yaml
 - tracing-ns.yaml
