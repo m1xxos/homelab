@@ -12,4 +12,3 @@ resources:
 - tracing-ns.yaml
 - kro.yaml
 - reflector.yaml
-- test-cluster.yaml

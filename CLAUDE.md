@@ -94,8 +94,9 @@ the CR and `task add-kubeconfig`. The `sops-gpg` key is mirrored into `<name>-cl
 reflector (no `task add-sops` step) — just ensure reflection was enabled once via
 `task enable-sops-reflection`. CAPI Proxmox manifests are on
 CAPMOX v0.8 / v1alpha2 (see the "CAPI Operator" section of `ARCHITECTURE.md` for the exact apiVersions
-and required Proxmox token ACLs). ClusterMesh is live (`main` hub + `test` spoke); the peering model and
-the spoke observability forwarding are documented in `ARCHITECTURE.md`.
+and required Proxmox token ACLs). ClusterMesh is enabled on the `main` hub (no spokes currently — the
+`test` spoke was torn down 2026-06-25); the peering model and the spoke observability forwarding are
+documented in `ARCHITECTURE.md`.
 
 ## Things that bite
 
