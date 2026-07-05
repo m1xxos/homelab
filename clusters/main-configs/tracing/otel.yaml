@@ -1,6 +1,8 @@
 apiVersion: opentelemetry.io/v1beta1
 kind: OpenTelemetryCollector
 metadata:
+  annotations:
+    kustomize.toolkit.fluxcd.io/substitute: disabled
   name: tracing
 spec:
   mode: deployment
