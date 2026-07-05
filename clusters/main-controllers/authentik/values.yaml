@@ -16,12 +16,14 @@ data:
         password: file:///postgres-creds/password
     server:
       serviceAccountName: authentik-reader
+      # Observed ~430Mi under normal load (2026-07); memory is the cluster
+      # bottleneck, so keep requests close to reality.
       resources:
         requests:
           cpu: 200m
-          memory: 800Mi
+          memory: 600Mi
         limits:
-          memory: 1600Mi
+          memory: 1200Mi
       route:
         main:
           enabled: true
@@ -46,12 +48,14 @@ data:
         readOnly: true
     worker:
       serviceAccountName: authentik-reader
+      # Observed ~320Mi under normal load (2026-07); the old 1100Mi request
+      # dated from the pre-2025 gunicorn worker model.
       resources:
         requests:
           cpu: 150m
-          memory: 1100Mi
+          memory: 512Mi
         limits:
-          memory: 2000Mi
+          memory: 1024Mi
       volumes:
       - name: postgres-creds
         secret:

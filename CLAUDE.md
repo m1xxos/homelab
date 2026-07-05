@@ -19,7 +19,7 @@ This repo has no build or test step; "running" means applying Terraform or recon
 
 ```
 task flux                    # reconcile the full Flux chain (source → flux-system → tenant → controllers → configs)
-task tfplan                  # terraform plan across 0-infra, 1-vault, 2-authentik
+task tfplan                  # terraform plan across 0-infra, 1-vault, 2-authentik, 3-harbor
 task new-cluster             # interactive scaffold of a new CAPI-managed Talos cluster (assets/scripts/new-cluster.sh)
 task add-kubeconfig CLUSTER=<name>   # add OIDC kubeconfig context for a cluster
 task enable-sops-reflection          # annotate flux-system/sops-gpg so reflector mirrors it into *-cluster namespaces (run once after bootstrap)
@@ -94,8 +94,9 @@ the CR and `task add-kubeconfig`. The `sops-gpg` key is mirrored into `<name>-cl
 reflector (no `task add-sops` step) — just ensure reflection was enabled once via
 `task enable-sops-reflection`. CAPI Proxmox manifests are on
 CAPMOX v0.8 / v1alpha2 (see the "CAPI Operator" section of `ARCHITECTURE.md` for the exact apiVersions
-and required Proxmox token ACLs). ClusterMesh is live (`main` hub + `test` spoke); the peering model and
-the spoke observability forwarding are documented in `ARCHITECTURE.md`.
+and required Proxmox token ACLs). ClusterMesh is enabled on the `main` hub (no spokes currently — the
+`test` spoke was torn down 2026-06-25); the peering model and the spoke observability forwarding are
+documented in `ARCHITECTURE.md`.
 
 ## Things that bite
 

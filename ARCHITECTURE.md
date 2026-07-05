@@ -15,7 +15,7 @@ in May 2026; additional CAPI-managed clusters can still be provisioned on demand
 | Role | All workloads (management + apps) |
 | Control plane VIP | 192.168.1.75 |
 | External/L2 IP | 192.168.1.80 |
-| ClusterMesh IP | 192.168.1.81 (clustermesh-apiserver LB; mesh enabled, `test` is a live peer) |
+| ClusterMesh IP | 192.168.1.81 (clustermesh-apiserver LB; mesh enabled, no live peers — the `test` spoke was torn down 2026-06-25) |
 | Cilium ID | 1 |
 | CP nodes | 1 × `main-cp-0` (192.168.1.70), 6 GiB RAM |
 | Worker nodes | 3 × `main-worker-{0,1,2}` (192.168.1.10–12), 4 cores / 5 GiB RAM / 70 GiB disk each |
@@ -84,7 +84,7 @@ infra/
                           volume-snapshotter CRD + controller, Traefik dashboard/hubble/longhorn routes
                           Uses ${DNS_NAME}
   critical/             — Critical infra deployed to remote clusters (none active now):
-                          cilium v1.18.6, talos-ccm v0.5.2, metrics-server v3.13.0
+                          cilium v1.18.6, talos-ccm v0.5.4, metrics-server v3.13.0
                           Uses ${CILIUM_CLUSTER_NAME}, ${CILIUM_CLUSTER_ID}, ${CILIUM_CLUSTERMESH_ENDPOINT}
 
 clusters/
@@ -251,7 +251,7 @@ when a new cluster bootstraps.
 | Secret key | From Secret `authentik-secret-key` mounted at `/secret-key/secret-key` |
 | UI | HTTPRoute at `authentik.local.m1xxos.online` |
 | SA | `authentik-reader` |
-| Resources | server 800Mi req / 1600Mi lim, worker 1100Mi req / 2000Mi lim (largest app on the cluster) |
+| Resources | server 600Mi req / 1200Mi lim, worker 512Mi req / 1024Mi lim (rightsized 2026-07 from ~430/~320Mi observed) |
 
 **OIDC consumers (Terraform `terraform/2-authentik/`):**
 - Grafana (generic_oauth, group mapping: `Grafana Admins`→Admin, `Grafana Editors`→Editor)
@@ -275,8 +275,10 @@ when a new cluster bootstraps.
 | kubeEtcd | Scraped via manual endpoint 192.168.1.70:2381 (Talos `listen-metrics-urls`, unauthenticated metrics-only port) |
 
 **Spoke clusters forward to `main` over ClusterMesh.** `main` is the only cluster with backing stores
-(VMSingle/VLSingle/VTSingle). Spokes (e.g. `test`) run only collectors and ship to `main`:
-- Metrics: a vmagent-only `victoria-metrics-k8s-stack` (`clusters/test/monitoring/`, operator +
+(VMSingle/VLSingle/VTSingle). Spokes run only collectors and ship to `main` (no spoke exists right
+now — the `test` spoke that pioneered this model was torn down 2026-06-25; the scaffold scripts
+generate these layers for new clusters):
+- Metrics: a vmagent-only `victoria-metrics-k8s-stack` (`clusters/<name>-controllers/monitoring/`, operator +
   vmagent, all stores disabled, admission webhooks disabled — the Talos apiserver can't reach the
   webhook ClusterIP) scrapes the local node-exporter ServiceMonitor and `kube-state-metrics` and
   `remoteWrite`s to `http://vmsingle-vm.monitoring.svc:8428/api/v1/write` with `externalLabels.cluster`.
@@ -288,7 +290,7 @@ data are distinguishable in `main`'s shared stores. Metrics: vmagent `externalLa
 (`infra/configs/otel/otel-logs.yaml`) runs a `resource` processor stamping
 `cluster: ${CILIUM_CLUSTER_NAME}` (substituted per cluster by the `*-configs` Flux Kustomization) and
 sets the `VL-Stream-Fields: cluster` header so VictoriaLogs treats it as a stream field.
-- Both rely on **stub global Services** on the spoke (`clusters/test-configs/{monitoring,logging}/`):
+- Both rely on **stub global Services** on the spoke (`clusters/<name>-configs/{monitoring,logging}/`):
   selector-less `vmsingle-vm` / `vlsingle-main` Services annotated `service.cilium.io/global: "true"`
   so CoreDNS resolves the name and Cilium attaches `main`'s remote backends. Without the stub, the
   name doesn't resolve on the spoke.
@@ -454,20 +456,21 @@ clusters. The remaining per-spoke copy-paste — candidates to factor out so a n
 `vm-values.yaml` and a `*-flux.yaml`:
 
 - **Monitoring release/repo (highest value):** `monitoring/repository.yaml` + `monitoring/vm-release.yaml`
-  are near-identical in `clusters/main-controllers` and `clusters/test-controllers` (differ only by
-  namespace / extra repos). Move them into a shared `infra/controllers/monitoring/`; keep only the
-  genuinely-different `vm-values.yaml` per cluster (hub = full stack, spoke = vmagent forwarder).
-- **Spoke stub global services:** `clusters/test-configs/monitoring/vmsingle-vm.yaml` and
-  `clusters/test-configs/logging/vlsingle-main.yaml` are structurally identical selector-less global
-  Services (only name/port differ). Factor into a reusable **spoke-only** overlay — they must *not* go
-  in the unconditional `infra/configs`, since `main` hosts the real backends — or kro-generate them.
+  are near-identical in `clusters/main-controllers` and the scaffolded spoke controllers layer (differ
+  only by namespace / extra repos). Move them into a shared `infra/controllers/monitoring/`; keep only
+  the genuinely-different `vm-values.yaml` per cluster (hub = full stack, spoke = vmagent forwarder).
+- **Spoke stub global services:** the scaffolded `clusters/<name>-configs/monitoring/vmsingle-vm.yaml`
+  and `clusters/<name>-configs/logging/vlsingle-main.yaml` are structurally identical selector-less
+  global Services (only name/port differ). Factor into a reusable **spoke-only** overlay — they must
+  *not* go in the unconditional `infra/configs`, since `main` hosts the real backends — or kro-generate
+  them.
 - **Spoke cilium ExternalSecrets:** `external-secret-clustermesh.yaml` / `external-secret-kvstoremesh.yaml`
   in the spoke configs are per-spoke boilerplate (the hub side is already kro-generated via the RGD's
   `clustermeshPeer`). Candidate for the same spoke overlay or kro generation.
 - **Leave alone:** hub-only platform components (authentik, harbor, vault, kro, grafana, capi, etc.)
   intentionally run only on `main` — not duplication.
 
-## Cilium ClusterMesh (enabled on main; `test` is a live peer)
+## Cilium ClusterMesh (enabled on main; no spokes currently)
 
 ClusterMesh is **enabled** on `main` — it is *not* disabled (this section was previously stale):
 
@@ -478,8 +481,9 @@ ClusterMesh is **enabled** on `main` — it is *not* disabled (this section was 
   `general/clustermesh/main` (PushSecret `cilium-clustermesh-push` = Synced).
 - `infra/critical/cilium/values.yaml` (remote clusters) also enables clustermesh.
 - The LB IP 192.168.1.81 and the `clustermesh-pool` CiliumLoadBalancerIPPool are in use.
-- `service.cilium.io/global: "true"` annotations are effective: `test`↔`main` is live
-  (`cilium-dbg status --all-clusters` shows `1/1 remote clusters ready` on both).
+- `service.cilium.io/global: "true"` annotations are effective; the mesh was verified live with the
+  `test` spoke (`1/1 remote clusters ready` on both) before that spoke was torn down 2026-06-25.
+  With no spokes the hub-side peer secret is empty and agents report `0/0 remote clusters`.
 
 **Stale data removed:** the dead `gitlab`/`app` peers used to be listed in
 `clusters/main-configs/cilium/external-secret-kvstoremesh.yaml`. That file is now an **empty base
@@ -493,9 +497,9 @@ mirrors every peer's state, so each entry's `endpoints` point at the **local** a
 key name differs. So on `test` the entry is `main:`, and on `main` it is `test:`. These were
 historically misnamed after the *local* cluster (`test` self-named `test`; `main` carried a stale
 `gitlab`), which made each agent report `0/0 remote clusters` and left global services with no
-backends → cross-cluster dials failed with `connect: operation not permitted`. Files:
-`clusters/test-configs/cilium/external-secret-clustermesh.yaml`,
-`clusters/main-configs/cilium/external-secret-clustermesh.yaml`.
+backends → cross-cluster dials failed with `connect: operation not permitted`. Hub file:
+`clusters/main-configs/cilium/external-secret-clustermesh.yaml` (spoke copies are scaffolded per
+cluster).
 
 ### Peering model (hub-and-spoke: every cluster ↔ `main`)
 - Each cluster (incl. `main`) pushes its own mesh cert to Vault `clustermesh/<name>` via the

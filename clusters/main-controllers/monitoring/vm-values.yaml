@@ -17,6 +17,9 @@ data:
         # externalLabels.cluster) in the shared VMSingle.
         externalLabels:
           cluster: main
+        # 60s is plenty for homelab dashboards; halves vmsingle ingest
+        # (CPU/memory and merge I/O towards the fragile plusha disk).
+        scrapeInterval: 60s
         # kube-apiserver /metrics exceeds the 16MiB default scrape limit on this
         # cluster; raise the cap so the API server target can be scraped.
         extraArgs:
