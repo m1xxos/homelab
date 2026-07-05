@@ -21,7 +21,7 @@
         "patch"
       ],
       "schedule": [
-        "every week"
+        "before 4am on monday"
       ]
     }
   ]
