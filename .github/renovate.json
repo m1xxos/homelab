@@ -32,6 +32,21 @@
         "every weekend"
       ],
       "dependencyDashboardApproval": true
+    },
+    {
+      "description": "CNI and storage need their own upgrade window: keep them out of the grouped PR and require manual approval even for minors (cilium is dual-pinned with terraform 0-infra; longhorn only supports +1 minor jumps)",
+      "matchPackageNames": [
+        "cilium",
+        "longhorn"
+      ],
+      "matchUpdateTypes": [
+        "minor"
+      ],
+      "groupName": null,
+      "schedule": [
+        "every weekend"
+      ],
+      "dependencyDashboardApproval": true
     }
   ]
 }
