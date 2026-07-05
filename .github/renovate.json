@@ -21,8 +21,17 @@
         "patch"
       ],
       "schedule": [
-        "before 4am on monday"
+        "every weekend"
       ]
+    },
+    {
+      "matchUpdateTypes": [
+        "major"
+      ],
+      "schedule": [
+        "every weekend"
+      ],
+      "dependencyDashboardApproval": true
     }
   ]
 }
