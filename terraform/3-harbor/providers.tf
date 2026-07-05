@@ -2,15 +2,15 @@ terraform {
   required_providers {
     harbor = {
       source  = "goharbor/harbor"
-      version = "3.11.6"
+      version = "3.12.0"
     }
     vault = {
       source  = "hashicorp/vault"
-      version = "5.7.0"
+      version = "5.10.1"
     }
     random = {
       source  = "hashicorp/random"
-      version = "3.8.1"
+      version = "3.9.0"
     }
   }
   backend "s3" {
