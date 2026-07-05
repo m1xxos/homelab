@@ -34,7 +34,7 @@ spec:
         templateID: integer | default=110
       versions:
         kubernetes: string | default="v1.35.0"
-        talos: string | default="v1.12.2"
+        talos: string | default="v1.13.5"
     status:
       controlPlaneEndpoint: $${proxmoxCluster.spec.controlPlaneEndpoint.host}
       kubernetesVersion: $${talosControlPlane.status.version}

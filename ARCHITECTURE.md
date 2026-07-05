@@ -20,7 +20,7 @@ in May 2026; additional CAPI-managed clusters can still be provisioned on demand
 | CP nodes | 1 × `main-cp-0` (192.168.1.70), 6 GiB RAM |
 | Worker nodes | 3 × `main-worker-{0,1,2}` (192.168.1.10–12), 4 cores / 5 GiB RAM / 70 GiB disk each |
 | Kubernetes version | v1.35.0 |
-| Talos version | v1.12.2 (initial image 1.11.3 via factory.talos.dev) |
+| Talos version | v1.13.5 (initial image 1.11.3 via factory.talos.dev) |
 | OIDC | Authentik at `https://authentik.local.m1xxos.online/application/o/k8s/`, client `k8s` |
 
 Proxmox node: `plusha` (192.168.1.122), VM disks on `pve-nvme` datastore, `cache=writeback`,
@@ -31,7 +31,7 @@ single-replica StorageClass for reproducible data, `vm.swappiness=30` set manual
 
 ## Infrastructure
 
-- **OS**: Talos Linux (v1.12.2)
+- **OS**: Talos Linux (v1.13.5)
 - **Provisioning**: Terraform → Proxmox VMs → Talos config → bootstrap
 - **CNI**: Cilium v1.18.6 (kube-proxy disabled, kubeProxyReplacement: true, L2 announcements;
   ClusterMesh enabled in the Terraform cilium-values template — clustermesh-apiserver runs on `main`,

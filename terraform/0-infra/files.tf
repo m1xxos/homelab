@@ -1,6 +1,6 @@
 locals {
   talos = {
-    version    = "v1.12.2"
+    version    = "v1.13.5"
     image_hash = "974c44bde6b7a95c8fe9038ae3625138c37d8b9d91940fa90ef05ffaacabc8a0"
   }
 }
