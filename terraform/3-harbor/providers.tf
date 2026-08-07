@@ -2,7 +2,7 @@ terraform {
   required_providers {
     harbor = {
       source  = "goharbor/harbor"
-      version = "3.12.0"
+      version = "3.12.3"
     }
     vault = {
       source  = "hashicorp/vault"
