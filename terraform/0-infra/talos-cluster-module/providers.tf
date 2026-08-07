@@ -6,7 +6,7 @@ terraform {
     }
     cloudflare = {
       source  = "cloudflare/cloudflare"
-      version = "5.21.1"
+      version = "5.23.0"
     }
     talos = {
       source  = "siderolabs/talos"
@@ -22,7 +22,7 @@ terraform {
     }
     flux = {
       source  = "fluxcd/flux"
-      version = "1.9.0"
+      version = "1.9.4"
     }
   }
 }
