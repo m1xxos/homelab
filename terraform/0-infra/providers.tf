@@ -2,15 +2,15 @@ terraform {
   required_providers {
     cloudflare = {
       source  = "cloudflare/cloudflare"
-      version = "5.23.0"
+      version = "5.25.0"
     }
     proxmox = {
       source  = "bpg/proxmox"
-      version = "0.111.1"
+      version = "0.113.1"
     }
     infisical = {
       source  = "Infisical/infisical"
-      version = "0.19.20"
+      version = "0.19.31"
     }
   }
   backend "s3" {
