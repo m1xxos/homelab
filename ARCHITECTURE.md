@@ -36,7 +36,7 @@ single-replica StorageClass for reproducible data, `vm.swappiness=30` set manual
 - **CNI**: Cilium v1.18.6 (kube-proxy disabled, kubeProxyReplacement: true, L2 announcements;
   ClusterMesh enabled in the Terraform cilium-values template — clustermesh-apiserver runs on `main`,
   but no live peer clusters yet)
-- **GitOps**: Flux CD (bootstrapped from Terraform, branch `main`, SOPS decryption via `sops-gpg`,
+- **GitOps**: Flux CD (managed via Flux Operator + `FluxInstance`, bootstrapped from Terraform via `controlplaneio-fluxcd/flux-operator-bootstrap`, branch `main`, SOPS decryption via `sops-gpg`,
   which the emberstack reflector auto-mirrors into spoke `*-cluster` namespaces)
 - **Secrets**: HashiCorp Vault (HA Raft, 3 replicas, YC KMS auto-unseal) + ESO + SOPS
 - **DNS**: Cloudflare (managed via Terraform), domain: `local.m1xxos.online`
@@ -56,7 +56,7 @@ single-replica StorageClass for reproducible data, `vm.swappiness=30` set manual
 
 ```
 terraform/
-  0-infra/              — Proxmox VMs, Talos clusters, Cilium bootstrap, Flux bootstrap
+  0-infra/              — Proxmox VMs, Talos clusters, Cilium bootstrap, Flux Operator bootstrap
     talos-cluster-module/ — Reusable module (cluster.tf, helm.tf, flux.tf, dns.tf, vm.tf)
   1-vault/              — Vault configuration (KV engines, auth backends, policies, random passwords)
   2-authentik/          — Authentik OIDC configuration (Grafana, Harbor, K8s, GitHub-oauth providers)
@@ -90,7 +90,7 @@ infra/
 clusters/
   main/                 — Main cluster Flux entry point
     namespaces/         — Cluster namespaces (`authentik`, `harbor`, `monitoring`, `vault`, `tracing`, etc.)
-    flux-system/        — Flux components/sync manifests (GitRepository branch: main)
+    flux-system/        — FluxInstance manifest and root Kustomization (reconciled by Flux Operator, GitRepository branch: main)
     flux-configs/       — config-sync.yaml (`main-tenant` → `main-controllers` → `main-configs`)
     configs/            — CiliumL2AnnouncementPolicy, CiliumLoadBalancerIPPool (192.168.1.81, clustermesh — reserved)
   main-controllers/     — Main cluster controllers:
@@ -554,7 +554,9 @@ app-specific secrets use namespace **SecretStores** (`harbor-store`, `grafana-st
 | cilium_version | 1.18.6 | Cilium Helm chart version |
 | external_ip | 192.168.1.250 | Traefik LoadBalancer IP |
 | cp_vip_address | (required) | Control plane VIP |
-| branch | — | Git branch Flux bootstraps from (**must stay `main`**) |
+
+> [!NOTE]
+> Ветка и URL GitOps-репозитория больше не задаются в переменных Terraform — они декларативно определяются в `clusters/<cluster>/flux-system/flux-instance.yaml` (`spec.sync`).
 
 ### Dependency Chain
 ```
@@ -563,8 +565,15 @@ Proxmox VMs → Talos config → bootstrap → kubeconfig
     → k8s_manifest: CiliumLoadBalancerIPPool
     → helm: metrics-server
     → helm: talos-ccm
-      → flux_bootstrap_git
+      → module: flux_operator_bootstrap (Flux Operator + FluxInstance)
 ```
+
+### Flux Operator Bootstrap (flux.tf)
+Uses module `controlplaneio-fluxcd/flux-operator-bootstrap/kubernetes` (v0.9.0):
+- Ephemeral bootstrap Job in namespace `flux-operator-bootstrap` installs Flux Operator (`ghcr.io/controlplaneio-fluxcd/charts/flux-operator`) and creates `FluxInstance` (`clusters/<cluster>/flux-system/flux-instance.yaml`).
+- Once bootstrapped, steady-state reconciliation of Flux controllers and sync CRs is managed by Flux Operator in the cluster.
+- Git pull credentials secret (`flux-system`) in `flux-system` namespace is declaratively managed via `managed_resources.secrets_yaml` with server-side apply.
+- Replaces legacy `fluxcd/flux` provider and `flux_bootstrap_git` resource.
 
 ### Talos machine config highlights (cluster.tf)
 - CNI `none` (Cilium installed by Terraform), kube-proxy disabled

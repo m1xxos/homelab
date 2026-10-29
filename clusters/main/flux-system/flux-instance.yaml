@@ -1,0 +1,22 @@
+apiVersion: fluxcd.controlplane.io/v1
+kind: FluxInstance
+metadata:
+  name: flux
+  namespace: flux-system
+spec:
+  components:
+    - source-controller
+    - kustomize-controller
+    - helm-controller
+    - notification-controller
+  cluster:
+    size: small
+  distribution:
+    version: 2.x
+    registry: ghcr.io/fluxcd
+  sync:
+    kind: GitRepository
+    url: https://github.com/m1xxos/homelab.git
+    ref: refs/heads/434-migrate-to-flux-operator
+    path: clusters/main
+    pullSecret: flux-system

@@ -1,14 +1,27 @@
-resource "terraform_data" "flux_git_auth_checksum" {
-  input = sha256(nonsensitive(var.github_token))
-}
+module "flux_operator_bootstrap" {
+  source = "github.com/controlplaneio-fluxcd/terraform-kubernetes-flux-operator-bootstrap?ref=v0.9.0"
 
-resource "flux_bootstrap_git" "cluster" {
-  depends_on = [helm_release.metrics-server, talos_cluster_kubeconfig.kubeconfig]
+  revision = 1
 
-  embedded_manifests = true
-  path               = "clusters/${var.cluster_name}"
-
-  lifecycle {
-    replace_triggered_by = [terraform_data.flux_git_auth_checksum]
+  gitops_resources = {
+    instance_yaml = file("${path.module}/../../../clusters/${var.cluster_name}/flux-system/flux-instance.yaml")
   }
+
+  managed_resources = {
+    secrets_yaml = <<-YAML
+      apiVersion: v1
+      kind: Secret
+      metadata:
+        name: flux-system
+        namespace: flux-system
+      type: Opaque
+      stringData:
+        username: ${var.github_username}
+        password: ${var.github_token}
+    YAML
+  }
+
+  debug_on_failure = true
+
+  depends_on = [helm_release.metrics-server, talos_cluster_kubeconfig.kubeconfig]
 }
