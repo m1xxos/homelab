@@ -1,7 +1,7 @@
 module "flux_operator_bootstrap" {
   source = "github.com/controlplaneio-fluxcd/terraform-kubernetes-flux-operator-bootstrap?ref=v0.9.0"
 
-  revision = 1
+  revision = 2
 
   gitops_resources = {
     instance_yaml = file("${path.module}/../../../clusters/${var.cluster_name}/flux-system/flux-instance.yaml")
