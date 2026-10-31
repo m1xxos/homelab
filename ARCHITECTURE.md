@@ -17,8 +17,8 @@ in May 2026; additional CAPI-managed clusters can still be provisioned on demand
 | External/L2 IP | 192.168.1.80 |
 | ClusterMesh IP | 192.168.1.81 (clustermesh-apiserver LB; mesh enabled, no live peers — the `test` spoke was torn down 2026-06-25) |
 | Cilium ID | 1 |
-| CP nodes | 1 × `main-cp-0` (192.168.1.70), 6 GiB RAM |
-| Worker nodes | 3 × `main-worker-{0,1,2}` (192.168.1.10–12), 4 cores / 5 GiB RAM / 70 GiB disk each |
+| CP nodes | 1 × `main-cp-0` (192.168.1.70), 7 GiB RAM |
+| Worker nodes | 3 × `main-worker-{0,1,2}` (192.168.1.10–12), 4 cores / 7 GiB RAM / 70 GiB disk each |
 | Kubernetes version | v1.35.0 |
 | Talos version | v1.13.5 (initial image 1.11.3 via factory.talos.dev) |
 | OIDC | Authentik at `https://authentik.local.m1xxos.online/application/o/k8s/`, client `k8s` |
