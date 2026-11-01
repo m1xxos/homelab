@@ -80,16 +80,6 @@ variable "github_username" {
   default = "m1xxos"
 }
 
-variable "git_url" {
-  type    = string
-  default = "https://github.com/m1xxos/homelab.git"
-}
-
-variable "branch" {
-  type    = string
-  default = "main"
-}
-
 variable "cilium_version" {
   type    = string
   default = "1.18.6"

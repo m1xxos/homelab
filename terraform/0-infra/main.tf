@@ -25,8 +25,8 @@ module "main-cluster" {
     }
   ]
   worker_cpu_cores     = 4
-  worker_memory        = 5120
-  cp_memory            = 6144
+  worker_memory        = 7168
+  cp_memory            = 7168
   external_ip          = "192.168.1.80"
   cp_vip_address       = "192.168.1.75"
   talos_image_id       = proxmox_virtual_environment_download_file.talos_nocloud_image_1_11_3.id
@@ -36,7 +36,6 @@ module "main-cluster" {
   cluster_name         = "main"
   cluster_dns          = "main.k8s.m1xxos.online"
   github_token         = local.github_token
-  branch               = "main"
   cilium_version       = "1.18.6"
   clustermesh_endpoint = "192.168.1.81"
 }
