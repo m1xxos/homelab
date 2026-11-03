@@ -1,7 +1,7 @@
 module "flux_operator_bootstrap" {
   source = "github.com/controlplaneio-fluxcd/terraform-kubernetes-flux-operator-bootstrap?ref=v0.9.0"
 
-  revision = 2
+  revision = 3
 
   gitops_resources = {
     instance_yaml = file("${path.module}/../../../clusters/${var.cluster_name}/flux-system/flux-instance.yaml")
@@ -20,8 +20,6 @@ module "flux_operator_bootstrap" {
         password: ${var.github_token}
     YAML
   }
-
-  debug_on_failure = true
 
   depends_on = [helm_release.metrics-server, talos_cluster_kubeconfig.kubeconfig]
 }
