@@ -14,6 +14,12 @@ variable "default_gateway" {
   default = "192.168.1.1"
 }
 
+variable "vlan_id" {
+  type        = number
+  description = "VLAN tag for the cluster VMs (null for native / untagged)"
+  default     = null
+}
+
 variable "external_ip" {
   type    = string
   default = "192.168.1.250"

@@ -1,34 +1,36 @@
 module "main-cluster" {
   source = "./talos-cluster-module"
+  vlan_id         = 20
+  default_gateway = "192.168.20.1"
   talos_cps = [
     {
       name  = "main-cp-0"
       vm_id = 900
-      ip    = "192.168.1.70"
+      ip    = "192.168.20.70"
     }
   ]
   talos_workers = [
     {
       name  = "main-worker-0"
       vm_id = 910
-      ip    = "192.168.1.10"
+      ip    = "192.168.20.10"
     },
     {
       name  = "main-worker-1"
       vm_id = 911
-      ip    = "192.168.1.11"
+      ip    = "192.168.20.11"
     },
     {
       name  = "main-worker-2"
       vm_id = 912
-      ip    = "192.168.1.12"
+      ip    = "192.168.20.12"
     }
   ]
   worker_cpu_cores     = 4
   worker_memory        = 7168
   cp_memory            = 7168
-  external_ip          = "192.168.1.80"
-  cp_vip_address       = "192.168.1.75"
+  external_ip          = "192.168.20.80"
+  cp_vip_address       = "192.168.20.75"
   talos_image_id       = proxmox_virtual_environment_download_file.talos_nocloud_image_1_11_3.id
   node_name            = "plusha"
   worker_disk_size     = 70
@@ -37,5 +39,5 @@ module "main-cluster" {
   cluster_dns          = "main.k8s.m1xxos.online"
   github_token         = local.github_token
   cilium_version       = "1.18.6"
-  clustermesh_endpoint = "192.168.1.81"
+  clustermesh_endpoint = "192.168.20.81"
 }

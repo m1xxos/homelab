@@ -33,7 +33,8 @@ resource "proxmox_virtual_environment_vm" "talos_cp" {
   }
 
   network_device {
-    bridge = "vmbr0"
+    bridge  = "vmbr0"
+    vlan_id = var.vlan_id
   }
 
   disk {
@@ -95,7 +96,8 @@ resource "proxmox_virtual_environment_vm" "talos_worker" {
   }
 
   network_device {
-    bridge = "vmbr0"
+    bridge  = "vmbr0"
+    vlan_id = var.vlan_id
   }
 
   disk {
