@@ -13,8 +13,8 @@ terraform {
       version = "0.19.32"
     }
     openwrt = {
-      source  = "ORFops/openwrt"
-      version = "~> 0.1.29"
+      source  = "joneshf/openwrt"
+      version = "0.0.20"
     }
   }
   backend "s3" {
@@ -59,9 +59,5 @@ provider "cloudflare" {
 }
 
 provider "openwrt" {
-  hostname = "192.168.1.1"
-  port     = 80
-  scheme   = "http"
-  username = "root"
   password = ephemeral.infisical_secret.openwrt_password.value
 }

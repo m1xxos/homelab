@@ -1,5 +1,3 @@
-# OpenWrt Network and Firewall configuration for Cluster VLAN 20
-
 resource "openwrt_network_device" "k8s_vlan" {
   id     = "br_lan_20"
   name   = "br-lan.20"
