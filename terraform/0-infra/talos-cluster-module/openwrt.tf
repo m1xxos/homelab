@@ -3,7 +3,7 @@ resource "openwrt_network_device" "k8s_vlan" {
   name   = "br-lan.20"
   type   = "8021q"
   ifname = "br-lan"
-  vid    = 20
+  vid    = var.vlan_id
 }
 
 resource "openwrt_network_interface" "k8s" {
