@@ -1,45 +1,66 @@
-resource "openwrt_network_device" "k8s_vlan" {
-  id     = "br_lan_20"
-  name   = "br-lan.20"
+# OpenWrt Network and Firewall configuration for Cluster VLAN
+
+locals {
+  enable_openwrt = var.vlan_id != null && var.manage_openwrt
+}
+
+# 1. 802.1q VLAN device on top of the base device (e.g. br-lan)
+resource "openwrt_network_device" "cluster_vlan" {
+  count = local.enable_openwrt ? 1 : 0
+
+  id     = "br_lan_${var.vlan_id}"
+  name   = "${var.openwrt_base_device}.${var.vlan_id}"
   type   = "8021q"
-  ifname = "br-lan"
+  ifname = var.openwrt_base_device
   vid    = var.vlan_id
 }
 
-resource "openwrt_network_interface" "k8s" {
-  id      = "k8s"
-  device  = openwrt_network_device.k8s_vlan.name
+# 2. OpenWrt logical network interface for the cluster
+resource "openwrt_network_interface" "cluster" {
+  count = local.enable_openwrt ? 1 : 0
+
+  id      = var.cluster_name
+  device  = openwrt_network_device.cluster_vlan[0].name
   proto   = "static"
-  ipaddr  = "192.168.20.1"
-  netmask = "255.255.255.0"
+  ipaddr  = var.default_gateway
+  netmask = var.vlan_netmask
 }
 
-resource "openwrt_firewall_zone" "k8s" {
-  id      = "k8s"
-  name    = "k8s"
-  network = [openwrt_network_interface.k8s.id]
+# 3. OpenWrt firewall zone for the cluster
+resource "openwrt_firewall_zone" "cluster" {
+  count = local.enable_openwrt ? 1 : 0
+
+  id      = var.cluster_name
+  name    = var.cluster_name
+  network = [openwrt_network_interface.cluster[0].id]
   input   = "ACCEPT"
   output  = "ACCEPT"
   forward = "REJECT"
 }
 
-# Allow LAN clients to connect to cluster nodes, VIP and services
-resource "openwrt_firewall_forwarding" "lan_to_k8s" {
+# 4. Allow LAN clients to connect to cluster nodes, VIP and services
+resource "openwrt_firewall_forwarding" "lan_to_cluster" {
+  count = local.enable_openwrt ? 1 : 0
+
   src    = "lan"
-  dest   = openwrt_firewall_zone.k8s.name
+  dest   = openwrt_firewall_zone.cluster[0].name
   family = "ipv4"
 }
 
-# Allow cluster nodes to access WAN (Internet)
-resource "openwrt_firewall_forwarding" "k8s_to_wan" {
-  src    = openwrt_firewall_zone.k8s.name
+# 5. Allow cluster nodes to access WAN (Internet)
+resource "openwrt_firewall_forwarding" "cluster_to_wan" {
+  count = local.enable_openwrt ? 1 : 0
+
+  src    = openwrt_firewall_zone.cluster[0].name
   dest   = "wan"
   family = "ipv4"
 }
 
-# Allow cluster nodes to access LAN resources (e.g. NFS at 192.168.1.138, MinIO at 192.168.1.77, Proxmox at 192.168.1.122)
-resource "openwrt_firewall_forwarding" "k8s_to_lan" {
-  src    = openwrt_firewall_zone.k8s.name
+# 6. Allow cluster nodes to access LAN resources (e.g. NFS at 192.168.1.138, MinIO at 192.168.1.77, Proxmox at 192.168.1.122)
+resource "openwrt_firewall_forwarding" "cluster_to_lan" {
+  count = local.enable_openwrt ? 1 : 0
+
+  src    = openwrt_firewall_zone.cluster[0].name
   dest   = "lan"
   family = "ipv4"
 }

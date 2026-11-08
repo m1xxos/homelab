@@ -20,6 +20,10 @@ terraform {
       source  = "hashicorp/kubernetes"
       version = "3.2.1"
     }
+    openwrt = {
+      source  = "ORFops/openwrt"
+      version = "~> 0.1.29"
+    }
   }
 }
 

@@ -20,6 +20,24 @@ variable "vlan_id" {
   default     = null
 }
 
+variable "manage_openwrt" {
+  type        = bool
+  description = "Whether to manage OpenWrt VLAN interface and firewall rules for this cluster"
+  default     = true
+}
+
+variable "openwrt_base_device" {
+  type        = string
+  description = "Base OpenWrt device for the 802.1q VLAN"
+  default     = "br-lan"
+}
+
+variable "vlan_netmask" {
+  type        = string
+  description = "Netmask for the cluster VLAN interface on OpenWrt"
+  default     = "255.255.255.0"
+}
+
 variable "external_ip" {
   type    = string
   default = "192.168.1.250"

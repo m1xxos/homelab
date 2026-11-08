@@ -13,8 +13,8 @@ terraform {
       version = "0.19.32"
     }
     openwrt = {
-      source  = "joneshf/openwrt"
-      version = "0.0.20"
+      source  = "ORFops/openwrt"
+      version = "~> 0.1.29"
     }
   }
   backend "s3" {
