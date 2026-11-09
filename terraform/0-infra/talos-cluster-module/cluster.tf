@@ -14,6 +14,11 @@ locals {
       },
     },
     machine = {
+      network = {
+        nameservers = [
+          var.default_gateway
+        ]
+      }
       kubelet = {
         extraMounts = [
           { destination = "/var/lib/longhorn",
@@ -133,6 +138,10 @@ resource "talos_machine_bootstrap" "bootstrap" {
   depends_on           = [talos_machine_configuration_apply.cp_config_apply]
   client_configuration = talos_machine_secrets.machine_secrets.client_configuration
   node                 = local.talos_cp_ips[0]
+
+  lifecycle {
+    ignore_changes = [node]
+  }
 }
 
 resource "talos_cluster_kubeconfig" "kubeconfig" {

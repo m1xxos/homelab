@@ -10,6 +10,18 @@ tasks:
     - flux reconcile kustomization main-tenant
     - flux reconcile kustomization main-controllers
     - flux reconcile kustomization main-configs
+
+  flux-branch:
+    desc: "Switch Flux in cluster to current git branch (or BRANCH=<name>)"
+    vars:
+      BRANCH: '{{.BRANCH | default ""}}'
+      TARGET_BRANCH:
+        sh: 'if [ -n "{{.BRANCH}}" ]; then echo "{{.BRANCH}}"; else git branch --show-current; fi'
+    cmds:
+      - echo "Switching Flux to branch '{{.TARGET_BRANCH}}'..."
+      - kubectl patch fluxinstance flux -n flux-system --type merge -p '{"spec":{"sync":{"ref":"refs/heads/{{.TARGET_BRANCH}}"}} }'
+      - flux reconcile source git flux-system
+      - flux reconcile kustomization flux-system
   new-cluster:
     desc: "Scaffold a new CAPI-managed Talos cluster in the repo"
     cmds:

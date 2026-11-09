@@ -46,3 +46,10 @@ ephemeral "infisical_secret" "cloudflare_api_token" {
   folder_path  = local.infisical_folder_path
   workspace_id = local.infisical_workspace_id
 }
+
+ephemeral "infisical_secret" "openwrt_password" {
+  name         = "openwrt_password"
+  env_slug     = local.infisical_env_slug
+  folder_path  = local.infisical_folder_path
+  workspace_id = local.infisical_workspace_id
+}

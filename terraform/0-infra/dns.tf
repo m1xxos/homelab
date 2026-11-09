@@ -5,7 +5,7 @@ locals {
 resource "cloudflare_dns_record" "main" {
   zone_id = local.cloudflare_zone_id
   name    = "local.${local.domain}"
-  content = "192.168.1.80"
+  content = "192.168.20.80"
   type    = "A"
   ttl     = 300
 }

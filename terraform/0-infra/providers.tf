@@ -12,6 +12,10 @@ terraform {
       source  = "Infisical/infisical"
       version = "0.19.32"
     }
+    openwrt = {
+      source  = "ORFops/openwrt"
+      version = "~> 0.1.29"
+    }
   }
   backend "s3" {
     endpoint                    = "https://storage.yandexcloud.net"
@@ -52,4 +56,8 @@ provider "proxmox" {
 
 provider "cloudflare" {
   api_token = ephemeral.infisical_secret.cloudflare_api_token.value
+}
+
+provider "openwrt" {
+  password = ephemeral.infisical_secret.openwrt_password.value
 }

@@ -33,7 +33,8 @@ resource "proxmox_virtual_environment_vm" "talos_cp" {
   }
 
   network_device {
-    bridge = "vmbr0"
+    bridge  = "vmbr0"
+    vlan_id = var.vlan_id
   }
 
   disk {
@@ -53,6 +54,9 @@ resource "proxmox_virtual_environment_vm" "talos_cp" {
 
   initialization {
     datastore_id = local.datastore_id
+    dns {
+      servers = [var.default_gateway]
+    }
     ip_config {
       ipv4 {
         address = "${each.value.ip}/24"
@@ -95,7 +99,8 @@ resource "proxmox_virtual_environment_vm" "talos_worker" {
   }
 
   network_device {
-    bridge = "vmbr0"
+    bridge  = "vmbr0"
+    vlan_id = var.vlan_id
   }
 
   disk {
@@ -115,6 +120,9 @@ resource "proxmox_virtual_environment_vm" "talos_worker" {
 
   initialization {
     datastore_id = local.datastore_id
+    dns {
+      servers = [var.default_gateway]
+    }
     ip_config {
       ipv4 {
         address = "${each.value.ip}/24"
