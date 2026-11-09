@@ -38,7 +38,6 @@ resource "openwrt_firewall_zone" "cluster" {
   forward = "REJECT"
 }
 
-# 4. Allow LAN clients to connect to cluster nodes, VIP and services
 resource "openwrt_firewall_forwarding" "lan_to_cluster" {
   count = local.enable_openwrt ? 1 : 0
 
@@ -47,7 +46,6 @@ resource "openwrt_firewall_forwarding" "lan_to_cluster" {
   family = "ipv4"
 }
 
-# 5. Allow cluster nodes to access WAN (Internet)
 resource "openwrt_firewall_forwarding" "cluster_to_wan" {
   count = local.enable_openwrt ? 1 : 0
 
@@ -56,7 +54,6 @@ resource "openwrt_firewall_forwarding" "cluster_to_wan" {
   family = "ipv4"
 }
 
-# 6. Allow cluster nodes to access LAN resources (e.g. NFS at 192.168.1.138, MinIO at 192.168.1.77, Proxmox at 192.168.1.122)
 resource "openwrt_firewall_forwarding" "cluster_to_lan" {
   count = local.enable_openwrt ? 1 : 0
 
